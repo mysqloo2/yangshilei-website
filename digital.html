@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>样式雷 · 数字展厅 | 云上烫样</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-map/js/china.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Georgia', 'Times New Roman', '宋体', '楷体', 'STKaiti', serif;
+            background-color: #0a0806;
+        }
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .content {
+            position: relative;
+            z-index: 20;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            padding: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(210, 180, 140, 0.55);
+            backdrop-filter: blur(2px);
+        }
+        .nav-left {
+            display: flex;
+            flex: 8;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .logo-search-group {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 12px;
+        }
+        .logo-item {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .logo-img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin-top: 0;
+            transition: all 0.3s ease;
+        }
+        .logo-item:hover .logo-img {
+            filter: brightness(1.2) drop-shadow(0 0 5px rgba(210, 180, 140, 0.5));
+            transform: scale(1.02);
+        }
+        .search-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgb(144 101 45 / 55%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 38px;
+            margin-left: -40px;
+        }
+        .search-btn:hover {
+            background: rgba(210, 180, 140, 0.25);
+            border-color: rgba(210, 180, 140, 1);
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(210, 180, 140, 0.5);
+        }
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(210,180,140,0.85)' stroke-width='1.8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-4.35-4.35M19 11a8 8 0 11-16 0 8 8 0 0116 0z' /%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            transition: all 0.3s ease;
+        }
+        .nav-item {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 22px;
+            padding-bottom: 22px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .nav-item:hover {
+            background: rgba(210, 180, 140, 0.15);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+        .nav-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            transition: all 0.3s ease;
+        }
+        .nav-item:hover .nav-img {
+            filter: brightness(1.25) drop-shadow(0 0 4px rgba(210, 180, 140, 0.6));
+            transform: scale(1.05);
+        }
+        .nav-item:hover::before {
+            background-color: rgba(210, 180, 140, 0.9);
+            height: 35px;
+        }
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 70%;
+            transform: translateY(-50%);
+            height: 28px;
+            width: 1px;
+            background-color: rgba(210, 180, 140, 0.55);
+            transition: all 0.3s ease;
+        }
+        .nav-item:first-of-type::before {
+            display: none;
+        }
+        .nav-item.active {
+            background: rgba(210, 180, 140, 0.2);
+            backdrop-filter: blur(4px);
+        }
+        .nav-item.active .nav-img {
+            filter: brightness(1.3) drop-shadow(0 0 6px rgba(210, 180, 140, 0.7));
+            transform: scale(1.02);
+        }
+        .logo-item.active .logo-img {
+            filter: brightness(1.2) drop-shadow(0 0 5px rgba(210, 180, 140, 0.5));
+        }
+
+        
+        .page-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 20px;
+            background-color: rgba(245, 240, 230, 0.5); 
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+            font-family: "SimSun", "宋体", "KaiTi", "楷体", serif;
+            position: relative;
+            z-index: 20;
+            backdrop-filter: blur(2px);
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+          
+            gap: 15px;
+        }
+        .content-block {
+            border: 2px solid #8b4513;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            background-color: rgba(255, 252, 245, 0.75);
+            color: #3a2a1a;
+            backdrop-filter: blur(1px);
+        }
+
+        /* 轮播文字 */
+        .top-left-merged {
+            grid-column: 1/2;
+            grid-row: 1/2;
+            border: 2px solid #8b4513;
+            border-radius: 8px;
+            background: rgba(255, 252, 245, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+        }
+        .carousel-text {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .carousel-item {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Georgia', '楷体', serif;
+            color: #3a2a1a;
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: translateX(120%);
+            transition: transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.6s ease;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: normal;
+            font-size: 1.65rem;
+            line-height: 1.7;
+        }
+        .carousel-item.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+        .carousel-item.exit-left {
+            opacity: 0;
+            transform: translateX(-120%);
+        }
+
+        .top-right-block {
+            grid-column: 2/3;
+            grid-row: 1/2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            min-height: 220px;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                background 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+        .top-right-block:hover {
+            transform: scale(1.05);
+            background: rgba(255, 252, 245, 0.95);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        .top-right-block h1 {
+            font-size: 34px;
+            font-family: 'Georgia', '楷体', serif;
+            letter-spacing: 6px;
+            margin-bottom: 8px;
+            color: #3a2a1a;
+        }
+        .top-right-block .subtitle {
+            font-size: 14px;
+            color: #6b5c4c;
+            letter-spacing: 3px;
+            border-top: 1px dashed rgba(107, 92, 76, 0.4);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .middle-full-block {
+            grid-column: 1/3;
+            grid-row: 2/3;
+            display: flex;
+            gap: 20px;
+            min-height: 620px;
+        }
+        .chart-panel {
+            flex: 1;
+            border: 2px solid #8b4513;
+            border-radius: 8px;
+            background: rgba(255, 252, 245, 0.75);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 620px;
+        }
+        .chart-panel h2 {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #5a3e2b;
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(139, 69, 19, 0.3);
+            padding-bottom: 8px;
+        }
+        #lineChart {
+            width: 100%;
+            height: 380px;
+        }
+
+        /* ----- 皇家园林遗产分布（精致版）样式 开始 ----- */
+        .two-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .bars-section {
+            flex: 1.6;
+            min-width: 320px;
+        }
+        .bars-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .bar-item-wrapper {
+            background: transparent;
+            transition: all 0.2s;
+            animation: slideFade 0.45s ease backwards;
+            animation-delay: calc(0.04s * var(--idx, 0));
+        }
+        .bar-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.6rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .region-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .region-icon {
+            font-size: 1.1rem;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+        }
+        .region-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1e2f3e;
+            letter-spacing: -0.2px;
+        }
+        .stats-badges {
+            display: flex;
+            gap: 10px;
+        }
+        .badge-count {
+            background: linear-gradient(135deg, #fdf6ed, #f8efe3);
+            color: #c27e3a;
+            padding: 0.25rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            box-shadow: inset 0 0 0 1px rgba(194,126,58,0.15), 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .badge-percent {
+            background: #eef3fc;
+            color: #4f6f8f;
+            padding: 0.25rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            box-shadow: inset 0 0 0 1px rgba(79,111,143,0.12);
+        }
+        .bar-rail {
+            background: #eef2f6;
+            border-radius: 60px;
+            height: 48px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(255,255,255,0.8);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s;
+        }
+        .bar-rail:hover {
+            transform: scale(1.003);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 60px;
+            background: linear-gradient(95deg, #DFB87A 0%, #CA9A62 45%, #B88247 100%);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 16px;
+            transition: width 1s cubic-bezier(0.22, 0.98, 0.48, 1.02);
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(255,255,200,0.3), 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .bar-fill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg,
+                rgba(255,255,245,0) 0%,
+                rgba(255,255,245,0.35) 35%,
+                rgba(255,255,245,0.5) 50%,
+                rgba(255,255,245,0.35) 65%,
+                rgba(255,255,245,0) 100%);
+            transform: translateX(-100%);
+            animation: shimmerFlow 2.8s infinite ease;
+            pointer-events: none;
+        }
+        @keyframes shimmerFlow {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+            100% { transform: translateX(100%); }
+        }
+        .bar-percent-label {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+            background: rgba(0,0,0,0.28);
+            padding: 0.2rem 0.7rem;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+        .info-panel {
+            flex: 1;
+            min-width: 260px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+        }
+        .elegant-card {
+            background: #fefcf9;
+            border-radius: 1.6rem;
+            padding: 1.2rem 1.2rem 1.4rem;
+            border: 1px solid #efebe3;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.02);
+            transition: all 0.2s;
+        }
+        .card-header {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #b2916e;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.9rem;
+        }
+        .stat-block {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 0.7rem 0.3rem;
+            text-align: center;
+            border: 1px solid #f0eae2;
+            transition: all 0.2s cubic-bezier(0.2,0.9,0.4,1.1);
+        }
+        .stat-block:hover {
+            transform: translateY(-3px);
+            border-color: #e1d5c8;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.04);
+        }
+        .stat-region {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #8b7358;
+            text-transform: uppercase;
+        }
+        .stat-number {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #d08c48;
+            line-height: 1.2;
+            margin: 6px 0;
+        }
+        .stat-percent {
+            font-size: 0.68rem;
+            color: #618c85;
+            font-weight: 600;
+        }
+        .rank-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .rank-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: linear-gradient(90deg, #fffcf7, #ffffff);
+            border-radius: 60px;
+            border-left: 4px solid #dfb87a;
+            transition: all 0.2s;
+        }
+        .rank-item:hover {
+            transform: translateX(3px);
+            background: #fffefa;
+        }
+        .rank-position {
+            font-weight: 800;
+            font-size: 1.1rem;
+            width: 48px;
+        }
+        .rank-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #2d4a5c;
+            flex: 1;
+            letter-spacing: -0.2px;
+        }
+        .rank-value {
+            background: #f1ede6;
+            padding: 0.25rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #a57a48;
+        }
+        .table-section {
+            border-radius: 1.4rem;
+            background: #ffffff;
+            border: 1px solid #eeebe5;
+            overflow-x: auto;
+            margin-top: 0.2rem;
+        }
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+        }
+        .styled-table th {
+            text-align: left;
+            padding: 1rem 0.9rem 0.8rem 1rem;
+            background: #fcfaf7;
+            color: #6b7f96;
+            font-weight: 700;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #eae3da;
+        }
+        .styled-table td {
+            padding: 0.85rem 0.9rem 0.85rem 1rem;
+            border-bottom: 1px solid #f2ede6;
+            color: #2f4659;
+        }
+        .styled-table tr:hover td {
+            background-color: #fefaf5;
+            transition: 0.1s;
+        }
+        .region-tag {
+            background: #e9e1d6;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #7c6042;
+            display: inline-block;
+        }
+        .project-desc {
+            font-size: 0.72rem;
+            color: #7c92ab;
+            line-height: 1.35;
+        }
+        .number-cell {
+            font-weight: 800;
+            color: #da904a;
+        }
+        .percent-cell {
+            font-weight: 700;
+            color: #46807a;
+        }
+        @keyframes slideFade {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* ----- 皇家园林遗产分布样式 结束 ----- */
+
+        /* 新增：时间轴样式（从测试.html移植，类名重命名避免冲突） */
+        .timeline-card {
+            width: 100%;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            transition: all 0.2s ease;
+            font-family: 'Inter', 'Cormorant Garamond', system-ui, sans-serif;
+            color: #2c251f;
+        }
+        .timeline-title-section {
+            text-align: center;
+            margin-bottom: 0.8rem;
+        }
+        .timeline-title-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 1.7rem;
+            background: linear-gradient(135deg, #bc7e48, #8b623f);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+        .timeline-title-section p {
+            font-size: 0.75rem;
+            color: #b6936e;
+            margin-top: 5px;
+            letter-spacing: 0.3px;
+        }
+        .timeline-title-section i {
+            color: #c98a54;
+            margin-right: 5px;
+        }
+        #timelineChart {
+            width: 100%;
+            height: 360px;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .timeline-info-panel {
+            margin-top: 0.6rem;
+            padding: 1.1rem 1.6rem;
+            background: #fefcf8;
+            border-radius: 1.4rem;
+            border: 1px solid #e8ddcf;
+            box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.06);
+            transition: all 0.35s cubic-bezier(0.22, 0.98, 0.48, 1.02);
+            min-height: 100px;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .timeline-info-panel.fade-update {
+            opacity: 0.4;
+            transform: translateY(6px);
+        }
+        .info-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .info-year-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #c27e4a, #a86230);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 0.3rem 1.1rem;
+            border-radius: 40px;
+            letter-spacing: 1px;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 3px 10px rgba(180, 110, 50, 0.25);
+            white-space: nowrap;
+        }
+        .info-year-badge i {
+            font-size: 0.8rem;
+            color: #ffe0c0;
+        }
+        .info-stage-tag {
+            background: #f3ece3;
+            color: #8b6b4f;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.25rem 0.9rem;
+            border-radius: 30px;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            border: 1px solid #e0d3c2;
+        }
+        .info-title-main {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: #3f2c1c;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+        .info-description {
+            font-size: 0.82rem;
+            color: #6f5842;
+            line-height: 1.7;
+            text-align: justify;
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            border-left: 3px solid #e0cfb5;
+            padding-left: 14px;
+            margin-top: 0.3rem;
+        }
+        .info-description i {
+            color: #c98a54;
+            margin-right: 6px;
+            font-size: 0.75rem;
+        }
+        .timeline-source-footer {
+            text-align: center;
+            font-size: 0.68rem;
+            color: #b99a78;
+            border-top: 1px solid #efe3d6;
+            padding-top: 0.9rem;
+            margin-top: 0.8rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .timeline-source-footer i {
+            margin-right: 5px;
+            color: #c68a54;
+        }
+        .timeline-seal-mark {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.7rem;
+            opacity: 0.5;
+            text-align: right;
+            margin-top: 2px;
+            color: #b99a78;
+        }
+
+        /* 调整flow-chart-block内部元素 */
+        .flow-chart-block {
+            grid-column: 1/3;
+            grid-row: 3/4;
+            min-height: auto;
+            padding: 20px 20px 20px 20px;
+        }
+
+        /* 其他原有样式保持不变 */
+        .bottom-double-block {
+            grid-column: 1/3;
+            grid-row: 4/5;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .chart-card {
+            border: 2px solid #8b4513;
+            border-radius: 8px;
+            background: rgba(255, 252, 245, 0.9);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            padding: 8px;
+        }
+        .chart-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+            border-color: #c27e4a;
+        }
+        .chart-card .chart-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .chart-card .chart-label {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 1.15rem;
+            padding: 4px 20px;
+            border-radius: 20px;
+            font-family: 'Georgia', '楷体', serif;
+            letter-spacing: 2px;
+            pointer-events: none;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .chart-card .expand-hint {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            font-size: 0.65rem;
+            color: #8b6b4f;
+            background: rgba(255, 252, 245, 0.9);
+            padding: 2px 10px;
+            border-radius: 12px;
+            pointer-events: none;
+            z-index: 10;
+            letter-spacing: 1px;
+            border: 1px solid rgba(139, 69, 19, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .chart-card:hover .expand-hint {
+            opacity: 1;
+        }
+
+        /* 模态框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            width: 90vw;
+            max-width: 1100px;
+            height: 85vh;
+            background: #fffef8;
+            border-radius: 24px;
+            border: 2px solid #e2d5c4;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            z-index: 210;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b4513' stroke-width='1.5'%3E%3Cpath d='M18 6L6 18'/%3E%3Cpath d='M6 6L18 18'/%3E%3C/svg%3E") no-repeat center;
+            background-size: 20px;
+            transition: all 0.2s;
+        }
+        .modal-close:hover {
+            transform: scale(1.1);
+        }
+        .modal-chart-container {
+            flex: 1;
+            width: 100%;
+            min-height: 400px;
+        }
+        .modal-legend-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            padding: 8px 0 4px;
+            border-top: 1px solid #efe2d4;
+            margin-top: 4px;
+        }
+        .modal-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: #4a3522;
+            background: #fefaf5;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid #e8dbcd;
+        }
+        .modal-legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        /* 古风边框装饰 */
+        .content-block::after,
+        .top-left-merged::after,
+        .chart-panel::after,
+        .chart-card::after {
+            content: "";
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 2px solid #8b4513;
+            border-top: none;
+            border-right: none;
+            left: 5px;
+            bottom: 5px;
+            border-radius: 0 0 0 4px;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .content-block::before,
+        .top-left-merged::before,
+        .chart-panel::before,
+        .chart-card::before {
+            content: "";
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 2px solid #8b4513;
+            border-bottom: none;
+            border-left: none;
+            right: 5px;
+            top: 5px;
+            border-radius: 0 4px 0 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .middle-full-block {
+                flex-direction: column;
+                min-height: auto;
+            }
+            .chart-panel {
+                max-height: none;
+            }
+            .bottom-double-block {
+                grid-template-columns: 1fr;
+            }
+            .chart-card {
+                aspect-ratio: 1/1;
+            }
+            #timelineChart {
+                height: 300px;
+            }
+            .timeline-title-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+        @media (max-width: 750px) {
+            .two-columns {
+                gap: 1rem;
+            }
+            .bar-rail {
+                height: 40px;
+            }
+            .bar-percent-label {
+                font-size: 0.7rem;
+                padding: 0.1rem 0.5rem;
+            }
+            .region-name {
+                font-size: 0.85rem;
+            }
+            .stat-number {
+                font-size: 1.2rem;
+            }
+            .rank-position {
+                width: 38px;
+                font-size: 0.9rem;
+            }
+            .rank-name {
+                font-size: 0.75rem;
+            }
+            .info-year-badge {
+                font-size: 0.85rem;
+                padding: 0.2rem 0.8rem;
+            }
+            .info-title-main {
+                font-size: 1.05rem;
+            }
+            .info-description {
+                font-size: 0.78rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .nav-img {
+                height: 18px;
+            }
+            .logo-img {
+                height: 45px;
+            }
+            .search-btn {
+                width: 26px;
+                height: 26px;
+                margin-top: 22px;
+            }
+            .carousel-item {
+                font-size: 1.1rem;
+            }
+            .chart-card .chart-label {
+                font-size: 0.65rem;
+                padding: 2px 8px;
+            }
+            #timelineChart {
+                height: 260px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <img class="bg-image" src="./images/bg-image.jpg" alt="背景图片">
+
+    <div class="content">
+        <!-- 导航栏 -->
+        <div class="nav-bar">
+            <div class="nav-left">
+                <div class="logo-search-group">
+                    <a href="index.html" class="logo-item" id="logoLink">
+                        <img src="./images/logo-icon.png" alt="建筑Logo" class="logo-img">
+                    </a>
+                    <div class="search-btn" id="searchBtn" role="button">
+                        <span class="search-icon"></span>
+                    </div>
+                </div>
+                <a href="index.html" class="nav-item" data-page="index.html"><img src="./images/首页.png" alt="首页" class="nav-img"></a>
+                <a href="about.html" class="nav-item" data-page="about.html"><img src="./images/家族溯源.png" alt="家族溯源" class="nav-img"></a>
+                <a href="achievement.html" class="nav-item" data-page="achievement.html"><img src="./images/建筑成就.png" alt="建筑成就" class="nav-img"></a>
+                <a href="craft.html" class="nav-item" data-page="craft.html"><img src="./images/烫样技艺.png" alt="烫样技艺" class="nav-img"></a>
+                <a href="digital.html" class="nav-item active" data-page="digital.html"><img src="./images/数字展厅.png" alt="数字展厅" class="nav-img"></a>
+                <a href="literature.html" class="nav-item" data-page="literature.html"><img src="./images/文献资料.png" alt="文献资料" class="nav-img"></a>
+                <a href="game.html" class="nav-item" data-page="game.html"><img src="./images/匠心工坊.png" alt="匠心工坊" class="nav-img"></a>
+            </div>
+        </div>
+
+        <div class="page-container">
+            <div class="content-grid">
+                <!-- 左上轮播 -->
+                <div class="top-left-merged">
+                    <div class="carousel-text" id="carouselText">
+                        <div class="carousel-item active" data-index="0">
+                            <span>雷氏家族世袭营造，</span>
+                            <span>贯穿清代皇家建筑发展史：260年+</span>
+                        </div>
+                        <div class="carousel-item" data-index="1">
+                            <span>国内现存世界文化遗产，</span>
+                            <span>出自样式雷营造设计：1/5</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 右上标题 -->
+                <div class="content-block top-right-block" onclick="showTipModal()" title="点击进入3D烫样鉴赏">
+                    <h1>烫样模型展厅</h1>
+                    <p class="subtitle">📜 古建新生 · 云上烫样</p>
+                    <p style="margin-top:12px; font-size:14px; color:#3a2a1a;">高精度数字化保护，让样式雷建筑瑰宝永续传承</p>
+                </div>
+
+                <!-- 第二行图表 -->
+                <div class="middle-full-block">
+                    <div class="chart-panel">
+                        <h2>📈 建筑工程年代分布</h2>
+                        <div id="lineChart"></div>
+                        <div style="margin-top:15px; padding-top:10px; border-top:1px dashed rgba(139,69,19,0.3); font-size:0.6rem; color:#6b5c4c; line-height:1.6; text-align:justify;">
+                            <p style="margin-bottom:6px;">数据来源：1.国家图书馆出版社《国家图书馆藏样式雷图档》系列（11卷），2015—2025年</p>
+                            <p style="margin-bottom:6px;">2.北京市公园管理中心《北京皇家园林样式雷图档选编》，学苑出版社，2023年4月，ISBN 9787507763461</p>
+                            
+                        </div>
+                    </div>
+                    <div class="chart-panel" id="heritagePanel">
+                        <h2>🏯 皇家园林遗产分布</h2>
+                        <div class="heritage-wrapper" id="heritageContent"></div>
+                        <div style="margin-top:15px; padding-top:10px; border-top:1px dashed rgba(139,69,19,0.3); font-size:0.6rem; color:#6b5c4c; line-height:1.6; text-align:justify;">
+                            <p style="margin-bottom:6px;">基于《国家图书馆藏样式雷图档》（共34函）、《清代皇家建筑工程概述》、《中国文物报》样式雷专题（2024–2025）、中国遗产研究院“样式雷建筑遗产名录”及公开学术文献综合整理。</p>
+                            <p style="margin-bottom:6px;">数据来源:国家图书馆·白鸿叶《大国工匠——样式雷》，国家图书馆出版社，2021年1月出版，ISBN 9787501370467</p>
+                            <p>国家图书馆出版社《国家图书馆藏样式雷图档》（共11卷，含故宫卷、圆明园卷、颐和园卷、香山静宜园卷等），2015—2025年陆续出版</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第三行：时间轴 -->
+                <div class="content-block flow-chart-block">
+                    <div class="timeline-card">
+                        <div class="timeline-title-section">
+                            <h2><i class="fas fa-timeline"></i> 样式雷 · 图档流传时间轴</h2>
+                            <p><i class="fas fa-scroll"></i> 从"样式房"到"世界记忆" —— 图档的抢救与重生</p>
+                        </div>
+                        <div id="timelineChart"></div>
+                        <div class="timeline-info-panel" id="infoPanel">
+                            <div class="info-panel-header">
+                                <span class="info-year-badge" id="infoYearBadge">
+                                    <i class="fas fa-clock"></i> <span id="infoYearText">1662-1912</span>
+                                </span>
+                                <span class="info-stage-tag" id="infoStageTag">执掌样式房</span>
+                            </div>
+                            <div class="info-title-main" id="infoTitleMain">
+                                雷氏家族8代人执掌皇家"样式房"
+                            </div>
+                            <div class="info-description" id="infoDescription">
+                                <i class="fas fa-quote-left"></i> 自康熙元年至宣统末年，雷氏家族连续8代担任清廷样式房掌案，主导皇家宫殿、园林、陵寝、坛庙等核心建筑的设计与营造，历时250年，是中国古代建筑史上罕见的世家传奇。
+                            </div>
+                        </div>
+                        <div style="margin-top:12px; padding-top:10px; border-top:1px dashed rgba(139,69,19,0.3); font-size:0.6rem; color:#6b5c4c; line-height:1.6; text-align:justify;">
+                            <p style="margin-bottom:4px;">数据来源：1. 中国科学院地理科学与资源研究所·清代皇家建筑遗产地理信息数据集（数据论文/研究报告），2019年</p>
+                            <p>2. 国家图书馆舆图组·样式雷图档地理信息数据库（内部档案）</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第四行：建筑分类径向图（左）+ 世界遗产经纬舆图（右） -->
+                <div class="bottom-double-block">
+                    <div class="chart-card" id="radialCard">
+                        <span class="expand-hint">🔍 点击放大</span>
+                        <div class="chart-inner" id="radialChartInline"></div>
+                        <div class="chart-label">📊 建筑分类径向图</div>
+                    </div>
+                    <div class="chart-card" id="heritageMapCard">
+                        <span class="expand-hint">🔍 点击放大</span>
+                        <div class="chart-inner" id="heritageMapInline"></div>
+                        <div class="chart-label">🌍 世界遗产经纬舆图</div>
+                    </div>
+                </div>
+
+                <!-- 第五行：总结语 -->
+                <div class="content-block" style="grid-column: 1 / 3; grid-row: 5 / 6; padding: 30px 35px;">
+                    <h2 style="text-align:center; color:#5a3e2b; margin-bottom:25px; font-family:'Georgia','楷体',serif; letter-spacing:6px;">总结</h2>
+                    <p style="text-indent:2em; line-height:2.2; margin-bottom:16px; color:#3a2a1a; font-size:20px;">
+                        样式雷是清代享誉盛名的皇家建筑世家，自康熙年间至清末，雷氏家族八代人累计200余年供职清廷样式房，执掌皇家建筑设计与营造大权，留下了璀璨的传统建筑文化遗产。
+                    </p>
+                    <p style="text-indent:2em; line-height:2.2; margin-bottom:16px; color:#3a2a1a; font-size:20px;">
+                        该家族主持、参与设计修建了紫禁城、颐和园、圆明园、清东陵、清西陵等众多经典皇家建筑，涵盖宫殿、园林、陵寝等多元建筑类型，构筑起清代皇家建筑的核心体系。同时，样式雷留存下超2万件建筑图档、烫样及工程文献，图纸按精准比例绘制，烫样完整还原建筑结构与细节，是全球罕见的古代建筑全流程档案。
+                    </p>
+                    <p style="text-indent:2em; line-height:2.2; margin-bottom:0; color:#3a2a1a; font-size:20px;">
+                        这些数据与遗存，直观展现了中国古代高超的建筑营造技艺，见证了传统建筑设计的严谨性与科学性，2007年相关技艺入选非遗名录，成为研究中国古代宫廷建筑、传承传统营造文化的核心数据依据，极具历史、艺术与学术价值。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（点击放大查看完整交互图表） -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-close" id="modalClose"></div>
+            <div class="modal-chart-container" id="modalChartContainer"></div>
+            <div class="modal-legend-row" id="modalLegendRow"></div>
+            <div id="modalSource" style="display:none; margin-top:15px; padding-top:10px; border-top:1px dashed rgba(139,69,19,0.3); font-size:0.6rem; color:#6b5c4c; line-height:1.6; text-align:justify;"></div>
+        </div>
+    </div>
+
+    <!-- 简单提示弹窗 -->
+    <div class="modal-overlay" id="tipModal" style="align-items:flex-start; padding-top:15vh;">
+        <div class="modal-content" style="width:500px; height:auto; min-height:220px; padding:28px 28px 20px;">
+            <div class="modal-close" id="tipClose" style="top:12px; right:18px;"></div>
+            <h3 style="color:#5a3e2b; font-family:'Georgia','楷体',serif; margin-bottom:18px;">⏳ 高精度模型提示</h3>
+            <p style="color:#3a2a1a; line-height:1.8; margin-bottom:10px;">
+                由于模型精度较高，从浏览器直接跳转可能加载较慢。
+            </p>
+            <p style="color:#3a2a1a; line-height:1.8; margin-bottom:16px;">
+                🔹 建议您在本文件夹内<strong>直接双击打开 <code style="background:#f5e8d8; padding:2px 6px; border-radius:4px;">standalone.html</code> 文件</strong>（与 <code style="background:#f5e8d8; padding:2px 6px; border-radius:4px;">digital.html</code> 同级目录）<br>
+                🔹 打开后请<strong>耐心等待 1-2 分钟</strong>，模型即可完整显示
+            </p>
+            <p style="text-align:center; color:#8b6b4f; font-size:0.8rem; margin-top:8px;">当前数字展厅其他内容不受影响，可继续浏览。</p>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 导航高亮 ====================
+        (function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'digital.html';
+            const navItems = document.querySelectorAll('.nav-item');
+            const logoLink = document.getElementById('logoLink');
+            navItems.forEach(item => item.classList.remove('active'));
+            if (logoLink) logoLink.classList.remove('active');
+            if (currentPage === 'index.html') {
+                if (logoLink) logoLink.classList.add('active');
+                navItems.forEach(item => { if (item.getAttribute('href') === 'index.html') item.classList.add('active'); });
+            } else {
+                navItems.forEach(item => { if (item.getAttribute('href') === currentPage) item.classList.add('active'); });
+            }
+        })();
+
+        // ==================== 搜索按钮 ====================
+        document.getElementById('searchBtn')?.addEventListener('click', () => alert('🔍 搜索功能即将上线'));
+
+        // ==================== 轮播逻辑 ====================
+        (function() {
+            const items = document.querySelectorAll('.carousel-item');
+            if (items.length === 0) return;
+            let currentIndex = 0, intervalId;
+
+            function removeAllClasses() { items.forEach(item => item.classList.remove('active', 'exit-left')); }
+            function showItem(index) { removeAllClasses(); const item = items[index]; if (item) item.classList.add('active'); }
+            function nextItem() {
+                const cur = items[currentIndex];
+                if (cur) { cur.classList.remove('active'); cur.classList.add('exit-left'); }
+                currentIndex = (currentIndex + 1) % items.length;
+                setTimeout(() => { removeAllClasses(); const nxt = items[currentIndex]; if (nxt) nxt.classList.add('active'); }, 600);
+            }
+            showItem(0);
+            intervalId = setInterval(nextItem, 2000);
+            const container = document.getElementById('carouselText');
+            if (container) {
+                container.addEventListener('mouseenter', () => clearInterval(intervalId));
+                container.addEventListener('mouseleave', () => { intervalId = setInterval(nextItem, 4000); });
+            }
+        })();
+
+        // ==================== 折线图（第二行） ====================
+        function initLineChart() {
+            const dom = document.getElementById('lineChart');
+            if (!dom) return;
+            const periods = ["康熙时期", "雍正时期", "乾隆时期", "嘉庆时期", "道光时期"];
+            const projectCounts = [12, 19, 28, 21, 14];
+            const option = {
+                tooltip: { trigger: 'axis' },
+                grid: { left: '10%', right: '8%', top: 20, bottom: 30, containLabel: true },
+                xAxis: {
+                    type: 'category', data: periods, boundaryGap: false,
+                    axisLine: { lineStyle: { color: '#c8b694' } },
+                    axisLabel: { color: '#4a3522', fontSize: 10 }
+                },
+                yAxis: { type: 'value', min: 0, max: 32, splitLine: { lineStyle: { color: '#e2d5c4', type: 'dashed' } } },
+                series: [{
+                    type: 'line', data: projectCounts, smooth: true, symbol: 'circle', symbolSize: 7,
+                    lineStyle: { width: 2.5, color: '#C27E4A' },
+                    itemStyle: { color: '#D4894C' },
+                    areaStyle: {
+                        opacity: 0.3,
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1,
+                            [{ offset: 0, color: '#E8C9A5' }, { offset: 1, color: '#FDF4E8' }])
+                    },
+                    label: { show: true, position: 'top', color: '#8d6845', fontSize: 10, formatter: '{c}项' }
+                }]
+            };
+            const chart = echarts.init(dom);
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+
+        // ==================== 遗产分布条形图（第二行右侧） ====================
+        function initHeritageChart() {
+            const container = document.getElementById('heritageContent');
+            if (!container) return;
+            const dataset = [
+                { region: "北京地区", projects: "故宫、颐和园、圆明园、天坛、地坛、太庙、社稷坛、北海、静宜园、静明园、畅春园、恭王府等", countDisplay: "180+ 项", countRaw: 180, percent: 65, percentLabel: "约 65%", icon: "🏯" },
+                { region: "河北地区", projects: "承德避暑山庄（含外八庙）、清东陵（遵化）、清西陵（易县）", countDisplay: "30+ 项", countRaw: 30, percent: 11, percentLabel: "约 11%", icon: "⛩️" },
+                { region: "辽宁地区", projects: "沈阳故宫、盛京三陵（永陵、福陵、昭陵）", countDisplay: "15+ 项", countRaw: 15, percent: 5, percentLabel: "约 5%", icon: "🏛️" },
+                { region: "天津地区", projects: "盘山行宫、静寄山庄", countDisplay: "5+ 项", countRaw: 5, percent: 2, percentLabel: "约 2%", icon: "🏞️" },
+                { region: "山西地区", projects: "五台山皇家寺庙、行宫等", countDisplay: "3+ 项", countRaw: 3, percent: 1, percentLabel: "约 1%", icon: "🏔️" },
+                { region: "其他/未确定", projects: "散见图档、文献记载中未明确落地的设计方案", countDisplay: "约 40+ 项", countRaw: 40, percent: 16, percentLabel: "约 16%", icon: "📜" }
+            ];
+
+            function renderBars() {
+                const stack = document.createElement('div');
+                stack.className = 'bars-stack';
+                dataset.forEach((item, idx) => {
+                    const w = document.createElement('div');
+                    w.className = 'bar-item-wrapper';
+                    w.style.setProperty('--idx', idx);
+                    w.innerHTML = `
+                        <div class="bar-meta">
+                            <div class="region-title">
+                                <span class="region-icon">${item.icon}</span>
+                                <span class="region-name">${item.region}</span>
+                            </div>
+                            <div class="stats-badges">
+                                <span class="badge-count">${item.countDisplay}</span>
+                                <span class="badge-percent">${item.percentLabel}</span>
+                            </div>
+                        </div>
+                        <div class="bar-rail">
+                            <div class="bar-fill" data-target="${item.percent}" style="width: 0%;">
+                                <span class="bar-percent-label">${item.percent}%</span>
+                            </div>
+                        </div>
+                    `;
+                    stack.appendChild(w);
+                });
+                return stack;
+            }
+
+            function renderTable() {
+                const table = document.createElement('table');
+                table.className = 'styled-table';
+                table.innerHTML = `<thead><tr><th>地域</th><th>代表性建筑项目</th><th>项目数量（约）</th><th>占比</th></tr></thead>
+                    <tbody>${dataset.map(item => `<tr>
+                        <td><span class="region-tag">${item.region}</span></td>
+                        <td class="project-desc">${item.projects}</td>
+                        <td class="number-cell">${item.countDisplay}</td>
+                        <td class="percent-cell">${item.percentLabel}</td>
+                    </tr>`).join('')}</tbody>`;
+                return table;
+            }
+
+            const twoCol = document.createElement('div');
+            twoCol.className = 'two-columns';
+            const leftSec = document.createElement('div');
+            leftSec.className = 'bars-section';
+            leftSec.appendChild(renderBars());
+            const rightSec = document.createElement('div');
+            rightSec.className = 'info-panel';
+            const card1 = document.createElement('div');
+            card1.className = 'elegant-card';
+            card1.innerHTML = '<div class="card-header">✦ 区域速览</div>';
+            const grid = document.createElement('div');
+            grid.className = 'stat-grid';
+            dataset.forEach(item => {
+                const b = document.createElement('div');
+                b.className = 'stat-block';
+                b.innerHTML = `<div class="stat-region">${item.region}</div><div class="stat-number">${item.countDisplay}</div><div class="stat-percent">${item.percentLabel}</div>`;
+                grid.appendChild(b);
+            });
+            card1.appendChild(grid);
+            const card2 = document.createElement('div');
+            card2.className = 'elegant-card';
+            card2.innerHTML = '<div class="card-header">🏆 占比 TOP 3</div>';
+            const sorted = [...dataset].sort((a, b) => b.percent - a.percent);
+            const list = document.createElement('div');
+            list.className = 'rank-list';
+            ['🥇', '🥈', '🥉'].forEach((m, i) => {
+                const div = document.createElement('div');
+                div.className = 'rank-item';
+                div.innerHTML = `<div class="rank-position">${m}</div><div class="rank-name">${sorted[i].region}</div><div class="rank-value">${sorted[i].percentLabel}</div>`;
+                list.appendChild(div);
+            });
+            card2.appendChild(list);
+            rightSec.appendChild(card1);
+            rightSec.appendChild(card2);
+            twoCol.appendChild(leftSec);
+            twoCol.appendChild(rightSec);
+            const tableSec = document.createElement('div');
+            tableSec.className = 'table-section';
+            tableSec.appendChild(renderTable());
+            container.innerHTML = '';
+            container.appendChild(twoCol);
+            container.appendChild(tableSec);
+
+            setTimeout(() => {
+                const fills = container.querySelectorAll('.bar-fill');
+                fills.forEach(bar => {
+                    const t = bar.getAttribute('data-target');
+                    if (t) bar.style.width = t + '%';
+                });
+            }, 200);
+        }
+
+        // ==================== 建筑分类径向图数据与配置 ====================
+        const categories = [
+            {
+                name: "皇家宫殿类",
+                value: 18,
+                representative: "紫禁城太和殿、中和殿、保和殿、紫禁城寝宫建筑群",
+                desc: "清代皇家核心宫殿群，主导修缮、扩建、格局规划"
+            },
+            {
+                name: "皇家陵寝类",
+                value: 23,
+                representative: "清东陵、清西陵、盛京皇陵、各帝后陵寝",
+                desc: "清代帝王后妃陵寝总体规划、选址、规制、营造全案"
+            },
+            {
+                name: "皇家园林类",
+                value: 12,
+                representative: "颐和园（清漪园）、圆明园、畅春园、静宜园、避暑山庄",
+                desc: "山水园林布局、楼阁亭台、水系营造、景观格局设计"
+            },
+            {
+                name: "皇家坛庙礼制类",
+                value: 9,
+                representative: "天坛、地坛、太庙、社稷坛、孔庙皇家礼制建筑",
+                desc: "古代礼制建筑规制营造、祭祀空间布局"
+            },
+            {
+                name: "行宫别院类",
+                value: 7,
+                representative: "热河行宫、圆明园附属行宫、京郊行宫",
+                desc: "皇家休憩、巡游专用园林式建筑群"
+            },
+            {
+                name: "园林府邸类",
+                value: 6,
+                representative: "王府园林、官邸别院、皇家附属宅院",
+                desc: "宗室、权贵府邸园林规划与建筑设计"
+            }
+        ];
+        const totalWorks = categories.reduce((sum, cat) => sum + cat.value, 0);
+        const colorPalette = [
+            "#D4894C", "#8B6B4F", "#7A9E7E", "#B88B5C", "#A57C5C", "#C89A6A"
+        ];
+        const names = categories.map(c => c.name);
+        const values = categories.map(c => c.value);
+        const radialMax = 26;
+
+        function buildRadialOption(isModal = false) {
+            return {
+                legend: { show: false },
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: 'rgba(38, 32, 27, 0.96)',
+                    borderColor: '#e2c2a0',
+                    borderWidth: 1.2,
+                    textStyle: { color: '#fef2e6', fontSize: 12, fontFamily: 'Inter, sans-serif', lineHeight: 20 },
+                    formatter: function(params) {
+                        if (params.data && params.data.name) {
+                            const category = categories.find(c => c.name === params.data.name);
+                            if (category) {
+                                const percent = ((category.value / totalWorks) * 100).toFixed(1);
+                                return `<strong><i class="fas fa-cube" style="color:#fadcb9;"></i> ${category.name}</strong><br/>
+                                        📦 建筑数量: ${category.value} 处<br/>
+                                        📊 占比: ${percent}%<br/>
+                                        🏛️ 代表作品: ${category.representative}<br/>
+                                        ✨ ${category.desc}`;
+                            }
+                        }
+                        return params.name;
+                    }
+                },
+                polar: {
+                    center: ['50%', '52%'],
+                    radius: '68%'
+                },
+                angleAxis: {
+                    type: 'category',
+                    data: names,
+                    axisLabel: {
+                        show: true,
+                        fontSize: 12,
+                        fontWeight: '500',
+                        color: '#4a3522',
+                        fontFamily: 'Inter, sans-serif',
+                        rotate: 0,
+                        margin: 12,
+                        formatter: function(value) {
+                            if (value === "皇家坛庙礼制类") return "皇家坛庙\n礼制类";
+                            return value;
+                        }
+                    },
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    splitLine: { show: false }
+                },
+                radiusAxis: {
+                    type: 'value',
+                    min: 0,
+                    max: radialMax,
+                    axisLabel: {
+                        show: true,
+                        fontSize: 9,
+                        color: '#a88866',
+                        fontFamily: 'Inter',
+                        margin: 8,
+                        formatter: (value) => value + '处'
+                    },
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    splitLine: {
+                        show: true,
+                        lineStyle: { color: '#ede0d2', width: 1, type: 'dashed' }
+                    },
+                    name: '建筑数量 (处)',
+                    nameTextStyle: {
+                        fontSize: 10,
+                        fontFamily: 'Inter',
+                        color: '#a88866',
+                        fontWeight: 500
+                    }
+                },
+                series: [{
+                    name: '样式雷建筑分类',
+                    type: 'bar',
+                    data: values.map((val, idx) => ({
+                        value: val,
+                        name: names[idx],
+                        itemStyle: {
+                            color: colorPalette[idx % colorPalette.length],
+                            borderRadius: [6, 6, 0, 0],
+                            shadowBlur: 8,
+                            shadowColor: 'rgba(0, 0, 0, 0.08)'
+                        }
+                    })),
+                    coordinateSystem: 'polar',
+                    barCategoryGap: '20%',
+                    barGap: 0.2,
+                    barWidth: '52%',
+                    label: {
+                        show: true,
+                        position: 'outside',
+                        formatter: (params) => {
+                            const percent = ((params.value / totalWorks) * 100).toFixed(1);
+                            return `{value|${params.value}处 · ${percent}%}`;
+                        },
+                        rich: {
+                            value: {
+                                fontSize: 11,
+                                fontWeight: '500',
+                                color: '#8d6845',
+                                fontFamily: 'Inter, sans-serif',
+                                backgroundColor: '#fefaf4',
+                                borderRadius: 28,
+                                padding: [4, 14, 4, 14],
+                                borderColor: '#dec9ae',
+                                borderWidth: 0.9,
+                                lineHeight: 22,
+                                shadowBlur: 3,
+                                shadowColor: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        distance: 10,
+                        rotate: 0,
+                        offset: [0, 0]
+                    },
+                    itemStyle: {
+                        borderRadius: [8, 8, 0, 0]
+                    },
+                    emphasis: {
+                        focus: 'self',
+                        itemStyle: {
+                            shadowBlur: 18,
+                            shadowColor: 'rgba(0,0,0,0.2)',
+                            borderWidth: 0,
+                            brightness: 1.05
+                        },
+                        label: {
+                            show: true,
+                            fontWeight: 'bold',
+                            fontSize: 12,
+                            backgroundColor: 'rgba(68, 52, 40, 0.94)',
+                            borderRadius: 32,
+                            padding: [6, 18, 6, 18],
+                            color: '#fff6ec',
+                            borderColor: '#e6c49f',
+                            borderWidth: 0.7,
+                            formatter: (params) => {
+                                const percent = ((params.value / totalWorks) * 100).toFixed(1);
+                                return `${params.name} : ${params.value}处 (${percent}%)`;
+                            }
+                        }
+                    }
+                }],
+                backgroundColor: 'transparent',
+                graphic: [
+                    {
+                        type: 'text',
+                        left: 'center',
+                        top: 8,
+                        style: {
+                            text: '⚘ 样式雷 · 营造万象 ⚘',
+                            fill: '#c69868',
+                            fontSize: 9.5,
+                            fontFamily: 'Cormorant Garamond',
+                            fontStyle: 'italic',
+                            opacity: 0.55
+                        },
+                        z: 100
+                    }
+                ]
+            };
+        }
+
+        // ==================== 世界遗产舆图数据 ====================
+        const heritageMapData = {
+            heritageMasterList: [
+                { id: 1, name: "故宫", yearLabel: "1987年", locationFull: "北京·东城区", coords: [116.397128, 39.916527], design: "三大殿等" },
+                { id: 2, name: "颐和园", yearLabel: "1998年", locationFull: "北京·海淀区", coords: [116.274368, 39.991839], design: "东宫门外牌楼等" },
+                { id: 3, name: "天坛", yearLabel: "1998年", locationFull: "北京·东城区", coords: [116.406418, 39.882481], design: "祈年殿等" },
+                { id: 4, name: "承德避暑山庄", yearLabel: "1994年", locationFull: "河北·承德", coords: [117.939507, 40.987717], design: "整体规划与外八庙" },
+                { id: 5, name: "清东陵与清西陵", yearLabel: "2000年", locationFull: "河北·遵化&易县", coords: [117.647575, 40.185172], design: "定陵、定东陵等", extraPoints: [{ name: "清西陵", coords: [115.346255, 39.378917], designDetail: "慕陵、崇陵" }] }
+            ]
+        };
+
+        function buildHeritageMapOption(isModal) {
+            const allPoints = [];
+            heritageMapData.heritageMasterList.forEach(item => {
+                if (item.id === 5) {
+                    allPoints.push({ name:"清东陵", value:[item.coords[0], item.coords[1]], year:item.yearLabel, design:"定陵等" });
+                    if (item.extraPoints) item.extraPoints.forEach(ext => allPoints.push({ name:ext.name, value:ext.coords, year:item.yearLabel, design:ext.designDetail }));
+                } else {
+                    allPoints.push({ name:item.name, value:item.coords, year:item.yearLabel, design:item.design });
+                }
+            });
+            return {
+                tooltip: { trigger:'item', backgroundColor:'rgba(33,26,20,0.92)', borderColor:'#cfb187', textStyle:{fontSize:11,color:'#fef0e2'} },
+                xAxis: { name:"东经 (°E)", nameLocation:'middle', nameGap:32, min:114.8, max:119.8, splitLine:{show:true,lineStyle:{color:'#e0d3c4',type:'dashed'}}, axisLabel:{show:true, fontSize:isModal?9:7, color:'#886e52', formatter:v=>v.toFixed(1)+'°'}, minorSplitLine:{show:true,lineStyle:{color:'#ede0d2',type:'dotted'}} },
+                yAxis: { name:"北纬 (°N)", nameLocation:'middle', nameGap:32, min:39.1, max:41.6, splitLine:{show:true,lineStyle:{color:'#e0d3c4',type:'dashed'}}, axisLabel:{show:true, fontSize:isModal?9:7, color:'#886e52', formatter:v=>v.toFixed(1)+'°'}, minorSplitLine:{show:true,lineStyle:{color:'#ede0d2',type:'dotted'}} },
+                series: [
+                    { type:'scatter', data:allPoints, symbol:'circle', symbolSize:val=>val.name==='故宫'?32:val.name==='天坛'?30:val.name==='清西陵'?24:28, itemStyle:{ color:'#bd7f48', borderColor:'#fff7ed', borderWidth:2.5, shadowBlur:12 }, label:{ show:true, formatter:p=>p.data.name, position:'top', offset:[0,-12], color:'#5c3b22', fontWeight:'600', fontSize:isModal?11:8 } },
+                    { type:'lines', data:[
+                        {coords:[[116.397,39.916],[116.274,39.992]]},{coords:[[116.397,39.916],[116.406,39.882]]},
+                        {coords:[[116.397,39.916],[117.939,40.987]]},{coords:[[117.939,40.987],[117.647,40.185]]},
+                        {coords:[[117.647,40.185],[115.346,39.379]]}
+                    ], lineStyle:{color:'#dcb48b', width:1.4, opacity:0.4, curveness:0.2}, symbol:'none' }
+                ],
+                grid: { left:'8%', right:'6%', top:'12%', bottom:'8%', backgroundColor:'#fefaf2' },
+                backgroundColor:'#fefbf4'
+            };
+        }
+
+        // ==================== 内嵌图表 ====================
+        let inlineRadialChart = null;
+        let inlineHeritageMapChart = null;
+
+        function initInlineCharts() {
+            // 径向图（左侧）
+            const radialDom = document.getElementById('radialChartInline');
+            if (radialDom && !inlineRadialChart) {
+                inlineRadialChart = echarts.init(radialDom);
+                inlineRadialChart.setOption(buildRadialOption(false));
+                // 开场动画：高亮陵寝类
+                setTimeout(() => {
+                    inlineRadialChart.dispatchAction({
+                        type: 'highlight',
+                        seriesIndex: 0,
+                        dataIndex: 1
+                    });
+                }, 200);
+                setTimeout(() => {
+                    inlineRadialChart.dispatchAction({
+                        type: 'downplay',
+                        seriesIndex: 0
+                    });
+                }, 1100);
+            }
+            // 遗产舆图（右侧）
+            const heritageDom = document.getElementById('heritageMapInline');
+            if (heritageDom && !inlineHeritageMapChart) {
+                inlineHeritageMapChart = echarts.init(heritageDom);
+                inlineHeritageMapChart.setOption(buildHeritageMapOption(false));
+            }
+        }
+
+        function resizeInlineCharts() {
+            if (inlineRadialChart) inlineRadialChart.resize();
+            if (inlineHeritageMapChart) inlineHeritageMapChart.resize();
+        }
+
+        // ==================== 模态框逻辑 ====================
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalChartContainer = document.getElementById('modalChartContainer');
+        const modalLegendRow = document.getElementById('modalLegendRow');
+        const modalSource = document.getElementById('modalSource');
+        let currentModalChart = null;
+
+        function renderModalLegend(chartType) {
+            if (chartType === 'radial') {
+                modalLegendRow.innerHTML = '<span style="font-size:0.7rem;color:#8b6b4f;">📊 各类建筑数量及占比 · 点击柱体查看详情</span>';
+                modalLegendRow.style.display = 'flex';
+            } else if (chartType === 'heritageMap') {
+                modalLegendRow.innerHTML = '<span style="font-size:0.7rem;color:#8b6b4f;">🌐 WGS84坐标系 · 经纬网格间距1° · 样式雷世遗精粹</span>';
+                modalLegendRow.style.display = 'flex';
+            } else {
+                modalLegendRow.style.display = 'none';
+            }
+        }
+
+        function openModal(chartType) {
+            modalOverlay.classList.add('active');
+            if (currentModalChart) { currentModalChart.dispose(); currentModalChart = null; }
+            modalChartContainer.innerHTML = '';
+            renderModalLegend(chartType);
+            
+            // 控制底部数据来源的显示
+if (chartType === 'radial') {
+    modalSource.innerHTML = '<p style="margin-bottom:4px;">数据来源：1.国家图书馆·苏品红《清宫的，中国的，世界的——样式雷与样式雷图档的前世今生》，2023年2月</p><p>2.国家图书馆出版社·白鸿叶《大国工匠——样式雷》，2021年</p>';
+    modalSource.style.display = 'block';
+} else if (chartType === 'heritageMap') {
+    modalSource.innerHTML = '<p style="margin-bottom:4px;">数据来源：1.中国科学院地理科学与资源研究所与清华大学建筑学院合作·“清代皇家建筑遗产地理信息数据库”，多篇数据论文，2018—2023年</p><p>2.联合国教科文组织世界遗产中心官方数据库（whc.unesco.org各国遗产页面）</p>';
+    modalSource.style.display = 'block';
+} else {
+    modalSource.style.display = 'none';
+}
+
+            setTimeout(() => {
+                let option;
+                if (chartType === 'radial') {
+                    option = buildRadialOption(true);
+                } else if (chartType === 'heritageMap') {
+                    option = buildHeritageMapOption(true);
+                } else {
+                    return;
+                }
+                currentModalChart = echarts.init(modalChartContainer);
+                currentModalChart.setOption(option);
+                // 如果是径向图，模态框中也播放一次高亮动画
+                if (chartType === 'radial') {
+                    setTimeout(() => {
+                        currentModalChart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: 1 });
+                    }, 200);
+                    setTimeout(() => {
+                        currentModalChart.dispatchAction({ type: 'downplay', seriesIndex: 0 });
+                    }, 1100);
+                }
+                window.addEventListener('resize', () => { if (currentModalChart) currentModalChart.resize(); });
+            }, 80);
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            if (currentModalChart) { currentModalChart.dispose(); currentModalChart = null; }
+            modalChartContainer.innerHTML = '';
+            modalLegendRow.innerHTML = '';
+            modalLegendRow.style.display = 'none';
+            modalSource.style.display = 'none';
+            modalSource.innerHTML = '';
+        }
+
+        document.getElementById('modalClose').addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+
+        // 点击卡片打开模态框
+        document.getElementById('radialCard').addEventListener('click', () => openModal('radial'));
+        document.getElementById('heritageMapCard').addEventListener('click', () => openModal('heritageMap'));
+
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal(); });
+
+        // ==================== 时间轴图表初始化 ====================
+        function initTimelineChart() {
+            const timelineNodes = [
+                { id: 0, timeLabel: '1662-1912', shortTime: '1662-1912', yearRange: '清康熙-宣统', stageTag: '执掌样式房', title: '雷氏家族8代人执掌皇家"样式房"', description: '自康熙元年至宣统末年，雷氏家族连续8代担任清廷样式房掌案，主导皇家宫殿、园林、陵寝、坛庙等核心建筑的设计与营造。雷氏以"烫样"绝艺闻名，用纸板、秸秆等材料制作微缩建筑模型，精准呈现建筑形制与结构，历时250年，是中国古代建筑史上罕见的世家传奇，也为后世留下数以万计的珍贵图档。', symbolSize: 28, symbolType: 'arrow', color: '#8B5E3C' },
+                { id: 1, timeLabel: '1860', shortTime: '1860', yearRange: '咸丰十年', stageTag: '图档抢救', title: '圆明园被焚 · 雷景修秘密运出图档', description: '咸丰十年，英法联军焚毁圆明园，样式房被毁。时任样式房掌案雷景修在战火中冒着生命危险，将家族数代积累的大量建筑图档、烫样秘密运出，转移至京城宅中保存。这一壮举使得样式雷图档免于灭顶之灾，为后世留下了不可估量的建筑文化遗产。', symbolSize: 24, symbolType: 'diamond', color: '#C0392B' },
+                { id: 2, timeLabel: '1930', shortTime: '1930', yearRange: '民国十九年', stageTag: '关键转折', title: '朱启钤发现图档流散 · 抢救性收购', description: '民国十九年，中国营造学社创始人朱启钤发现样式雷图档在市面流散。他通过中华教育文化基金董事会拨款5,000大洋，从雷氏后人手中抢救性收购了大量图档，并存入北平图书馆（今中国国家图书馆）。此举开启了样式雷图档的公共收藏时代。', symbolSize: 28, symbolType: 'diamond', color: '#B87A3C' },
+                { id: 3, timeLabel: '2007年8月', shortTime: '2007', yearRange: '2007年', stageTag: '世界记忆', title: '入选联合国教科文组织《世界记忆名录》', description: '2007年8月，样式雷建筑图档正式入选联合国教科文组织《世界记忆名录》，成为世界公认的人类珍贵文献遗产。这是国际社会对样式雷图档历史价值、文化价值和学术价值的最高认可。', symbolSize: 26, symbolType: 'circle', color: '#D4894C' },
+                { id: 4, timeLabel: '2014年', shortTime: '2014', yearRange: '2014年', stageTag: '数字化重生', title: '国图启动大规模修复与数字化工程', description: '中国国家图书馆正式启动样式雷图档的大规模修复与数字化工程。专业修复团队对破损图档进行细致修复，同时利用高清扫描与数字影像技术，将珍贵图档转化为数字档案，让沉睡百年的建筑图纸在数字世界中重获新生。', symbolSize: 22, symbolType: 'circle', color: '#3A7EB0' },
+                { id: 5, timeLabel: '2025年6月', shortTime: '2025', yearRange: '2025年', stageTag: '成果发布', title: '《国家图书馆藏样式雷图档·故宫卷》发布', description: '《国家图书馆藏样式雷图档·故宫卷》正式出版发布，系统收录了377件与故宫营造相关的珍贵图档。这是样式雷图档整理研究的里程碑式成果，为清代皇家宫殿建筑研究提供了权威的一手资料。', symbolSize: 26, symbolType: 'circle', color: '#E8A040' },
+                { id: 6, timeLabel: '2026年3月', shortTime: '2026', yearRange: '2026年', stageTag: '国际协作', title: '清华与柏林工大合作 · 纠正百年误判', description: '清华大学与德国柏林工业大学合作，利用3D数字建模技术对德国博物馆收藏的"崇陵烫样"进行精确分析，成功纠正了这一持续百年的误判——该烫样实为"惠陵烫样"。这一跨国合作展示了数字技术在建筑考古中的巨大潜力。', symbolSize: 30, symbolType: 'pin', color: '#E8742A' }
+            ];
+
+            function updateInfoPanel(nodeData) {
+                const panel = document.getElementById('infoPanel');
+                if (!panel) return;
+                panel.classList.add('fade-update');
+                setTimeout(() => {
+                    document.getElementById('infoYearText').textContent = nodeData.timeLabel;
+                    document.getElementById('infoStageTag').textContent = nodeData.stageTag;
+                    document.getElementById('infoTitleMain').textContent = nodeData.title;
+                    document.getElementById('infoDescription').innerHTML = '<i class="fas fa-quote-left"></i> ' + nodeData.description;
+                    panel.classList.remove('fade-update');
+                }, 180);
+                const badge = document.getElementById('infoYearBadge');
+                if (badge) {
+                    badge.style.background = `linear-gradient(135deg, ${nodeData.color}, ${adjustColor(nodeData.color, -20)})`;
+                    badge.style.boxShadow = `0 3px 10px ${nodeData.color}40`;
+                }
+            }
+
+            function adjustColor(hex, amount) {
+                let r = parseInt(hex.slice(1, 3), 16);
+                let g = parseInt(hex.slice(3, 5), 16);
+                let b = parseInt(hex.slice(5, 7), 16);
+                r = Math.max(0, Math.min(255, r + amount));
+                g = Math.max(0, Math.min(255, g + amount));
+                b = Math.max(0, Math.min(255, b + amount));
+                return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+            }
+
+            const chartDom = document.getElementById('timelineChart');
+            if (!chartDom) return;
+            const myChart = echarts.init(chartDom);
+
+            const xLabels = timelineNodes.map(n => n.timeLabel);
+            const scatterData = timelineNodes.map((n, idx) => ({
+                name: n.timeLabel,
+                value: [idx, 0],
+                nodeData: n,
+                symbolSize: n.symbolSize,
+                symbol: n.symbolType,
+                itemStyle: {
+                    color: n.color,
+                    borderColor: '#fffef7',
+                    borderWidth: 2.5,
+                    shadowBlur: 10,
+                    shadowColor: n.color + '55'
+                }
+            }));
+
+            const linkData = [];
+            for (let i = 0; i < timelineNodes.length - 1; i++) {
+                linkData.push({ coords: [[i, 0], [i + 1, 0]] });
+            }
+
+            const option = {
+                backgroundColor: 'transparent',
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: 'rgba(38, 32, 27, 0.96)',
+                    borderColor: '#e2c2a0',
+                    borderWidth: 1.2,
+                    textStyle: { color: '#fef2e6', fontSize: 12 },
+                    formatter: function(params) {
+                        if (params.data && params.data.nodeData) {
+                            const n = params.data.nodeData;
+                            return `<strong style="color:#fadcb9;">${n.timeLabel}</strong><br/>📍 <strong>${n.title}</strong><br/>🏷️ 阶段：${n.stageTag}<br/>📜 ${n.yearRange}`;
+                        }
+                        return params.name;
+                    }
+                },
+                grid: { left: '6%', right: '6%', top: '6%', bottom: '6%', containLabel: true },
+                xAxis: {
+                    type: 'category', data: xLabels,
+                    axisLine: { show: true, lineStyle: { color: '#c8b694', width: 2.5 } },
+                    axisTick: { show: false },
+                    axisLabel: { fontSize: 11, fontWeight: 600, color: '#4a3522', margin: 14, formatter: function(value) {
+                        if (value === '1662-1912') return '1662\n1912';
+                        if (value === '2007年8月') return '2007\n8月';
+                        if (value === '2025年6月') return '2025\n6月';
+                        if (value === '2026年3月') return '2026\n3月';
+                        return value;
+                    }}
+                },
+                yAxis: { type: 'value', min: -1.5, max: 1.5, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { show: false }, splitLine: { show: false } },
+                series: [
+                    {
+                        name: '时间脉络', type: 'lines', coordinateSystem: 'cartesian2d', data: linkData,
+                        lineStyle: { color: '#dbbb97', width: 2.8, opacity: 0.6, curveness: 0, shadowBlur: 6, shadowColor: 'rgba(180,140,100,0.25)' },
+                        symbol: 'none', effect: { show: true, period: 8, trailLength: 0.25, symbol: 'circle', symbolSize: 6, color: '#c27e4a', loop: true }, z: 1
+                    },
+                    {
+                        name: '流光', type: 'lines', coordinateSystem: 'cartesian2d', data: linkData,
+                        lineStyle: { color: '#e8c9a5', width: 1, type: 'dashed', opacity: 0.5 }, symbol: 'none',
+                        effect: { show: true, period: 6, trailLength: 0.3, symbol: 'circle', symbolSize: 4, color: '#f5d5b0', loop: true }, z: 0
+                    },
+                    {
+                        name: '历史节点', type: 'scatter', data: scatterData, symbolSize: function(val) { return val.symbolSize || 22; },
+                        symbol: function(val) { return val.symbol || 'circle'; },
+                        itemStyle: { borderColor: '#fffef7', borderWidth: 2.5, shadowBlur: 10 },
+                        label: { show: true, position: 'bottom', offset: [0, 16], formatter: function(params) { if (params.data.nodeData) return `{stage|${params.data.nodeData.stageTag}}`; return ''; }, rich: { stage: { fontSize: 9, fontWeight: '600', color: '#8d6845', backgroundColor: '#fefaf4', borderRadius: 16, padding: [3, 10, 3, 10], borderColor: '#dec9ae', borderWidth: 0.7 } } },
+                        emphasis: { scale: 1.5, itemStyle: { shadowBlur: 20, borderWidth: 3 }, label: { show: true, fontWeight: 'bold', fontSize: 11, backgroundColor: 'rgba(68, 52, 40, 0.9)', borderRadius: 20, padding: [4, 12, 4, 12], color: '#fff7ed', formatter: function(params) { if (params.data.nodeData) return params.data.nodeData.timeLabel; return ''; } } },
+                        z: 10
+                    }
+                ],
+                graphic: [{ type: 'text', left: 'center', top: 4, style: { text: '⚘ 从样式房到世界记忆 · 图档流传轨迹 ⚘', fill: '#c69868', fontSize: 9.5, fontStyle: 'italic', opacity: 0.5 } }]
+            };
+
+            myChart.setOption(option);
+
+            myChart.on('click', function(params) {
+                if (params.data && params.data.nodeData) {
+                    updateInfoPanel(params.data.nodeData);
+                    myChart.dispatchAction({ type: 'highlight', seriesIndex: 2, dataIndex: params.data.nodeData.id });
+                    setTimeout(() => myChart.dispatchAction({ type: 'downplay', seriesIndex: 2 }), 1200);
+                }
+            });
+
+            window.addEventListener('resize', () => { myChart.resize(); });
+            updateInfoPanel(timelineNodes[0]);
+            setTimeout(() => myChart.dispatchAction({ type: 'highlight', seriesIndex: 2, dataIndex: 0 }), 400);
+            setTimeout(() => myChart.dispatchAction({ type: 'downplay', seriesIndex: 2 }), 1800);
+        }
+
+        // ==================== 全局初始化 ====================
+        function initAll() {
+            initLineChart();
+            initHeritageChart();
+            initInlineCharts();
+            initTimelineChart();
+            setTimeout(() => {
+                const fills = document.querySelectorAll('.bar-fill');
+                fills.forEach(bar => { const t = bar.getAttribute('data-target'); if (t) bar.style.width = t + '%'; });
+            }, 500);
+        }
+
+        window.addEventListener('load', initAll);
+        window.addEventListener('resize', () => {
+            resizeInlineCharts();
+            if (currentModalChart) currentModalChart.resize();
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                setTimeout(() => {
+                    resizeInlineCharts();
+                    if (currentModalChart) currentModalChart.resize();
+                }, 300);
+            }
+        });
+
+        // ==================== 提示弹窗 ====================
+        function showTipModal() {
+            const modal = document.getElementById('tipModal');
+            modal.style.display = 'flex';
+            setTimeout(() => { modal.style.opacity = '1'; modal.style.visibility = 'visible'; }, 10);
+        }
+
+        document.getElementById('tipClose').addEventListener('click', () => {
+            const modal = document.getElementById('tipModal');
+            modal.style.opacity = '0';
+            modal.style.visibility = 'hidden';
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        });
+
+        document.getElementById('tipModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.opacity = '0';
+                this.style.visibility = 'hidden';
+                setTimeout(() => { this.style.display = 'none'; }, 300);
+            }
+        });
+
+        console.log('样式雷 · 数字展厅已就绪 | 建筑分类径向图已集成 | 时间轴与总结板块正常');
+    </script>
+</body>
+</html>

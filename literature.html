@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>样式雷 · 文献资料</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+            background-color: #0a0806;
+        }
+
+        .bg-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .content {
+            position: relative;
+            z-index: 20;
+            min-height: 100vh;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            padding: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(210, 180, 140, 0.55);
+        }
+
+        .nav-left {
+            display: flex;
+            flex: 8;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .logo-search-group {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .logo-item {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo-img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin-top: 0;
+            transition: all 0.3s ease;
+        }
+
+        .logo-item:hover .logo-img {
+            filter: brightness(1.2) drop-shadow(0 0 5px rgba(210, 180, 140, 0.5));
+            transform: scale(1.02);
+        }
+
+        .search-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgb(144 101 45 / 55%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 38px;
+            margin-left: -40px;
+        }
+
+        .search-btn:hover {
+            background: rgba(210, 180, 140, 0.25);
+            border-color: rgba(210, 180, 140, 1);
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(210, 180, 140, 0.5);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(210,180,140,0.85)' stroke-width='1.8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-4.35-4.35M19 11a8 8 0 11-16 0 8 8 0 0116 0z' /%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 22px;
+            padding-bottom: 22px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(210, 180, 140, 0.15);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+
+        .nav-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-img {
+            filter: brightness(1.25) drop-shadow(0 0 4px rgba(210, 180, 140, 0.6));
+            transform: scale(1.05);
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 70%;
+            transform: translateY(-50%);
+            height: 28px;
+            width: 1px;
+            background-color: rgba(210, 180, 140, 0.55);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:first-of-type::before {
+            display: none;
+        }
+
+        .nav-item.active {
+            background: rgba(210, 180, 140, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-item.active .nav-img {
+            filter: brightness(1.3) drop-shadow(0 0 6px rgba(210, 180, 140, 0.7));
+            transform: scale(1.02);
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 116px 20px 80px;
+        }
+
+        .intro-card {
+            position: relative;
+            min-height: 320px;
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(210, 180, 140, 0.4);
+            margin-bottom: 32px;
+            background: rgba(255, 248, 235, 0.85);
+        }
+
+        .intro-card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .intro-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 248, 235, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 34px 42px;
+}
+
+       .intro-text {
+    max-width: 960px;
+    color: #3a2a1a;
+    text-shadow: none;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0 auto;
+    text-align: center;
+}
+
+       .intro-text h2 {
+    font-size: 34px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    text-align: center;
+    color: #8b5a2b;
+}
+
+.intro-text p {
+    font-size: 16px;
+    line-height: 1.9;
+    color: #3a2a1a;
+    text-align: center;
+}
+
+        .theme-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .theme-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 22px;
+            border: 1px solid rgba(210, 180, 140, 0.42);
+            min-height: 430px;
+            background: rgba(255, 248, 235, 0.85);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .theme-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(210, 180, 140, 0.8);
+            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transform: scale(1.03);
+        }
+
+        .theme-overlay {
+            position: absolute;
+            inset: 0;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            color: #3a2a1a;
+            background: rgba(255, 248, 235, 0.65);
+        }
+
+        .theme-overlay h3 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            text-shadow: none;
+            color: #8b5a2b;
+            text-align: center;
+            font-weight: 900;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(210, 180, 140, 0.55);
+            padding-bottom: 8px;
+        }
+
+       .theme-overlay p {
+    font-size: 14px;
+    line-height: 1.72;
+    text-align: justify;
+    margin: 0 0 12px 0;  /* 段落之间加间距 */
+    color: #3a2a1a;
+    text-shadow: none;
+    text-indent: 2em;  /* 首行缩进2字符 */
+}
+
+        .heritage-row {
+            margin-bottom: 34px;
+        }
+
+        .heritage-card {
+            min-height: 320px;
+        }
+
+        .heritage-card .theme-overlay h3 {
+            font-size: 28px;
+        }
+
+        .heritage-card .theme-overlay p {
+            line-height: 1.7;
+        }
+
+      .heritage-card img {
+    object-fit: cover;
+    transform: scale(1);
+    background: transparent;
+}
+
+        .heritage-link {
+            text-decoration: none;
+            display: block;
+            height: 100%;
+        }
+
+        .carousel-section {
+            margin-top: 8px;
+            margin-bottom: 34px;
+            border-radius: 24px;
+            border: 1px solid rgba(210, 180, 140, 0.42);
+            background: rgba(255, 248, 235, 0.85);
+            backdrop-filter: none;
+            padding: 24px 20px 22px;
+            overflow: hidden;
+        }
+
+        .carousel-title {
+            color: #8b5a2b;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 18px;
+            letter-spacing: 2px;
+        }
+
+        .books-window {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        .books-track {
+            display: flex;
+            gap: 18px;
+            transition: transform 0.5s ease;
+            will-change: transform;
+        }
+
+        .book-card {
+            position: relative;
+            flex: 0 0 calc((100% - 36px) / 3);
+            min-height: 200px;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(210, 180, 140, 0.42);
+            text-decoration: none;
+            transition: transform 0.22s ease;
+        }
+
+        .book-card:hover {
+            transform: scale(1.03);
+        }
+
+        .book-card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            background: rgba(255, 248, 235, 0.82);
+        }
+
+       .book-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 14px;
+    background: rgba(62, 40, 24, 0.52);
+}
+
+        .book-overlay span {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 17px;
+    line-height: 1.5;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.85), 0 0 2px rgba(255, 255, 255, 0.95);
+    text-align: center;
+    width: 100%;
+    display: block;
+    font-weight: 900;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+    padding-bottom: 8px;
+}
+
+        .books-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(210, 180, 140, 0.85);
+            background: rgba(255, 248, 235, 0.9);
+            color: #8b5a2b;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .books-nav.prev {
+            left: 8px;
+        }
+
+        .books-nav.next {
+            right: 8px;
+        }
+
+        .bottom-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .bottom-card {
+            position: relative;
+            min-height: 420px;
+            border-radius: 22px;
+            overflow: hidden;
+            border: 1px solid rgba(210, 180, 140, 0.45);
+        }
+
+        .bottom-card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bottom-overlay {
+            position: absolute;
+            inset: 0;
+            padding: 20px;
+            color: #3a2a1a;
+            background: rgba(255, 248, 235, 0.85);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bottom-overlay h3 {
+            font-size: 30px;
+            margin-bottom: 10px;
+            text-shadow: none;
+            color: #8b5a2b;
+            text-align: center;
+            font-weight: 900;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(210, 180, 140, 0.55);
+            padding-bottom: 8px;
+        }
+
+        .bottom-overlay p {
+    font-size: 14px;
+    line-height: 1.72;
+    white-space: normal;
+    text-align: justify;
+    overflow-y: auto;
+    padding-right: 4px;
+    color: #3a2a1a;
+    text-shadow: none;
+    text-indent: 2em;  /* 添加首行缩进 */
+    margin-bottom: 12px;
+}
+
+.bottom-overlay .ref-list {
+    text-indent: 0;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+        @media (max-width: 1280px) {
+            .theme-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .heritage-card {
+                min-height: 520px;
+            }
+
+            .book-card {
+                flex: 0 0 calc((100% - 18px) / 2);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .intro-card {
+                min-height: 250px;
+            }
+
+            .intro-overlay {
+                padding: 26px;
+            }
+
+            .intro-text h2 {
+                font-size: 28px;
+            }
+
+            .theme-card {
+                min-height: 380px;
+            }
+
+            .heritage-card {
+                min-height: 460px;
+            }
+
+            .book-card {
+                flex: 0 0 100%;
+            }
+
+            .bottom-pair {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .main-container {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .intro-text h2 {
+                font-size: 24px;
+            }
+
+            .intro-text p {
+                font-size: 14px;
+            }
+
+            .theme-overlay,
+            .bottom-overlay {
+                padding: 16px;
+            }
+
+            .theme-overlay h3,
+            .bottom-overlay h3 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-wrapper">
+        <img class="bg-image" src="./images/bg-image.jpg" alt="背景图片">
+    </div>
+
+    <div class="content">
+        <div class="nav-bar">
+            <div class="nav-left">
+                <div class="logo-search-group">
+                    <a href="index.html" class="logo-item" id="logoLink">
+                        <img src="./images/logo-icon.png" alt="建筑Logo" class="logo-img">
+                    </a>
+                    <div class="search-btn" id="searchBtn" role="button">
+                        <span class="search-icon"></span>
+                    </div>
+                </div>
+                <a href="index.html" class="nav-item"><img src="./images/首页.png" alt="首页" class="nav-img"></a>
+                <a href="about.html" class="nav-item"><img src="./images/家族溯源.png" alt="家族溯源" class="nav-img"></a>
+                <a href="achievement.html" class="nav-item"><img src="./images/建筑成就.png" alt="建筑成就" class="nav-img"></a>
+                <a href="craft.html" class="nav-item"><img src="./images/烫样技艺.png" alt="烫样技艺" class="nav-img"></a>
+                <a href="digital.html" class="nav-item"><img src="./images/数字展厅.png" alt="数字展厅" class="nav-img"></a>
+                <a href="literature.html" class="nav-item active"><img src="./images/文献资料.png" alt="文献资料" class="nav-img"></a>
+                <a href="game.html" class="nav-item"><img src="./images/匠心工坊.png" alt="匠心工坊" class="nav-img"></a>
+            </div>
+        </div>
+
+        <main class="main-container">
+            <section class="intro-card">
+                <img src="./images/literature-intro-bg.jpg" alt="板块导语背景图">
+                <div class="intro-overlay">
+                    <div class="intro-text">
+                        <h2>匠脉承古·雷韵千秋</h2>
+                        <p>从康熙年间初入宫廷，到清末民初技艺流传，样式雷家族八代薪火相传，执掌清代皇家建筑设计二百余年，留下了无数惊世古建与珍贵技艺遗产。这不仅是一段建筑营造史，更是一部匠人精神传承史、中华古建文化赓续史。本板块深挖样式雷精神内核、文化底蕴、文献根基与时代价值，全方位展现这份世界记忆遗产的不朽魅力，让千年古建文脉在当代生生不息。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="theme-layout">
+                <article class="theme-card">
+    <img src="./images/literature-theme-common.jpg" alt="匠心铸魂背景图">
+    <div class="theme-overlay">
+        <h3>匠心铸魂</h3>
+        <p>择一事，终一生，八代雷氏匠人，以匠心守初心，以毫厘定乾坤，用坚守与专注，铸就了中国古代建筑史上的传奇，也书写了流传千古的工匠精神。</p>
+        <p>在等级森严的清代宫廷，样式雷家族以匠人身份，扛起皇家建筑营造重任。他们恪守精益求精、严谨务实、恪尽职守、薪火相传的匠人信念，从烫样制作的一草一纸，到建筑施工的一砖一瓦，无不精雕细琢、分毫必较；从园林布局的整体规划，到陵寝地宫的细微构造，无不思虑周全、匠心独运。</p>
+        <p>没有惊天动地的壮举，却在日复一日的设计、制图、营造中，将对技艺的敬畏、对作品的负责刻入血脉。雷景修耗尽半生整理家族图档，雷思起、雷廷昌为皇家工程呕心沥血，一代代雷氏匠人不求功名，只愿打造传世建筑，用坚守诠释匠人匠心，用传承延续技艺根脉，这份工匠精神，穿越百年时光，依旧熠熠生辉，成为中华传统技艺精神的典范。</p>
+    </div>
+</article>
+                <article class="theme-card">
+    <img src="./images/literature-theme-common.jpg" alt="典籍留痕背景图">
+    <div class="theme-overlay">
+        <h3>典籍留痕</h3>
+        <p>纸载千秋，图绘万象，样式雷留存的海量文献图档，是见证百年营造历史的珍贵信物，是解锁清代皇家建筑密码的核心密钥，为后世研究、传承、弘扬提供了坚实依据。</p>
+        <p>样式雷家族历经数代积累、整理，留下了海量珍贵资料文献，是中国现存最完整、最系统的古代建筑档案，也是世界建筑史上极为罕见的实物文献资料。</p>
+        <p>核心资料包含样式雷建筑烫样、手绘工程图纸、营造做法册、工程奏折、勘估文档等，涵盖圆明园、颐和园、紫禁城、天坛、清东陵、清西陵等诸多皇家建筑的设计图纸、施工方案、尺寸标注、用料明细、工期规划，内容详尽、绘制精准。</p>
+        <p>这些文献大多珍藏于国家图书馆、故宫博物院等权威机构，系统记录了清代皇家建筑营造的全流程，兼具历史价值、学术价值与技艺价值。本板块整理收录权威文献目录、核心文档摘要、珍贵图档赏析，为文化爱好者、学术研究者、建筑从业者提供专业、详实的资料参考，让百年营造典籍得以完整呈现、永续留存。</p>
+    </div>
+</article>
+               <article class="theme-card">
+    <img src="./images/literature-theme-common.jpg" alt="文脉永续背景图">
+    <div class="theme-overlay">
+        <h3>文脉永续</h3>
+        <p>样式雷，不止是建筑技艺，更是承载清代历史、古建文化、非遗智慧的文化瑰宝，是中华优秀传统文化不可或缺的组成部分，历经百年，依旧文脉绵长、薪火不绝。</p>
+        <p>作为世界记忆遗产，样式雷留存的烫样、建筑图档、做法册，是中国古代独一无二的「建筑三维档案」，完整记录了清代皇家建筑的营造理念、技艺流程、文化内涵，是研究中国古代建筑史、清代宫廷史、园林艺术、丧葬规制的珍贵史料，填补了中国古代建筑设计实物档案的空白。</p>
+        <p>其蕴含的营造技艺，融合了中国传统风水文化、美学理念、工程智慧，是东方古建技艺的集大成者；家族传承的坚守之道、敬业之魂，更是中华传统美德的生动体现。从文物修复、技艺研究，到非遗传播、教育普及，社会各界聚力守护，让样式雷文化走出档案馆、走出博物馆，融入现代生活，让这份珍贵的历史文脉、非遗文化，代代相传、历久弥新，彰显中华古建文化的深厚底蕴与强大生命力。</p>
+    </div>
+</article>
+               <article class="theme-card">
+    <img src="./images/literature-theme-common.jpg" alt="传承与创新背景图">
+    <div class="theme-overlay">
+        <h3>传承与创新</h3>
+        <p>让古老技艺活起来，让传统文化潮起来，样式雷文化在当代不断破圈创新，以全新形式融入现代生活，绽放出跨越时代的新生魅力。</p>
+        <p>百年技艺，当代传承。如今，样式雷不再是尘封的历史遗产，而是通过多元化创新，走进大众视野：烫样技艺走进校园课堂，成为非遗研学、手工体验的热门内容；样式雷建筑元素、图档纹样融入文创设计，打造出文具、饰品、摆件、艺术品等多款潮流文创；数字技术赋能古建复原，通过3D建模、VR展示，让百年烫样、古建筑实现数字化重现；文旅融合、主题展览、非遗讲座等活动遍地开花，让更多人近距离感受样式雷的文化魅力。</p>
+        <p>从专业研究到大众科普，从文物保护到文创开发，样式雷文化在传承中创新，在创新中发展，让古老的营造智慧与现代生活相融，让非遗文化真正活在当下、走向未来。</p>
+    </div>
+</article>
+            </section>
+
+           <section class="heritage-row">
+    <a class="heritage-link" href="javascript:void(0)" style="cursor:default; text-decoration:none;" onclick="return false;">
+        <article class="theme-card heritage-card">
+            <img src="./images/literature-theme-heritage.jpg" alt="世遗荣光背景图">
+            <div class="theme-overlay">
+                <h3>世遗荣光</h3>
+                <p>一纸档案载华夏匠心，千年技艺登世界舞台，样式雷建筑图档成功入选世界记忆遗产，是世界对中华古建文化的高度认可，更是中国非遗文化的世界级荣光。</p>
+                <p>在申遗之路上，样式雷文化逐步迈向世界。2003年，样式雷图档成功入选中国档案文献遗产，筑牢了国内非遗保护根基。此后，经过精心筹备与价值梳理，2006年我国正式向联合国教科文组织提交申报材料，2007年，清代样式雷建筑图档凭借极高的文化价值，成功入选《世界记忆名录》，实现了从中国非遗到世界记忆遗产的跨越，让这份中式建筑智慧站上国际舞台。</p>
+                <p>样式雷的世界遗产价值毋庸置疑。雷氏家族八代传承，主持设计了故宫、天坛、颐和园、清东陵等诸多经典皇家建筑，这些作品大多跻身世界文化遗产之列。样式雷图档包含建筑图样、烫样、工程文献，完整留存了古代建筑设计、施工的全流程技艺，是研究中国古代建筑营造体系的珍贵实证，兼具艺术价值、历史价值与学术价值，填补了世界建筑档案领域的空白。</p>
+                <p>这份独特的文化瑰宝，收获了国际社会广泛赞誉。联合国教科文组织及全球建筑学界高度认可其价值，认为样式雷建筑文化是人类建筑史上的不朽财富，展现了中国古代工匠的极致匠心与东方建筑哲学。它不仅是中华优秀传统文化的杰出代表，更成为世界建筑文化中不可或缺的重要组成，彰显了中国传统建筑文化举足轻重的国际地位，让世界见证属于中国、也属于全人类的建筑文明瑰宝。</p>
+            </div>
+        </article>
+    </a>
+</section>
+
+            <section class="carousel-section">
+                <h3 class="carousel-title">书籍与影像资料</h3>
+                <div class="books-window">
+                    <button class="books-nav prev" id="booksPrevBtn" type="button" aria-label="上一项">‹</button>
+                    <div class="books-track" id="booksTrack">
+                        <a class="book-card" href="https://www.nlcpress.com/ProductView.aspx?Id=12436" target="_blank" rel="noopener noreferrer">
+                            <img src="" data-cover-base="literature-book-1" alt="国家图书馆藏样式雷图档">
+                            <div class="book-overlay"><span>《国家图书馆藏样式雷图档》系列（含故宫卷、圆明园卷等）</span></div>
+                        </a>
+                        <a class="book-card" href="https://www.nlcpress.com/ProductView.aspx?Id=11301" target="_blank" rel="noopener noreferrer">
+                            <img src="" data-cover-base="literature-book-2" alt="大国工匠样式雷">
+                            <div class="book-overlay"><span>《大国工匠——样式雷》</span></div>
+                        </a>
+                        <a class="book-card" href="https://book.douban.com/subject/2336349/" target="_blank" rel="noopener noreferrer">
+                            <img src="" data-cover-base="literature-book-3" alt="样式雷建筑文化新论">
+                            <div class="book-overlay"><span>《样式雷建筑文化新论》</span></div>
+                        </a>
+                        <a class="book-card" href="https://tv.cctv.com/2023/02/27/VIDEkZg7zp9cZRvQiIOmmG83230227.shtml" target="_blank" rel="noopener noreferrer">
+                            <img src="" data-cover-base="literature-book-4" alt="五集纪录片样式雷">
+                            <div class="book-overlay"><span>五集纪录片《样式雷》（CCTV-9，2023年播出）</span></div>
+                        </a>
+                        <a class="book-card" href="https://tv.cctv.com/2015/08/19/VIDE1439983915770372.shtml" target="_blank" rel="noopener noreferrer">
+                            <img src="" data-cover-base="literature-book-5" alt="国宝档案样式雷与重修圆明园">
+                            <div class="book-overlay"><span>《国宝档案：传奇——样式雷与重修圆明园》</span></div>
+                        </a>
+                        <a class="book-card" href="https://v.qq.com/x/cover/mzc00200lbbrr87/s0029weyg5v.html" target="_blank" rel="noopener noreferrer">
+                            <img src="" data-cover-base="literature-book-6" alt="国家宝藏第二季样式雷建筑烫样">
+                            <div class="book-overlay"><span>《国家宝藏》第二季：样式雷建筑烫样</span></div>
+                        </a>
+                    </div>
+                    <button class="books-nav next" id="booksNextBtn" type="button" aria-label="下一项">›</button>
+                </div>
+            </section>
+
+            <section class="bottom-pair">
+               <article class="bottom-card">
+    <img src="./images/literature-bottom-common.jpg" alt="守护践行背景图">
+    <div class="bottom-overlay">
+        <h3>守护践行</h3>
+        <p>文化因传承而不朽，遗产因守护而永恒。样式雷非遗文化的传承保护，离不开专业机构的坚守，更离不开每一个人的参与。</p>
+        <p>样式雷烫样、图档等珍贵文物，历经百年岁月，存在老化、破损等问题，文物修复、档案整理、技艺传承工作任重道远。多年来，文博机构、高校团队、非遗传承人携手发力，开展文物修复、图档整理、技艺挖掘、学术研究等工作，全力守护这份珍贵遗产。</p>
+        <p>而传承非遗文化，不止是专业人士的使命，更是我们每个人的责任。本板块科普样式雷文物保护知识、非遗传承意义，发布文化守护倡议，分享公众参与渠道——无论是走进博物馆参观展览、学习非遗知识，还是参与研学体验、传播文化内容，都是对样式雷文化的守护与传承。</p>
+        <p>以微光聚星河，让我们共同行动，守护样式雷千年文脉，传承中华古建非遗瑰宝，让这份百年匠心与文化瑰宝，永续流传、光耀后世。</p>
+    </div>
+</article>
+
+               <article class="bottom-card">
+    <img src="./images/literature-bottom-common.jpg" alt="参考文献背景图">
+    <div class="bottom-overlay">
+        <h3>参考文献</h3>
+        <p class="ref-list">
+[1] 朱启钤. 样式雷考[J]. 中国营造学社汇刊,1933,4(1):86-89.<br>
+[2] 王其亨,何蓓洁. 样式雷考校注[M]. 天津:天津大学出版社,2018.<br>
+[3] 王方捷,王其亨. “样式雷”定陵地宫建筑烫样设计图研究[J]. 文物,2020(04):73-91.<br>
+[4] 国家图书馆,国家古籍保护中心. 样式雷图档集成[M]. 北京:国家图书馆出版社,2020.<br>
+[5] 何蓓洁,王其亨. 华夏意匠的世界记忆——传世清代样式雷建筑图档源流纪略[J]. 建筑师,2015(03):51-65.<br>
+[6] 刘彤彤,何蓓洁. 样式雷与清代皇家园林[J]. 中国园林,2008(06):17-22.<br>
+[7] 王其亨,张凤梧. 康熙《皇城宫殿衙署图》解读补遗[J]. 建筑史学刊,2024,5(3):101-112.<br>
+[8] 张应韬,单琳琳. 清代样式雷家族教育研究及工匠精神启示[J]. 西安建筑科技大学学报(社会科学版),2023,42(5):37-46.<br>
+[9] 张宝章. 建筑世家样式雷[M]. 北京:北京出版社,2003.<br>
+[10] 中国联合国教科文组织全国委员会. 世界记忆遗产——清代样式雷建筑图档申报材料[Z]. 2007.
+        </p>
+    </div>
+</article>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'literature.html';
+            const navItems = document.querySelectorAll('.nav-item');
+            const logoLink = document.getElementById('logoLink');
+
+            navItems.forEach(function(item) { item.classList.remove('active'); });
+            if (logoLink) logoLink.classList.remove('active');
+
+            navItems.forEach(function(item) {
+                const href = item.getAttribute('href');
+                if (href === currentPage) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        document.getElementById('searchBtn')?.addEventListener('click', function() {
+            alert('搜索功能开发中');
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const track = document.getElementById('booksTrack');
+            const prevBtn = document.getElementById('booksPrevBtn');
+            const nextBtn = document.getElementById('booksNextBtn');
+            if (!track) return;
+
+            const cards = Array.from(track.querySelectorAll('.book-card'));
+            if (!cards.length) return;
+
+            const coverImages = track.querySelectorAll('img[data-cover-base]');
+            const formats = ['.jpg', '.png', '.jpeg', '.webp', '.JPG', '.PNG', '.JPEG', '.WEBP'];
+            const dirs = ['./images/', './'];
+
+            coverImages.forEach(function(img) {
+                const base = img.getAttribute('data-cover-base') || '';
+                const candidates = [];
+                dirs.forEach(function(dir) {
+                    formats.forEach(function(ext) {
+                        candidates.push(dir + base + ext);
+                    });
+                });
+
+                let idx = 0;
+                function tryNext() {
+                    if (idx >= candidates.length) {
+                        img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Crect width='400' height='260' fill='%23d8c0a0'/%3E%3Ctext x='200' y='132' text-anchor='middle' font-size='20' fill='%238b5a2b'%3E%E5%B0%81%E9%9D%A2%E5%9B%BE%E6%9A%82%E7%BC%BA%3C/text%3E%3C/svg%3E";
+                        return;
+                    }
+                    img.src = candidates[idx++];
+                    img.onerror = tryNext;
+                }
+                tryNext();
+            });
+
+            let currentIndex = 0;
+            let timer = null;
+
+            function getPerView() {
+                if (window.innerWidth <= 900) return 1;
+                if (window.innerWidth <= 1280) return 2;
+                return 3;
+            }
+
+            function maxIndex() {
+                return Math.max(0, cards.length - getPerView());
+            }
+
+            function cardStep() {
+                if (cards.length < 2) return cards[0].offsetWidth;
+                return cards[1].offsetLeft - cards[0].offsetLeft;
+            }
+
+            function render() {
+                const step = cardStep();
+                track.style.transform = 'translateX(' + (-currentIndex * step) + 'px)';
+            }
+
+            function moveNext() {
+                if (currentIndex >= maxIndex()) {
+                    currentIndex = 0;
+                } else {
+                    currentIndex += 1;
+                }
+                render();
+            }
+
+            function movePrev() {
+                if (currentIndex <= 0) {
+                    currentIndex = maxIndex();
+                } else {
+                    currentIndex -= 1;
+                }
+                render();
+            }
+
+            function startAuto() {
+                stopAuto();
+                timer = setInterval(function() {
+                    moveNext();
+                }, 3200);
+            }
+
+            function stopAuto() {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }
+
+            track.addEventListener('mouseenter', stopAuto);
+            track.addEventListener('mouseleave', startAuto);
+            prevBtn?.addEventListener('click', function() {
+                movePrev();
+                startAuto();
+            });
+            nextBtn?.addEventListener('click', function() {
+                moveNext();
+                startAuto();
+            });
+
+            window.addEventListener('resize', function() {
+                currentIndex = Math.min(currentIndex, maxIndex());
+                render();
+            });
+
+            render();
+            startAuto();
+        });
+    </script>
+</body>
+</html>

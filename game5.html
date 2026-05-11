@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>样式雷 · 匠心工坊 - 留言墙</title>
+    <style>
+        :root {
+            --bg-deep: #0a0806;
+            --bg-card: rgba(22, 16, 10, 0.78);
+            --border-gold: rgba(210, 180, 140, 0.4);
+            --border-gold-hover: rgba(210, 180, 140, 0.65);
+            --text-primary: #e8d8b0;
+            --text-secondary: #c9a03d;
+            --text-muted: #b8a080;
+            --accent: #c9a03d;
+            --accent-light: #e8c97a;
+            --bg-hover: rgba(210, 180, 140, 0.1);
+            --bg-active: rgba(201, 160, 61, 0.2);
+            --danger: #a0523d;
+            --success: #7cba6a;
+            --font-serif: 'Georgia', 'Times New Roman', '楷体', 'STKaiti', 'KaiTi', serif;
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 22px;
+            --radius-xl: 28px;
+            --shadow-card: 0 8px 40px rgba(0, 0, 0, 0.35);
+            --shadow-hover: 0 14px 50px rgba(0, 0, 0, 0.5);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: var(--font-serif);
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.55;
+            pointer-events: none;
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 16px 20px 30px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 14px 22px;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-gold);
+            box-shadow: var(--shadow-card);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 15px;
+            padding: 10px 18px;
+            border-radius: 28px;
+            background: rgba(201, 160, 61, 0.08);
+            border: 1px solid rgba(201, 160, 61, 0.35);
+            transition: all var(--transition);
+            cursor: pointer;
+            font-family: var(--font-serif);
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            background: rgba(201, 160, 61, 0.18);
+            border-color: var(--accent-light);
+            color: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(201, 160, 61, 0.18);
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .game-tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .game-tab {
+            padding: 10px 18px;
+            border-radius: 26px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(210, 180, 140, 0.25);
+            color: #b8a080;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 13px;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            font-family: var(--font-serif);
+            position: relative;
+        }
+
+        .game-tab:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+            color: #d4b870;
+            transform: translateY(-1px);
+        }
+
+        .game-tab.active {
+            background: var(--bg-active);
+            border-color: var(--accent);
+            color: var(--accent-light);
+            box-shadow: 0 0 18px rgba(201, 160, 61, 0.2);
+            font-weight: bold;
+        }
+
+        .game-tab .tab-icon {
+            margin-right: 4px;
+        }
+
+        .wall-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 400px;
+        }
+
+        .wall-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-gold);
+            padding: 22px 20px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .wall-title {
+            font-size: 22px;
+            letter-spacing: 3px;
+            color: var(--text-secondary);
+            text-align: center;
+            font-family: var(--font-serif);
+        }
+
+        .wall-subtitle {
+            font-size: 13px;
+            color: #a08060;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .wall-input-row {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .wall-input {
+            flex: 1;
+            min-height: 55px;
+            border: 1px solid rgba(166, 124, 82, 0.45);
+            border-radius: 10px;
+            background: rgba(40, 28, 16, 0.5);
+            color: #d5c8b0;
+            font-family: var(--font-serif);
+            font-size: 14px;
+            padding: 12px 15px;
+            resize: vertical;
+            outline: none;
+            transition: all var(--transition);
+            letter-spacing: 1px;
+        }
+
+        .wall-input::placeholder {
+            color: rgba(180, 160, 130, 0.45);
+            letter-spacing: 2px;
+        }
+
+        .wall-input:focus {
+            border-color: rgba(210, 180, 140, 0.7);
+            background: rgba(50, 34, 18, 0.6);
+            box-shadow: 0 0 18px rgba(210, 180, 140, 0.12);
+            color: #e8d8b0;
+        }
+
+        .wall-submit-btn {
+            padding: 12px 22px;
+            border-radius: 10px;
+            background: rgba(201, 160, 61, 0.18);
+            border: 1px solid var(--accent);
+            color: var(--accent-light);
+            cursor: pointer;
+            font-size: 14px;
+            letter-spacing: 2px;
+            transition: all var(--transition);
+            font-family: var(--font-serif);
+            white-space: nowrap;
+            align-self: stretch;
+        }
+
+        .wall-submit-btn:hover {
+            background: rgba(201, 160, 61, 0.3);
+            box-shadow: 0 0 16px rgba(201, 160, 61, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .wall-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 350px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .wall-message-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(210, 180, 140, 0.2);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 13px;
+            color: #c8b898;
+            letter-spacing: 1px;
+            line-height: 1.5;
+            transition: all var(--transition);
+        }
+
+        .wall-message-item:hover {
+            border-color: var(--border-gold-hover);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .wall-message-item .msg-time {
+            font-size: 10px;
+            color: #a08060;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+
+        .wall-empty {
+            text-align: center;
+            color: #a08060;
+            letter-spacing: 2px;
+            padding: 30px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 650px) {
+            .wall-input-row {
+                flex-direction: column;
+            }
+            .wall-submit-btn {
+                align-self: center;
+                width: 100%;
+                text-align: center;
+            }
+            .game-tab {
+                padding: 7px 10px;
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+            .back-btn {
+                font-size: 13px;
+                padding: 8px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img class="bg-image" src="./images/bg-image.jpg" alt="背景" onerror="this.style.display='none'">
+
+    <div class="app-container">
+        <div class="top-bar">
+            <a href="game.html" class="back-btn" title="返回匠心工坊">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                返回匠心工坊
+            </a>
+            <div class="game-tabs" id="gameTabs">
+                <div class="game-tab" data-game="puzzle"><span class="tab-icon">🧩</span>建筑拼图</div>
+                <div class="game-tab" data-game="craft"><span class="tab-icon">🧹</span>古建拂尘</div>
+                <div class="game-tab" data-game="quiz"><span class="tab-icon">📝</span>知识答题</div>
+                <div class="game-tab active" data-game="wall"><span class="tab-icon">💬</span>留言墙</div>
+            </div>
+            <div class="difficulty-select" style="visibility:hidden;"></div>
+        </div>
+
+        <div class="wall-panel active" id="wallPanel">
+            <div class="wall-card">
+                <div class="wall-title">💬 留言墙</div>
+                <div class="wall-subtitle">留下你与样式雷建筑的故事</div>
+                <div class="wall-input-row">
+                    <textarea class="wall-input" id="wallInput" placeholder="写下您的感悟与祝福…（200字内）" maxlength="200" rows="3"></textarea>
+                    <button class="wall-submit-btn" id="wallSubmitBtn">✍ 确认留言</button>
+                </div>
+            </div>
+            <div class="wall-card">
+                <h4 style="text-align:center;color:var(--text-secondary);letter-spacing:3px;margin-bottom:8px;">📜 留言记录</h4>
+                <div class="wall-messages" id="wallMessages">
+                    <div class="wall-empty">暂无留言，快来留下第一条吧～</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const wallMessages = [];
+            const wallInput = document.getElementById('wallInput');
+            const wallSubmitBtn = document.getElementById('wallSubmitBtn');
+            const wallMessagesContainer = document.getElementById('wallMessages');
+
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function renderMessages() {
+                if (wallMessages.length === 0) {
+                    wallMessagesContainer.innerHTML = '<div class="wall-empty">暂无留言，快来留下第一条吧～</div>';
+                    return;
+                }
+                wallMessagesContainer.innerHTML = '';
+                wallMessages.slice().reverse().forEach(msg => {
+                    const item = document.createElement('div');
+                    item.className = 'wall-message-item';
+                    item.innerHTML = `<div>${escapeHtml(msg.text)}</div><div class="msg-time">🕐 ${msg.time}</div>`;
+                    wallMessagesContainer.appendChild(item);
+                });
+            }
+
+            wallSubmitBtn.addEventListener('click', () => {
+                const text = wallInput.value.trim();
+                if (!text) {
+                    alert('请先写下您的留言～');
+                    return;
+                }
+                const now = new Date();
+                const timeStr = now.getFullYear() + '-' +
+                    String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(now.getDate()).padStart(2, '0') + ' ' +
+                    String(now.getHours()).padStart(2, '0') + ':' +
+                    String(now.getMinutes()).padStart(2, '0');
+                wallMessages.push({ text, time: timeStr });
+                wallInput.value = '';
+                renderMessages();
+                // 轻提示
+                const hint = document.createElement('div');
+                hint.style.cssText =
+                    'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(201,160,61,0.85);color:#1a1008;padding:10px 24px;border-radius:24px;z-index:2000;font-family:var(--font-serif);letter-spacing:2px;font-size:14px;transition:all 0.5s ease;';
+                hint.textContent = '💬 留言已提交，感谢您的分享！';
+                document.body.appendChild(hint);
+                setTimeout(() => {
+                    hint.style.opacity = '0';
+                    hint.style.transform = 'translateX(-50%) translateY(-20px)';
+                    setTimeout(() => hint.remove(), 500);
+                }, 1800);
+            });
+
+            wallInput.addEventListener('keydown', e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    wallSubmitBtn.click();
+                }
+            });
+
+            // 标签跳转
+            document.querySelectorAll('.game-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const pages = { puzzle: 'game2.html', craft: 'game3.html', quiz: 'game4.html', wall: 'game5.html' };
+                    window.location.href = pages[tab.dataset.game];
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

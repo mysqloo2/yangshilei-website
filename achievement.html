@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>样式雷 · 建筑成就</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+        }
+
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 20;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========= 导航栏 ========= */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            padding: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(210, 180, 140, 0.55);
+        }
+
+        .nav-left {
+            display: flex;
+            flex: 8;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .logo-search-group {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .logo-item {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo-img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin-top: 0;
+            transition: all 0.3s ease;
+        }
+
+        .logo-item:hover .logo-img {
+            filter: brightness(1.2) drop-shadow(0 0 5px rgba(210, 180, 140, 0.5));
+            transform: scale(1.02);
+        }
+
+        .search-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgb(144 101 45 / 55%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 38px;
+            margin-left: -40px;
+        }
+
+        .search-btn:hover {
+            background: rgba(210, 180, 140, 0.25);
+            border-color: rgba(210, 180, 140, 1);
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(210, 180, 140, 0.5);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(210,180,140,0.85)' stroke-width='1.8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-4.35-4.35M19 11a8 8 0 11-16 0 8 8 0 0116 0z' /%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 22px;
+            padding-bottom: 22px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(210, 180, 140, 0.15);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+
+        .nav-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-img {
+            filter: brightness(1.25) drop-shadow(0 0 4px rgba(210, 180, 140, 0.6));
+            transform: scale(1.05);
+        }
+
+        .nav-item:hover::before {
+            background-color: rgba(210, 180, 140, 0.9);
+            height: 35px;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 70%;
+            transform: translateY(-50%);
+            height: 28px;
+            width: 1px;
+            background-color: rgba(210, 180, 140, 0.55);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:first-of-type::before {
+            display: none;
+        }
+
+        .nav-item.active {
+            background: rgba(210, 180, 140, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-item.active .nav-img {
+            filter: brightness(1.3) drop-shadow(0 0 6px rgba(210, 180, 140, 0.7));
+            transform: scale(1.02);
+        }
+
+        .logo-item.active .logo-img {
+            filter: brightness(1.2) drop-shadow(0 0 5px rgba(210, 180, 140, 0.5));
+        }
+
+        /* ========= 卡片区域 ========= */
+        .carousel-wrapper {
+            flex: 1;
+            position: relative;
+            min-height: 450px;
+            margin-top: 100px;
+            margin-bottom: 20px;
+        }
+
+        .carousel-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 480px;
+            perspective: 1400px;
+            z-index: 50;
+            pointer-events: auto;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            cursor: grab;
+        }
+
+        .carousel:active {
+            cursor: grabbing;
+        }
+
+        .card {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 260px;
+            height: auto;
+            margin-left: -130px;
+            margin-top: -150px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            border: none;
+        }
+
+        .card.selected {
+            transform: scale(1.08) !important;
+            filter: brightness(1.15) drop-shadow(0 0 15px rgba(210, 180, 140, 0.6)) !important;
+            z-index: 1000 !important;
+        }
+
+        .card:not(.selected) {
+            filter: brightness(0.7) blur(0.5px);
+            transform: scale(0.9);
+            opacity: 0.7;
+            transition: all 0.4s ease-out;
+        }
+
+        .card-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transform: rotate(-90deg) scale(1.5);
+            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
+        }
+
+        .carousel-container::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: 15%;
+            width: 70%;
+            height: 50px;
+            background: radial-gradient(ellipse, rgba(210, 180, 140, 0.2), transparent);
+            border-radius: 50%;
+            filter: blur(15px);
+            pointer-events: none;
+        }
+
+        /* ========= 底部面板 ========= */
+       .bottom-panel {
+    display: none;
+    position: relative;
+    width: 92%;
+    margin: -70px auto 20px auto;  /* ✅ 你的 -70px 在这里 */
+    background: rgba(166, 124, 82, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    border-top: 3px solid #a67c52;
+    box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.15);
+    overflow: visible;
+    font-family: 'Segoe UI', '思源宋体', 'Georgia', serif;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' opacity='0.06'%3E%3Cpath fill='none' stroke='%238b7355' stroke-width='0.3' d='M30 30 L170 30 M30 50 L170 50 M30 70 L170 70 M30 90 L170 90 M30 110 L170 110 M30 130 L170 130 M30 150 L170 150 M30 170 L170 170 M50 30 L50 170 M70 30 L70 170 M90 30 L90 170 M110 30 L110 170 M130 30 L130 170 M150 30 L150 170'/%3E%3C/svg%3E");
+    transition: transform 0.4s ease-out, opacity 0.3s ease-out;
+    transform: translateY(100%);
+    opacity: 0;
+    z-index: 80;
+}
+
+
+
+        .bottom-panel.open {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .bottom-panel .panel-inner,
+.bottom-panel .panel-nav {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+}
+
+.bottom-panel::before {
+    content: '';
+    position: absolute;
+    top: -51px;
+    left: -59px;
+    right: -70px;
+    bottom: -60px;
+    background-image: url(./images/cloud-border.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+        .panel-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b5c4c' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M18 6L6 18'/%3E%3Cpath d='M6 6L18 18'/%3E%3C/svg%3E") no-repeat center;
+            background-size: 20px;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+    
+        .panel-close:hover {
+            transform: scale(1.1);
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a67c52' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M18 6L6 18'/%3E%3Cpath d='M6 6L18 18'/%3E%3C/svg%3E") no-repeat center;
+            background-size: 20px;
+        }
+
+        .panel-inner {
+            padding: 25px 30px 20px 30px;
+        }
+
+        .panel-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(166, 124, 82, 0.3);
+        }
+        .panel-header h2 {
+            font-size: 32px;
+            font-family: 'Georgia', '楷体', serif;
+            letter-spacing: 6px;
+            color: #2b241c;
+            margin-bottom: 8px;
+        }
+        .panel-header .sub {
+            font-size: 14px;
+            color: #6b5c4c;
+            letter-spacing: 3px;
+        }
+
+        /* ✅ 左图右文等高布局 */
+        .panel-mid {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            align-items: stretch;
+            min-height: 320px;
+        }
+
+        .panel-image {
+            flex: 1.2;
+            min-width: 260px;
+        }
+.panel-image img {
+    width: 100%;
+    height: 320px;           /* ✅ 固定高度 */
+    max-height: 320px;
+    object-fit: cover;       /* ✅ 裁剪填充，保证全部填满不变形 */
+    border-radius: 12px;
+    /* 去掉浅色背景和边框 */
+}
+        .panel-text-area {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content:space-between;
+        }
+
+        .panel-tags {
+            margin-bottom: 15px;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tag {
+            background: rgba(166, 124, 82, 0.15);
+            color: #7a5a3a;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            border: 1px solid rgba(166, 124, 82, 0.3);
+        }
+
+       .panel-description {
+    font-size: 16px;
+    line-height: 1.85;
+    color: #3a3228;
+    text-align: justify;
+    overflow-y: auto;
+    height: 280px;           /* ✅ 固定高度，和图片一致 */
+    padding-right: 8px;
+}
+        .panel-description p {
+            margin-bottom: 12px;
+            text-indent: 2em;
+        }
+        .panel-description::-webkit-scrollbar {
+            width: 3px;
+        }
+        .panel-description::-webkit-scrollbar-track {
+            background: rgba(166, 124, 82, 0.1);
+        }
+        .panel-description::-webkit-scrollbar-thumb {
+            background: #a67c52;
+        }
+
+       .panel-nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 15px;
+    border-top: 1px solid rgba(107, 92, 76, 0.2);
+    background: rgba(255, 252, 245, 0.9);
+    margin-top: auto;        /* ✅ 确保按钮在底部 */
+}
+        .panel-nav-prev, .panel-nav-next {
+            cursor: pointer;
+            font-size: 14px;
+            color: #6b5c4c;
+            transition: all 0.2s;
+            padding: 6px 24px;
+            border-radius: 30px;
+            background: rgba(166, 124, 82, 0.1);
+        }
+        .panel-nav-prev:hover, .panel-nav-next:hover {
+            color: #a67c52;
+            background: rgba(166, 124, 82, 0.2);
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 1000px) {
+            .panel-mid { flex-direction: column; }
+            .carousel-container { height: 420px; }
+            .card { width: 220px; margin-left: -110px; margin-top: -130px; }
+        }
+        @media (max-width: 700px) {
+            .carousel-container { height: 350px; }
+            .card { width: 180px; margin-left: -90px; margin-top: -105px; }
+            .panel-header h2 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <img class="bg-image" src="./images/bg-image.jpg" alt="背景图片">
+
+    <div class="content">
+        <div class="nav-bar">
+            <div class="nav-left">
+                <div class="logo-search-group">
+                    <a href="index.html" class="logo-item" id="logoLink">
+                        <img src="./images/logo-icon.png" alt="建筑Logo" class="logo-img">
+                    </a>
+                    <div class="search-btn" id="searchBtn" role="button">
+                        <span class="search-icon"></span>
+                    </div>
+                </div>
+                <a href="index.html" class="nav-item"><img src="./images/首页.png" alt="首页" class="nav-img"></a>
+                <a href="about.html" class="nav-item"><img src="./images/家族溯源.png" alt="家族溯源" class="nav-img"></a>
+                <a href="achievement.html" class="nav-item active"><img src="./images/建筑成就.png" alt="建筑成就" class="nav-img"></a>
+                <a href="craft.html" class="nav-item"><img src="./images/烫样技艺.png" alt="烫样技艺" class="nav-img"></a>
+                <a href="digital.html" class="nav-item"><img src="./images/数字展厅.png" alt="数字展厅" class="nav-img"></a>
+                <a href="literature.html" class="nav-item"><img src="./images/文献资料.png" alt="文献资料" class="nav-img"></a>
+                <a href="game.html" class="nav-item"><img src="./images/匠心工坊.png" alt="匠心工坊" class="nav-img"></a>
+            </div>
+        </div>
+
+        <div class="carousel-wrapper">
+            <div class="carousel-container">
+                <div class="carousel" id="carousel"></div>
+            </div>
+        </div>
+
+        <div class="bottom-panel" id="bottomPanel">
+            <div class="panel-close" id="panelClose"></div>
+            <div class="panel-inner">
+                <div class="panel-header">
+                    <h2 id="panelBuildingName">太和殿</h2>
+                    <div class="sub" id="panelSubTitle">清代 · 样式雷营造 · 最高等级</div>
+                </div>
+
+                <!-- ✅ 左图右文等高布局 -->
+                <div class="panel-mid">
+                    <div class="panel-image">
+                        <img src="./images/太和殿大图.jpg" alt="太和殿" id="panelImg">
+                    </div>
+                    <div class="panel-text-area">
+                        <div class="panel-tags">
+                            <div class="tags" id="panelTags">
+                                <span class="tag">样式雷营造</span>
+                                <span class="tag">皇家建筑</span>
+                                <span class="tag">世界文化遗产</span>
+                                <span class="tag">北京故宫</span>
+                            </div>
+                        </div>
+                        <div class="panel-description" id="panelDescription">
+                            <p>太和殿，俗称"金銮殿"，位于北京故宫南北中轴线的显要位置，是紫禁城内规模最大的殿宇。始建于明永乐十八年（1420年），称奉天殿。太和殿是皇帝举行重大朝典的地方，如皇帝登基、皇帝大婚、册立皇后、命将出征等。样式雷家族曾参与太和殿的多次修缮工程。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-nav">
+                <div class="panel-nav-prev" id="prevBtn">◀ 上一个</div>
+                <div class="panel-nav-next" id="nextBtn">下一个 ▶</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const buildingsData = [
+    { 
+        name: "太和殿", 
+        sub: "清代 · 样式雷营造 · 最高等级", 
+        largeImg: "./images/太和殿大图.jpg", 
+        tags: ["样式雷营造", "皇家建筑", "世界文化遗产", "北京故宫"], 
+        description: "太和殿，俗称\"金銮殿\"，位于北京故宫南北中轴线的显要位置，是紫禁城内规模最大的殿宇。始建于明永乐十八年（1420年），称奉天殿。明嘉靖四十一年（1562年）改称皇极殿，清顺治二年（1645年）改今名。太和殿是皇帝举行重大朝典的地方，如皇帝登基、皇帝大婚、册立皇后、命将出征等。殿内金砖铺地，雕龙画凤，尽显皇家威仪。样式雷家族曾参与太和殿的多次修缮工程，留下了大量珍贵图档，展现了古代建筑设计的最高水准。太和殿面阔十一间，进深五间，建筑面积2377平方米，高26.92米，是故宫最大的木结构建筑。"
+    },
+    { 
+        name: "天坛", 
+        sub: "明代 · 祭天建筑 · 祈谷大典", 
+        largeImg: "./images/天坛大图.jpg", 
+        tags: ["样式雷营造", "祭天建筑", "世界文化遗产", "北京"], 
+        description: "天坛位于北京城南端，是明清两代皇帝祭天、祈谷的场所。始建于明永乐十八年（1420年），占地约273万平方米。天坛以严谨的建筑布局、奇特的建筑结构和瑰丽的装饰著称。祈年殿、皇穹宇、圜丘坛是其核心建筑。祈年殿为圆形，象征天圆，蓝色琉璃瓦象征蓝天。殿内不用大梁和长檩，仅用楠木柱和枋桷相互衔接支撑，结构精巧。样式雷家族在天坛修缮中留下了大量珍贵图档，其\"天圆地方\"的设计理念深刻体现了中国古代宇宙观。天坛1998年被列入《世界遗产名录》。"
+    },
+    { 
+        name: "圆明园", 
+        sub: "清代 · 万园之园 · 皇家园林", 
+        largeImg: "./images/圆明园大图.jpg", 
+        tags: ["样式雷设计", "皇家园林", "世界文化遗产", "北京"], 
+        description: "圆明园是清代大型皇家园林，始建于康熙四十六年（1707年），由圆明园、长春园、绮春园组成，占地350余公顷。被誉为\"万园之园\"，汇集了江南名园胜景，还融入了西方园林建筑。园内有景点100多处，如正大光明、勤政亲贤、九州清晏、蓬岛瑶台等。样式雷家族是圆明园的主要设计者之一，留下了大量精美的烫样和图档。圆明园不仅是中国园林艺术的巅峰，也是中西文化交流的见证。1860年遭英法联军焚毁，现为遗址公园，警示后人珍惜文化遗产。"
+    },
+    { 
+        name: "避暑山庄", 
+        sub: "清代 · 塞外宫阙 · 夏宫", 
+        largeImg: "./images/避暑山庄大图.jpg", 
+        tags: ["样式雷营造", "皇家园林", "世界文化遗产", "承德"], 
+        description: "承德避暑山庄，又名\"承德离宫\"，是清代皇帝夏季避暑和处理政务的场所。始建于康熙四十二年（1703年），占地564万平方米，是中国现存最大的古典皇家园林。山庄分为宫殿区、湖泊区、平原区、山峦区四大部分，融汇了南北园林艺术精华。周围环列着12座气势宏伟的寺庙，即\"外八庙\"，融合汉、蒙、藏多种建筑风格。样式雷家族参与了避暑山庄及周围寺庙的设计与修建，其建筑体现了清代多民族国家的文化融合。1994年被列入《世界遗产名录》。"
+    },
+    { 
+        name: "颐和园", 
+        sub: "清代 · 皇家园林 · 湖光山色", 
+        largeImg: "./images/颐和园大图.jpg", 
+        tags: ["样式雷营造", "皇家园林", "世界文化遗产", "北京"], 
+        description: "颐和园位于北京西郊，是清代皇家园林，前身为清漪园。光绪年间重建后改名颐和园。以万寿山和昆明湖为主体，亭台楼阁、长廊石舫美不胜收。佛香阁是颐和园的标志性建筑，高41米，八面三层四重檐，气势恢宏。全长728米的长廊，绘有彩画14000余幅，被誉为\"世界第一廊\"。样式雷第四代传人雷家玺曾主持颐和园的修建工程，其设计巧妙利用山水地形，是中国古典园林艺术的巅峰之作。1998年被列入《世界遗产名录》。"
+    },
+    { 
+        name: "清东陵", 
+        sub: "清代 · 帝王陵寝 · 风水宝地", 
+        largeImg: "./images/清东陵大图.jpg", 
+        tags: ["样式雷设计", "帝王陵寝", "世界文化遗产", "河北遵化"], 
+        description: "清东陵位于河北遵化，是清代帝王陵寝建筑群。始建于顺治十八年（1661年），占地80平方公里，建有孝陵、景陵、裕陵、定陵、惠陵等15座陵寝，埋葬着5位皇帝、15位皇后、136位妃嫔。其建筑规制严谨，气势恢宏，是中国古代陵寝建筑的集大成者。样式雷家族负责清东陵的选址与规划设计，巧妙运用风水理论，将建筑与山水自然完美融合。清东陵展现了清代陵寝建筑的最高成就，2000年被列入《世界遗产名录》。"
+    }
+];
+
+        const cardsData = [
+            { name: "太和殿", img: "./images/太和殿.png" },
+            { name: "天坛", img: "./images/天坛.png" },
+            { name: "圆明园", img: "./images/圆明园.png" },
+            { name: "避暑山庄", img: "./images/避暑山庄.png" },
+            { name: "颐和园", img: "./images/颐和园.png" },
+            { name: "清东陵", img: "./images/清东陵.png" }
+        ];
+
+        let currentAngle = 0;
+        let autoRotate = true;
+        let isDragging = false;
+        let isPanelOpen = false;
+        let currentSelectedIndex = 0;
+        const radius = 420;
+        const totalCards = cardsData.length;
+
+        const carousel = document.getElementById('carousel');
+        const bottomPanel = document.getElementById('bottomPanel');
+
+        function updatePanelContent(index) {
+            const data = buildingsData[index];
+            document.getElementById('panelBuildingName').textContent = data.name;
+            document.getElementById('panelSubTitle').textContent = data.sub;
+            document.getElementById('panelImg').src = data.largeImg;
+            document.getElementById('panelTags').innerHTML = data.tags.map(t => `<span class="tag">${t}</span>`).join('');
+            document.getElementById('panelDescription').innerHTML = `<p>${data.description}</p>`;
+        }
+
+        function openPanel(index) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => card.classList.remove('selected'));
+            const targetCard = document.querySelector(`.card[data-index="${index}"]`);
+            if (targetCard) targetCard.classList.add('selected');
+            currentSelectedIndex = index;
+            updatePanelContent(index);
+            
+            bottomPanel.style.display = 'block';
+            void bottomPanel.offsetHeight;
+            bottomPanel.classList.add('open');
+            
+            isPanelOpen = true;
+            autoRotate = false;
+        }
+
+        function closePanel() {
+            bottomPanel.classList.remove('open');
+            bottomPanel.style.display = 'none';
+            
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+            isPanelOpen = false;
+            setTimeout(() => { if (!isPanelOpen && !isDragging) autoRotate = true; }, 100);
+        }
+
+        function switchCard(index) {
+           if (index < 0) index = totalCards - 1;
+    if (index >= totalCards) index = 0;
+    
+    if (index === currentSelectedIndex) return;
+            currentSelectedIndex = index;
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((c, i) => i === index ? c.classList.add('selected') : c.classList.remove('selected'));
+            updatePanelContent(index);
+            const targetAngle = -(index * Math.PI * 2 / totalCards);
+            const startAngle = currentAngle;
+            let delta = targetAngle - startAngle;
+            if (delta > Math.PI) delta -= Math.PI * 2;
+            if (delta < -Math.PI) delta += Math.PI * 2;
+            const startTime = performance.now();
+            function animateRotate(now) {
+                const t = Math.min(1, (now - startTime) / 400);
+                const ease = 1 - Math.pow(1 - t, 3);
+                currentAngle = startAngle + delta * ease;
+                updateCardsPosition();
+                if (t < 1) requestAnimationFrame(animateRotate);
+            }
+            requestAnimationFrame(animateRotate);
+        }
+
+        function renderCards() {
+            carousel.innerHTML = '';
+            cardsData.forEach((card, i) => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.setAttribute('data-index', i);
+                div.innerHTML = `<div class="card-img"><img src="${card.img}" alt="${card.name}"></div>`;
+                carousel.appendChild(div);
+            });
+            updateCardsPosition();
+        }
+
+        function updateCardsPosition() {
+            const cards = document.querySelectorAll('.card');
+            const step = Math.PI * 2 / totalCards;
+            cards.forEach((card, i) => {
+                const angle = currentAngle + i * step;
+                const x = Math.sin(angle) * radius;
+                const z = Math.cos(angle) * radius;
+                const y = Math.sin(angle * 2) * 8;
+                card.style.transform = `translate3d(${x}px, ${y}px, ${z}px) rotateY(${-angle * 57.3}deg)`;
+                if (!isPanelOpen) {
+                    const bright = 0.5 + (Math.cos(angle) + 1) / 2.5;
+                    card.style.opacity = 0.5 + (Math.cos(angle) + 1) / 2.2;
+                    card.style.filter = `brightness(${bright})`;
+                } else if (i !== currentSelectedIndex) {
+                    card.style.opacity = '0.5';
+                    card.style.filter = 'brightness(0.6) blur(0.5px)';
+                } else {
+                    card.style.opacity = '1';
+                    card.style.filter = 'brightness(1.08) drop-shadow(0 0 10px rgba(210,180,140,0.5))';
+                }
+                card.style.zIndex = Math.floor((Math.cos(angle) + 1) * 100);
+            });
+        }
+
+        function animate() {
+            if (autoRotate && !isDragging && !isPanelOpen) {
+                currentAngle += 0.0025;
+                updateCardsPosition();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function initEvents() {
+            let dragStart = 0, dragStartAngle = 0, dragging = false;
+            const container = document.querySelector('.carousel-container');
+            container.addEventListener('mousedown', e => {
+                if (isPanelOpen) return;
+                dragging = true;
+                autoRotate = false;
+                dragStart = e.clientX;
+                dragStartAngle = currentAngle;
+                e.preventDefault();
+            });
+            window.addEventListener('mousemove', e => {
+                if (!dragging) return;
+                currentAngle = dragStartAngle + (e.clientX - dragStart) * 0.006;
+                updateCardsPosition();
+            });
+            window.addEventListener('mouseup', () => { dragging = false; setTimeout(() => { if (!dragging && !isPanelOpen) autoRotate = true; }, 100); });
+            container.addEventListener('wheel', e => {
+                if (isPanelOpen) return;
+                autoRotate = false;
+                currentAngle += e.deltaY > 0 ? -0.1 : 0.1;
+                updateCardsPosition();
+                clearTimeout(window.wt);
+                window.wt = setTimeout(() => { if (!isPanelOpen) autoRotate = true; }, 800);
+            }, { passive: false });
+            carousel.addEventListener('click', e => {
+                const card = e.target.closest('.card');
+                if (!card) return;
+                const idx = parseInt(card.dataset.index);
+                if (isPanelOpen) switchCard(idx);
+                else {
+                    autoRotate = false;
+                    const target = -(idx * Math.PI * 2 / totalCards);
+                    const start = currentAngle;
+                    let delta = target - start;
+                    if (delta > Math.PI) delta -= Math.PI * 2;
+                    if (delta < -Math.PI) delta += Math.PI * 2;
+                    const startTime = performance.now();
+                    function rotateTo(now) {
+                        const t = Math.min(1, (now - startTime) / 400);
+                        const ease = 1 - Math.pow(1 - t, 3);
+                        currentAngle = start + delta * ease;
+                        updateCardsPosition();
+                        if (t < 1) requestAnimationFrame(rotateTo);
+                        else openPanel(idx);
+                    }
+                    requestAnimationFrame(rotateTo);
+                }
+            });
+            document.getElementById('panelClose').addEventListener('click', closePanel);
+            document.getElementById('prevBtn').addEventListener('click', () => switchCard(currentSelectedIndex - 1));
+            document.getElementById('nextBtn').addEventListener('click', () => switchCard(currentSelectedIndex + 1));
+            document.body.addEventListener('click', e => {
+                if (isPanelOpen && !bottomPanel.contains(e.target) && !e.target.closest('.card')) closePanel();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCards();
+            initEvents();
+            animate();
+        });
+    </script>
+</body>
+</html>

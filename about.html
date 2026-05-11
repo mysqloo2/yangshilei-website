@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>样式雷 · 家族溯源</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+            background-color: #0a0806;
+        }
+
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 20;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========= 导航栏（修复点击问题） ========= */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            padding: 0;
+            z-index: 10000;
+            pointer-events: auto;
+            border-bottom: 1px solid rgba(210, 180, 140, 0.55);
+        }
+
+        .nav-left {
+            display: flex;
+            flex: 8;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .logo-search-group {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .logo-item {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo-img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin-top: 0;
+            transition: all 0.3s ease;
+        }
+
+        .logo-item:hover .logo-img {
+            filter: brightness(1.2) drop-shadow(0 0 5px rgba(210, 180, 140, 0.5));
+            transform: scale(1.02);
+        }
+
+        .search-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgb(144 101 45 / 55%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 38px;
+            margin-left: -40px;
+        }
+
+        .search-btn:hover {
+            background: rgba(210, 180, 140, 0.25);
+            border-color: rgba(210, 180, 140, 1);
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(210, 180, 140, 0.5);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(210,180,140,0.85)' stroke-width='1.8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-4.35-4.35M19 11a8 8 0 11-16 0 8 8 0 0116 0z' /%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 22px;
+            padding-bottom: 22px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(210, 180, 140, 0.15);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+
+        .nav-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-img {
+            filter: brightness(1.25) drop-shadow(0 0 4px rgba(210, 180, 140, 0.6));
+            transform: scale(1.05);
+        }
+
+        .nav-item:hover::before {
+            background-color: rgba(210, 180, 140, 0.9);
+            height: 35px;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 70%;
+            transform: translateY(-50%);
+            height: 28px;
+            width: 1px;
+            background-color: rgba(210, 180, 140, 0.55);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:first-of-type::before {
+            display: none;
+        }
+
+        .nav-item.active {
+            background: rgba(210, 180, 140, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-item.active .nav-img {
+            filter: brightness(1.3) drop-shadow(0 0 6px rgba(210, 180, 140, 0.7));
+            transform: scale(1.02);
+        }
+
+        .logo-item.active .logo-img {
+            filter: brightness(1.2) drop-shadow(0 0 5px rgba(210, 180, 140, 0.5));
+        }
+
+        /* ========= 卷轴容器 ========= */
+        .scroll-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 120px 20px 80px 20px;
+        }
+
+        .scroll-container {
+            position: relative;
+            width: 1100px;
+            max-width: 95vw;
+            min-height: 650px;
+            cursor: pointer;
+        }
+
+        /* 手指点击提示 */
+        .click-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: bounce 1.5s ease infinite;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .click-hint.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .finger-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+        }
+
+        .hint-text {
+            background: rgba(20, 18, 16, 0.85);
+            backdrop-filter: blur(8px);
+            color: #e8c97a;
+            font-size: 13px;
+            font-family: 'Georgia', serif;
+            letter-spacing: 2px;
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(201, 160, 61, 0.5);
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        .click-hint.fade-out {
+            animation: fadeOutHint 0.5s ease forwards;
+        }
+
+        @keyframes fadeOutHint {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                transform: translateX(-50%) translateY(20px);
+            }
+        }
+
+        .scroll-rolled {
+            opacity: 0;
+            transform: translateY(-100vh);
+            animation: dropFromTop 1.2s ease-out forwards 0.1s;
+        }
+
+        @keyframes dropFromTop {
+            0% {
+                opacity: 0;
+                transform: translateY(-100vh);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-inner {
+            position: relative;
+            display: flex;
+            width: 100%;
+            min-height: 650px;
+        }
+
+        .roller-l {
+            width: 100px;
+            background: url('./images/roller_left.png') center/contain no-repeat;
+            background-size: 100px 100%;
+            transform: translateX(calc(-50% - 50px));
+            transition: transform 0s;
+            flex-shrink: 0;
+            position: relative;
+            left: 50%;
+        }
+
+        .scroll-paper {
+            flex: 1;
+            background: url('./images/paper_center.png') center/100% 100% no-repeat;
+            background-size: 100% 100%;
+            clip-path: inset(0 50% 0 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 70px;
+            overflow-y: visible;
+        }
+
+        .roller-r {
+            width: 100px;
+            background: url('./images/roller_right.png') center/contain no-repeat;
+            background-size: 100px 100%;
+            transform: translateX(calc(50% + 50px));
+            transition: transform 0s;
+            flex-shrink: 0;
+            position: relative;
+            right: 50%;
+        }
+
+        .scroll-open .roller-l {
+            animation: rollLeft 2.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+        .scroll-open .roller-r {
+            animation: rollRight 2.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+        .scroll-open .scroll-paper {
+            animation: paperSpread 2.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+
+        @keyframes rollLeft {
+            to { left: 0; transform: translateX(0); }
+        }
+        @keyframes rollRight {
+            to { right: 0; transform: translateX(0); }
+        }
+        @keyframes paperSpread {
+            to { clip-path: inset(0 0 0 0); }
+        }
+
+        .poem-container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .poem-line {
+            font-size: 28px;
+            font-family: 'Georgia', '楷体', '思源宋体', serif;
+            letter-spacing: 6px;
+            color: #3a2a1a;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .guide-area {
+            position: relative;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .illustration-left,
+        .illustration-right,
+        .btn-bottom-left,
+        .btn-bottom-right {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .illustration-left.show,
+        .illustration-right.show,
+        .btn-bottom-left.show,
+        .btn-bottom-right.show {
+            opacity: 1;
+        }
+
+        .illustration-left {
+            position: absolute;
+            top: -300px;
+            left: -490px;
+            width: auto;
+            height: auto;
+            pointer-events: none;
+        }
+
+        .illustration-right {
+            position: absolute;
+            top: -150px;
+            right: -430px;
+            width: 700px;
+            height: auto;
+            pointer-events: none;
+        }
+
+        .btn-bottom-left {
+            position: absolute;
+            bottom: -10px;
+            left: -170px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 20;
+        }
+
+        .btn-bottom-left:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-bottom-right {
+            position: absolute;
+            bottom: -10px;
+            right: -120px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 20;
+        }
+
+        .btn-bottom-right:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-btn-img {
+            width: 160px;
+            height: auto;
+            display: block;
+        }
+
+        .guide-text {
+            font-size: 52px;
+            font-weight: bold;
+            font-family: 'Georgia', '楷体', serif;
+            letter-spacing: 8px;
+            color: #c9a03d;
+            text-align: center;
+            opacity: 0;
+            margin-top: -100px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .guide-text:hover {
+            color: #e8c97a;
+            transform: scale(1.05);
+            text-shadow: 0 0 15px rgba(201, 160, 61, 0.5);
+        }
+
+        .guide-text:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        @keyframes fadeInContent {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-content {
+            display: none;
+            text-align: center;
+            width: 100%;
+        }
+
+        .main-content.show {
+            display: block;
+            animation: fadeInContent 0.8s ease forwards;
+        }
+
+        @media (max-width: 800px) {
+            .nav-img { height: 24px; }
+            .search-btn { width: 30px; height: 30px; margin-top: 12px; }
+            .logo-img { height: 60px; }
+            .scroll-paper { padding: 25px 30px; }
+            .poem-line { font-size: 20px; letter-spacing: 4px; }
+            .illustration-left { width: 60px; top: -40px; left: -30px; }
+            .illustration-right { width: 60px; top: -40px; right: -30px; }
+            .btn-bottom-left { bottom: -60px; left: -20px; }
+            .btn-bottom-right { bottom: -60px; right: -20px; }
+            .nav-btn-img { width: 70px; }
+            .guide-text { font-size: 32px; margin-top: -60px; }
+            .roller-l, .roller-r { width: 55px; background-size: 55px 100%; }
+        }
+
+        @media (max-width: 600px) {
+            .nav-img { height: 18px; }
+            .search-btn { width: 26px; height: 26px; margin-top: 8px; }
+            .logo-img { height: 45px; }
+            .scroll-paper { padding: 20px 20px; }
+            .poem-line { font-size: 16px; letter-spacing: 3px; }
+            .illustration-left { width: 50px; top: -30px; left: -20px; }
+            .illustration-right { width: 50px; top: -30px; right: -20px; }
+            .btn-bottom-left { bottom: -45px; left: -15px; }
+            .btn-bottom-right { bottom: -45px; right: -15px; }
+            .nav-btn-img { width: 55px; }
+            .guide-text { font-size: 24px; margin-top: -40px; }
+            .roller-l, .roller-r { width: 40px; background-size: 40px 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <img class="bg-image" src="./images/bg-image.jpg" alt="背景图片">
+
+    <div class="content">
+        <div class="nav-bar">
+            <div class="nav-left">
+                <div class="logo-search-group">
+                    <a href="index.html" class="logo-item" id="logoLink">
+                        <img src="./images/logo-icon.png" alt="建筑Logo" class="logo-img">
+                    </a>
+                    <div class="search-btn" id="searchBtn" role="button">
+                        <span class="search-icon"></span>
+                    </div>
+                </div>
+                <a href="index.html" class="nav-item" data-page="index.html">
+                    <img src="./images/首页.png" alt="首页" class="nav-img">
+                </a>
+                <a href="about.html" class="nav-item" data-page="about.html">
+                    <img src="./images/家族溯源.png" alt="家族溯源" class="nav-img">
+                </a>
+                <a href="achievement.html" class="nav-item" data-page="achievement.html">
+                    <img src="./images/建筑成就.png" alt="建筑成就" class="nav-img">
+                </a>
+                <a href="craft.html" class="nav-item" data-page="craft.html">
+                    <img src="./images/烫样技艺.png" alt="烫样技艺" class="nav-img">
+                </a>
+                <a href="digital.html" class="nav-item" data-page="digital.html">
+                    <img src="./images/数字展厅.png" alt="数字展厅" class="nav-img">
+                </a>
+                <a href="literature.html" class="nav-item" data-page="literature.html">
+                    <img src="./images/文献资料.png" alt="文献资料" class="nav-img">
+                </a>
+                <a href="game.html" class="nav-item" data-page="game.html">
+                    <img src="./images/匠心工坊.png" alt="匠心工坊" class="nav-img">
+                </a>
+            </div>
+        </div>
+
+        <div class="scroll-wrapper">
+            <div class="scroll-container" id="scrollContainer">
+                <div class="scroll-rolled">
+                    <div class="scroll-inner">
+                        <div class="roller-l"></div>
+                        <div class="scroll-paper">
+                            <div class="paper-content">
+                                <div class="poem-container">
+                                    <div class="poem-line line1">雷氏一脉，源远流长</div>
+                                    <div class="poem-line line2">百年家承，世代流芳</div>
+                                    <div class="poem-line line3">探寻八代世系，铭记岁月大事记</div>
+                                </div>
+                                <div class="guide-area">
+                                    <img src="./images/illustration-left.png" alt="左插图" class="illustration-left">
+                                    <img src="./images/illustration-right.png" alt="右插图" class="illustration-right">
+                                    <div class="guide-text">你想先探索？</div>
+                                    <div class="btn-bottom-left">
+                                        <img src="./images/button-left.png" alt="按钮左" class="nav-btn-img">
+                                    </div>
+                                    <div class="btn-bottom-right">
+                                        <img src="./images/button-right.png" alt="按钮右" class="nav-btn-img">
+                                    </div>
+                                </div>
+                                <div class="main-content"></div>
+                            </div>
+                        </div>
+                        <div class="roller-r"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="click-hint" id="clickHint">
+            <div class="finger-icon">☝️</div>
+            <div class="hint-text">点击卷轴，展开家族溯源</div>
+        </div>
+    </div>
+
+    <script>
+        // 导航栏高亮
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navItems = document.querySelectorAll('.nav-item');
+            const logoLink = document.getElementById('logoLink');
+            
+            navItems.forEach(item => item.classList.remove('active'));
+            if (logoLink) logoLink.classList.remove('active');
+            
+            if (currentPage === 'index.html') {
+                if (logoLink) logoLink.classList.add('active');
+                navItems.forEach(item => {
+                    if (item.getAttribute('href') === 'index.html') {
+                        item.classList.add('active');
+                    }
+                });
+            } else {
+                navItems.forEach(item => {
+                    if (item.getAttribute('href') === currentPage) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+        });
+
+        document.getElementById('searchBtn')?.addEventListener('click', () => {
+            alert('🔍 搜索功能开发中');
+        });
+
+        document.querySelector('.btn-bottom-left')?.addEventListener('click', () => {
+            window.location.href = 'family-events.html';
+        });
+
+        document.querySelector('.btn-bottom-right')?.addEventListener('click', () => {
+            window.location.href = 'family-tree.html';
+        });
+
+        // 隐藏提示的函数
+        function hideClickHint() {
+            const hint = document.getElementById('clickHint');
+            if (hint) {
+                hint.classList.add('fade-out');
+                setTimeout(() => {
+                    hint.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // // 绑定卷轴点击事件（放在 DOM 加载后）
+        // function bindScrollContainerClick() {
+        //     const scrollContainer = document.getElementById('scrollContainer');
+        //     if (scrollContainer) {
+        //         scrollContainer.addEventListener('click', () => {
+        //             hideClickHint();
+        //         });
+        //     }
+        // }
+
+        // 逐行诗句动画
+        function startPoemAnimation() {
+            const poemContainer = document.querySelector('.poem-container');
+            const guideText = document.querySelector('.guide-text');
+            const mainContent = document.querySelector('.main-content');
+            const illustrationLeft = document.querySelector('.illustration-left');
+            const illustrationRight = document.querySelector('.illustration-right');
+            const btnLeft = document.querySelector('.btn-bottom-left');
+            const btnRight = document.querySelector('.btn-bottom-right');
+            const lines = document.querySelectorAll('.poem-line');
+            
+            if (!lines.length) return;
+            
+            lines.forEach((line, index) => {
+                setTimeout(() => {
+                    line.style.animation = 'fadeInUp 1.2s ease forwards';
+                }, index * 1200);
+            });
+            
+            const totalDuration = lines.length * 1200 + 1000;
+            setTimeout(() => {
+                lines.forEach(line => {
+                    line.style.animation = 'fadeOut 0.8s ease forwards';
+                });
+                
+                setTimeout(() => {
+                    poemContainer.style.display = 'none';
+                    
+                    guideText.style.animation = 'fadeInUp 0.8s ease forwards';
+                    
+                    guideText.addEventListener('animationend', function onGuideTextShow() {
+                        guideText.removeEventListener('animationend', onGuideTextShow);
+                        
+                        setTimeout(() => {
+                            if (illustrationLeft) illustrationLeft.classList.add('show');
+                            if (illustrationRight) illustrationRight.classList.add('show');
+                            if (btnLeft) btnLeft.classList.add('show');
+                            if (btnRight) btnRight.classList.add('show');
+                        }, 300);
+                    });
+                    
+                    guideText.addEventListener('click', function onClick() {
+                        guideText.style.animation = 'fadeOut 0.4s ease forwards';
+                        setTimeout(() => {
+                            guideText.style.display = 'none';
+                            mainContent.classList.add('show');
+                        }, 400);
+                        guideText.removeEventListener('click', onClick);
+                    });
+                }, 900);
+            }, totalDuration);
+        }
+        
+        // 卷轴动画
+     // 卷轴动画
+window.addEventListener('load', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const skipAnimation = urlParams.get('skip') === 'true';
+
+    if (skipAnimation) {
+        const container = document.getElementById('scrollContainer');
+        if (container) container.classList.add('scroll-open');
+        
+        const poemContainer = document.querySelector('.poem-container');
+        if (poemContainer) poemContainer.style.display = 'none';
+        
+        const guideText = document.querySelector('.guide-text');
+        if (guideText) {
+            guideText.style.animation = 'none';
+            guideText.style.opacity = '1';
+        }
+        
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) mainContent.classList.add('show');
+        
+        const illustrationLeft = document.querySelector('.illustration-left');
+        const illustrationRight = document.querySelector('.illustration-right');
+        const btnLeft = document.querySelector('.btn-bottom-left');
+        const btnRight = document.querySelector('.btn-bottom-right');
+        
+        if (illustrationLeft) illustrationLeft.classList.add('show');
+        if (illustrationRight) illustrationRight.classList.add('show');
+        if (btnLeft) btnLeft.classList.add('show');
+        if (btnRight) btnRight.classList.add('show');
+        
+        hideClickHint();
+        return;
+    }
+    
+    // ✅ 创建透明遮罩层（不拦截导航栏点击）
+    const hiddenOverlay = document.createElement('div');
+    hiddenOverlay.id = 'hiddenOverlay';
+    hiddenOverlay.style.position = 'fixed';
+    hiddenOverlay.style.top = '0';
+    hiddenOverlay.style.left = '0';
+    hiddenOverlay.style.width = '100%';
+    hiddenOverlay.style.height = '100%';
+    hiddenOverlay.style.zIndex = '1999';
+    hiddenOverlay.style.cursor = 'pointer';
+    hiddenOverlay.style.background = 'transparent';
+    hiddenOverlay.style.pointerEvents = 'none';  // ✅ 不拦截点击，让导航栏可点
+    document.body.appendChild(hiddenOverlay);
+    
+    // ✅ 卷轴容器独立处理点击（触发展开）
+    const scrollContainer = document.getElementById('scrollContainer');
+    if (scrollContainer) {
+        scrollContainer.style.position = 'relative';
+        scrollContainer.style.zIndex = '2000';
+        scrollContainer.style.cursor = 'pointer';
+        
+        scrollContainer.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hiddenOverlay.remove();
+            hideClickHint();
+            
+            const audio = new Audio('./audio/book-open.mp3');
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log('音频播放失败:', e));
+            
+            const container = document.getElementById('scrollContainer');
+            if (container) {
+                container.classList.add('scroll-open');
+                startPoemAnimation();
+            }
+        });
+    }
+});
+    </script>
+</body>
+</html>

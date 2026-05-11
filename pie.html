@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>样式雷 · 饼图</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: transparent;
+            font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+        }
+        .charts-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding: 10px;
+        }
+        .chart-card {
+            background: transparent;
+            border-radius: 24px;
+            padding: 15px;
+        }
+        .title-section {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .title-section h1 {
+            font-size: 18px;
+            color: #8b5a2b;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+        .title-section .sub {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .title-section .sub span {
+            font-size: 11px;
+            color: #b99a78;
+            letter-spacing: 1px;
+        }
+        .card-title {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #8b5a2b;
+            margin-bottom: 10px;
+        }
+        .legend-note {
+            text-align: center;
+            font-size: 10px;
+            color: #b99a78;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        #pieChart, #overseasPieChart {
+            width: 100%;
+            height: 320px;
+        }
+        @media (max-width: 768px) {
+            #pieChart, #overseasPieChart { height: 280px; }
+        }
+    </style>
+</head>
+<body>
+<div class="charts-wrapper">
+    <!-- 典藏分布饼图 -->
+    <div class="chart-card">
+        <div class="title-section">
+            <h1>📐 样式雷图档 · 典藏分布</h1>
+            <div class="sub">
+                <span>🏯 世界记忆遗产</span>
+                <span>✍️ 雷氏世家烫样图稿</span>
+                <span>🗺️ 全球收藏格局</span>
+            </div>
+        </div>
+        <div class="card-title">🌐 全球占比 · 馆藏份额</div>
+        <div id="pieChart"></div>
+        <div class="legend-note">※ 鼠标悬停查看详细馆藏数量及占比</div>
+    </div>
+
+    <!-- 海外分布饼图 -->
+    <div class="chart-card">
+        <div class="title-section">
+            <h2 style="font-size:16px; color:#8b5a2b;"><i class="fas fa-globe-asia"></i> 样式雷 · 海外文献收藏占比</h2>
+            <p style="font-size:11px; color:#b99a78;"><i class="fas fa-archive"></i> 世界记忆遗产 · 样式雷营造文献海外典藏分布</p>
+        </div>
+        <div id="overseasPieChart"></div>
+        <div class="footer-stats" style="text-align:center; margin-top:10px;">
+            <span style="font-size:12px; color:#8b5a2b;"><i class="fas fa-cube"></i> 海外总量：<strong>约 307+</strong> 件</span>
+            <span style="font-size:10px; color:#b99a78; margin-left:15px;"><i class="fas fa-scroll"></i> 数据来源：国家图书馆官方统计</span>
+        </div>
+        <div class="seal-mark" style="text-align:center; font-size:10px; color:#c9a03d; margin-top:10px;">⚘ 样式雷世家 · 文献遗珍全球分布 ⚘</div>
+    </div>
+</div>
+<script>
+    // ========= 典藏分布饼图 =========
+    (function() {
+        const rawData = [
+            { name: "中国国家图书馆", value: 15000, detail: "约15,000件 · 占全球存世量3/4，为最大收藏机构" },
+            { name: "故宫博物院", value: 2300, detail: "约2,300件 · 含82件样式雷烫样" },
+            { name: "中国第一历史档案馆", value: 1000, detail: "约1,000件 · 珍藏样式雷相关文献" },
+            { name: "清华大学建筑学院", value: 300, detail: "300余件 · 教学研究典藏" },
+            { name: "日本东京大学东洋文化研究所", value: 300, detail: "约300余件 · 海外最大收藏" },
+            { name: "其他机构", value: 400, detail: "约400件 · 散落全球各文博院所" }
+        ];
+
+        const pieChartDom = document.getElementById('pieChart');
+        if (pieChartDom) {
+            const pieChart = echarts.init(pieChartDom);
+            const pieData = rawData.map(item => ({
+                name: item.name,
+                value: item.value,
+                detail: item.detail
+            }));
+
+            pieChart.setOption({
+                backgroundColor: 'transparent',
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: 'rgba(250, 245, 235, 0.96)',
+                    borderColor: '#cfb991',
+                    borderWidth: 1,
+                    textStyle: { color: '#4f321a', fontSize: 13 },
+                    formatter: function(params) {
+                        const percent = params.percent.toFixed(1);
+                        return `<strong>📌 ${params.name}</strong><br/>📦 数量: ${params.value.toLocaleString()} 件<br/>📈 占比: ${percent}%<br/>✏️ ${params.data.detail}`;
+                    }
+                },
+                legend: {
+                    orient: 'vertical',
+                    right: '5%',
+                    top: 'center',
+                    textStyle: { color: '#6f4e2e', fontSize: 11 },
+                    itemGap: 10
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['42%', '68%'],
+                    center: ['50%', '52%'],
+                    itemStyle: { borderRadius: 8, borderColor: '#fef3e4', borderWidth: 1.5 },
+                    label: { show: true, position: 'outside', formatter: '{b} : {d}%', color: '#684f2c', fontSize: 11 },
+                    labelLine: { length: 8, length2: 8, smooth: true, lineStyle: { color: '#c6aa7c' } },
+                    data: pieData,
+                    color: ['#b58a5c', '#9c754e', '#84683f', '#a0845c', '#bc9a6e', '#cfb48c']
+                }]
+            });
+
+            window.addEventListener('resize', () => pieChart.resize());
+        }
+    })();
+
+    // ========= 海外分布饼图 =========
+    (function() {
+        const overseasPieChartDom = document.getElementById('overseasPieChart');
+        if (overseasPieChartDom) {
+            const overseasPieChart = echarts.init(overseasPieChartDom);
+            overseasPieChart.setOption({
+                backgroundColor: 'transparent',
+                tooltip: {
+                    trigger: 'item',
+                    backgroundColor: 'rgba(250, 245, 235, 0.96)',
+                    borderColor: '#cfb991',
+                    borderWidth: 1,
+                    textStyle: { color: '#4f321a', fontSize: 12 },
+                    formatter: function(params) {
+                        const percent = params.percent.toFixed(1);
+                        let detailText = '';
+                        if (params.name === '日本东京大学东洋文化研究所') {
+                            detailText = '（样式雷图档与绘图）';
+                        }
+                        return `<strong>📌 ${params.name}</strong><br/>📦 收藏数量: ${params.value} 件${detailText}<br/>📊 占比: ${percent}%<br/>✨ 样式雷营造文献 · 世界记忆遗产`;
+                    }
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    textStyle: { color: '#6f4e2e', fontSize: 11 },
+                    formatter: function(name) {
+                        if (name === '日本东京大学东洋文化研究所') return '日本·东大研究所';
+                        if (name === '德国汉堡民族学博物馆') return '德国·汉堡博物馆';
+                        return name;
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '65%'],
+                    center: ['55%', '55%'],
+                    data: [
+                        { name: '日本东京大学东洋文化研究所', value: 300, itemStyle: { color: '#b58a5c' } },
+                        { name: '德国汉堡民族学博物馆', value: 8, itemStyle: { color: '#9c754e' } },
+                        { name: '美国博物馆', value: 4, itemStyle: { color: '#84683f' } },
+                        { name: '法国吉美博物馆', value: 3, itemStyle: { color: '#a0845c' } },
+                        { name: '英国博物馆', value: 2, itemStyle: { color: '#bc9a6e' } }
+                    ],
+                    label: {
+                        show: true,
+                        position: 'outside',
+                        formatter: '{b} : {d}%',
+                        color: '#684f2c',
+                        fontSize: 11
+                    },
+                    labelLine: {
+                        length: 10,
+                        length2: 8,
+                        smooth: true,
+                        lineStyle: { color: '#c6aa7c' }
+                    },
+                    itemStyle: {
+                        borderRadius: 8,
+                        borderColor: '#fef3e4',
+                        borderWidth: 1.5
+                    },
+                    emphasis: {
+                        scale: true,
+                        label: { show: true, fontWeight: 'bold' }
+                    }
+                }]
+            });
+            window.addEventListener('resize', () => overseasPieChart.resize());
+        }
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>样式雷 · 匠心工坊 - 知识答题</title>
+    <style>
+        :root {
+            --bg-deep: #0a0806;
+            --bg-card: rgba(22, 16, 10, 0.78);
+            --border-gold: rgba(210, 180, 140, 0.4);
+            --border-gold-hover: rgba(210, 180, 140, 0.65);
+            --text-primary: #e8d8b0;
+            --text-secondary: #c9a03d;
+            --text-muted: #b8a080;
+            --accent: #c9a03d;
+            --accent-light: #e8c97a;
+            --bg-hover: rgba(210, 180, 140, 0.1);
+            --bg-active: rgba(201, 160, 61, 0.2);
+            --danger: #a0523d;
+            --success: #7cba6a;
+            --font-serif: 'Georgia', 'Times New Roman', '楷体', 'STKaiti', 'KaiTi', serif;
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 22px;
+            --radius-xl: 28px;
+            --shadow-card: 0 8px 40px rgba(0, 0, 0, 0.35);
+            --shadow-hover: 0 14px 50px rgba(0, 0, 0, 0.5);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: var(--font-serif);
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.55;
+            pointer-events: none;
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 16px 20px 30px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 14px 22px;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-gold);
+            box-shadow: var(--shadow-card);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 15px;
+            padding: 10px 18px;
+            border-radius: 28px;
+            background: rgba(201, 160, 61, 0.08);
+            border: 1px solid rgba(201, 160, 61, 0.35);
+            transition: all var(--transition);
+            cursor: pointer;
+            font-family: var(--font-serif);
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            background: rgba(201, 160, 61, 0.18);
+            border-color: var(--accent-light);
+            color: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(201, 160, 61, 0.18);
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .game-tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .game-tab {
+            padding: 10px 18px;
+            border-radius: 26px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(210, 180, 140, 0.25);
+            color: #b8a080;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 13px;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            font-family: var(--font-serif);
+            position: relative;
+        }
+
+        .game-tab:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+            color: #d4b870;
+            transform: translateY(-1px);
+        }
+
+        .game-tab.active {
+            background: var(--bg-active);
+            border-color: var(--accent);
+            color: var(--accent-light);
+            box-shadow: 0 0 18px rgba(201, 160, 61, 0.2);
+            font-weight: bold;
+        }
+
+        .game-tab .tab-icon {
+            margin-right: 4px;
+        }
+
+        /* 答题面板容器 */
+        .quiz-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            min-height: 450px;
+            justify-content: center;
+        }
+
+        .quiz-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-gold);
+            padding: 30px 24px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+        }
+
+        .quiz-timer {
+            font-size: 40px;
+            font-weight: bold;
+            color: var(--accent-light);
+            margin-bottom: 12px;
+            font-family: var(--font-serif);
+        }
+
+        .quiz-timer.warning {
+            color: #e07050;
+            animation: pulse 0.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .quiz-question {
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: #e8d8b0;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            padding: 13px 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(210, 180, 140, 0.25);
+            color: #d5c8b0;
+            cursor: pointer;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: all var(--transition);
+            font-family: var(--font-serif);
+            text-align: center;
+        }
+
+        .quiz-option:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+            color: var(--accent-light);
+        }
+
+        .quiz-option.correct {
+            background: rgba(100, 180, 120, 0.25) !important;
+            border-color: #7cba6a !important;
+            color: #a0e0a0 !important;
+        }
+
+        .quiz-option.wrong {
+            background: rgba(200, 100, 80, 0.25) !important;
+            border-color: #c86050 !important;
+            color: #e8a090 !important;
+        }
+
+        .quiz-feedback {
+            font-size: 13px;
+            color: #b8a080;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        .quiz-score-display {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .quiz-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            background: rgba(201, 160, 61, 0.15);
+            border: 1px solid rgba(201, 160, 61, 0.35);
+            color: var(--text-secondary);
+        }
+
+        .quiz-progress {
+            font-size: 13px;
+            color: #a08060;
+            letter-spacing: 1px;
+        }
+
+        .action-btn {
+            padding: 11px 26px;
+            border-radius: 28px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: 1px solid rgba(210, 180, 140, 0.35);
+            font-family: var(--font-serif);
+            white-space: nowrap;
+            background: transparent;
+            color: #b8a080;
+        }
+
+        .btn-submit {
+            background: rgba(201, 160, 61, 0.18);
+            color: var(--accent-light);
+            border-color: var(--accent);
+        }
+
+        .btn-submit:hover {
+            background: rgba(201, 160, 61, 0.3);
+            box-shadow: 0 0 20px rgba(201, 160, 61, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background: transparent;
+            color: #b8a080;
+        }
+
+        .btn-reset:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: #d4b870;
+            border-color: var(--border-gold-hover);
+        }
+
+        /* 结果弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(28, 18, 10, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            border: 2px solid rgba(201, 160, 61, 0.5);
+            padding: 36px 28px;
+            text-align: center;
+            max-width: 440px;
+            width: 92%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+        }
+
+        .modal-content h2 {
+            font-size: 26px;
+            color: var(--accent-light);
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            font-family: var(--font-serif);
+        }
+
+        .modal-content .achievement {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            padding: 10px 18px;
+            background: rgba(201, 160, 61, 0.1);
+            border-radius: 10px;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .modal-content .knowledge {
+            font-size: 13px;
+            color: #b8a080;
+            line-height: 1.8;
+            text-align: left;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-close {
+            padding: 10px 24px;
+            border-radius: 24px;
+            background: rgba(201, 160, 61, 0.18);
+            border: 1px solid var(--accent);
+            color: var(--accent-light);
+            cursor: pointer;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: all var(--transition);
+            font-family: var(--font-serif);
+        }
+
+        .modal-close:hover {
+            background: rgba(201, 160, 61, 0.3);
+        }
+
+        @media (max-width: 1150px) {
+            .top-bar {
+                justify-content: center;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .game-tab {
+                padding: 7px 10px;
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+            .back-btn {
+                font-size: 13px;
+                padding: 8px 14px;
+            }
+            .quiz-card {
+                padding: 20px 14px;
+            }
+            .quiz-question {
+                font-size: 15px;
+            }
+            .quiz-timer {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img class="bg-image" src="./images/bg-image.jpg" alt="背景" onerror="this.style.display='none'">
+
+    <div class="app-container">
+        <div class="top-bar">
+            <a href="game.html" class="back-btn" title="返回匠心工坊">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                返回匠心工坊
+            </a>
+            <div class="game-tabs" id="gameTabs">
+                <div class="game-tab" data-game="puzzle"><span class="tab-icon">🧩</span>建筑拼图</div>
+                <div class="game-tab" data-game="craft"><span class="tab-icon">🧹</span>古建拂尘</div>
+                <div class="game-tab active" data-game="quiz"><span class="tab-icon">📝</span>知识答题</div>
+                <div class="game-tab" data-game="wall"><span class="tab-icon">💬</span>留言墙</div>
+            </div>
+            <div class="difficulty-select" style="visibility:hidden;"></div>
+        </div>
+
+        <div class="quiz-panel active" id="quizPanel">
+            <div class="quiz-card" id="quizCard">
+                <div class="quiz-timer" id="quizTimer">15</div>
+                <div class="quiz-question" id="quizQuestion"></div>
+                <div class="quiz-options" id="quizOptions"></div>
+                <div class="quiz-feedback" id="quizFeedback"></div>
+                <div class="quiz-score-display">
+                    <span class="quiz-badge" id="quizBadge">🏅 称号：-</span>
+                    <span class="quiz-progress" id="quizProgress">0/10</span>
+                </div>
+                <button class="action-btn btn-submit" id="quizNextBtn" style="margin-top:12px;display:none;">下一题 ▶</button>
+                <button class="action-btn btn-reset" id="quizRestartBtn" style="margin-top:8px;">🔄 重新挑战</button>
+                <button class="action-btn btn-reset" id="resetBadgeBtn" style="margin-top:8px;">🔄 重置勋章</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="quizResultModal">
+        <div class="modal-content">
+            <h2 id="quizResultTitle">📝 答题结束</h2>
+            <div class="achievement" id="quizResultBadge"></div>
+            <div class="knowledge" id="quizResultSummary"></div>
+            <button class="modal-close" id="quizResultClose">关闭</button>
+        </div>
+    </div>
+
+    <!-- 确认重置勋章弹窗 -->
+    <div class="modal-overlay" id="confirmResetModal">
+        <div class="modal-content" style="max-width: 370px;">
+            <h2 style="font-size: 22px; margin-bottom: 8px;">🔄 重置勋章</h2>
+            <p style="color: #b8a080; margin-bottom: 18px; letter-spacing: 1px;">确定要重置当前勋章记录吗？<br>所有称号都将恢复为默认状态。</p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <button class="modal-close" id="confirmResetYes" style="background: rgba(201,160,61,0.22); border-color: var(--accent);">是</button>
+                <button class="modal-close" id="confirmResetNo">否</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const quizQuestions = [
+                { q: '样式雷祖籍是江西哪里？', options: ['南昌', '永修县', '景德镇', '九江'], answer: 1, explanation: '样式雷家族祖籍江西省永修县（古称建昌）。', difficulty: '入门' },
+                { q: '样式雷一共传承了几代？', options: ['六代', '七代', '八代', '九代'], answer: 2, explanation: '样式雷家族一共传承了八代，从雷发达至雷献彩，延续200余年。', difficulty: '入门' },
+                { q: '"烫样"指的是什么？', options: ['建筑图纸', '建筑模型', '建筑雕刻', '建筑材料'], answer: 1, explanation: '烫样是样式雷制作的建筑立体模型，主要用于向皇帝展示建筑设计效果。', difficulty: '入门' },
+                { q: '样式雷参与设计的世界文化遗产有几项？', options: ['3项', '5项', '6项', '8项'], answer: 2, explanation: '样式雷参与设计的建筑中，共有6项被列入世界文化遗产名录。', difficulty: '入门' },
+                { q: '样式雷家族第一代传人是谁？', options: ['雷金玉', '雷发达', '雷家玺', '雷景修'], answer: 1, explanation: '雷发达（1619-1693）是样式雷家族的第一代传人，清初来到北京参与皇家建筑营造。', difficulty: '进阶' },
+                { q: '样式雷烫样主要用什么材料制作？', options: ['陶土', '草纸板、木料', '青铜', '石料'], answer: 1, explanation: '烫样主要使用草纸板、木料等轻便材料，便于制作、修改和运输。', difficulty: '进阶' },
+                { q: '样式雷图档中，"平格"的作用是什么？', options: ['装饰图案', '建筑选址与地形测绘', '木构件标记', '色彩标注'], answer: 1, explanation: '"平格"是样式雷用于建筑选址与地形测绘的网格系统，体现了科学的设计方法。', difficulty: '进阶' },
+                { q: '样式雷图档于哪一年入选《世界记忆名录》？', options: ['2003年', '2005年', '2007年', '2010年'], answer: 2, explanation: '2007年，样式雷建筑图档入选联合国教科文组织《世界记忆名录》。', difficulty: '挑战' },
+                { q: '以下哪项建筑不是样式雷设计的？', options: ['圆明园', '故宫角楼', '长城', '颐和园'], answer: 2, explanation: '长城是古代军事防御工程，样式雷主要参与清代皇家建筑的设计，与长城无关。', difficulty: '挑战' },
+                { q: '样式雷家族哪位传人主持了颐和园的修建？', options: ['雷发达', '雷金玉', '雷家玺', '雷献彩'], answer: 2, explanation: '第四代传人雷家玺曾主持颐和园（清漪园）的修建工程，贡献卓著。', difficulty: '挑战' }
+            ];
+
+            let currentIndex = 0, score = 0, timerSec = 15, timerInterval = null, answered = false;
+            let shuffledQuestions = [];
+
+            function shuffleArray(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+            }
+
+            function shuffleQuestions() {
+                shuffledQuestions = [...quizQuestions];
+                shuffleArray(shuffledQuestions);
+                shuffledQuestions = shuffledQuestions.slice(0, 10);
+            }
+
+            function updateBadge() {
+                let badge = score <= 3 ? '🔨 匠心学徒' : score <= 7 ? '📐 古建达人' : score <= 9 ? '🏛️ 样式雷传人' : '👑 样式雷大师';
+                document.getElementById('quizBadge').textContent = '🏅 ' + badge;
+            }
+
+            function loadQuestion() {
+                if (currentIndex >= shuffledQuestions.length) { endQuiz(); return; }
+                answered = false;
+                timerSec = 15;
+                const timerEl = document.getElementById('quizTimer');
+                timerEl.textContent = timerSec;
+                timerEl.classList.remove('warning');
+                document.getElementById('quizNextBtn').style.display = 'none';
+                document.getElementById('quizFeedback').textContent = '';
+                document.getElementById('quizProgress').textContent = currentIndex + '/' + shuffledQuestions.length;
+                const q = shuffledQuestions[currentIndex];
+                document.getElementById('quizQuestion').textContent = `【${q.difficulty}】${currentIndex + 1}. ${q.q}`;
+                const optionsContainer = document.getElementById('quizOptions');
+                optionsContainer.innerHTML = '';
+                q.options.forEach((opt, i) => {
+                    const btn = document.createElement('div');
+                    btn.className = 'quiz-option';
+                    btn.textContent = opt;
+                    btn.addEventListener('click', () => selectAnswer(i));
+                    optionsContainer.appendChild(btn);
+                });
+                clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    timerSec--;
+                    timerEl.textContent = timerSec;
+                    if (timerSec <= 5) timerEl.classList.add('warning');
+                    if (timerSec <= 0) { clearInterval(timerInterval); if (!answered) timeUp(); }
+                }, 1000);
+            }
+
+            function selectAnswer(index) {
+                if (answered) return;
+                answered = true;
+                clearInterval(timerInterval);
+                const q = shuffledQuestions[currentIndex];
+                const options = document.querySelectorAll('#quizOptions .quiz-option');
+                const isCorrect = index === q.answer;
+                if (isCorrect) {
+                    score++;
+                    options[index].classList.add('correct');
+                    document.getElementById('quizFeedback').textContent = '✅ 正确！' + q.explanation;
+                } else {
+                    options[index].classList.add('wrong');
+                    options[q.answer].classList.add('correct');
+                    document.getElementById('quizFeedback').textContent = '❌ 错误！正确答案是：' + q.options[q.answer] + '。' + q.explanation;
+                }
+                updateBadge();
+                document.getElementById('quizNextBtn').style.display = 'inline-block';
+                document.getElementById('quizNextBtn').textContent = currentIndex < shuffledQuestions.length - 1 ? '下一题 ▶' : '查看结果 🏆';
+            }
+
+            function timeUp() {
+                answered = true;
+                const q = shuffledQuestions[currentIndex];
+                const options = document.querySelectorAll('#quizOptions .quiz-option');
+                options[q.answer].classList.add('correct');
+                document.getElementById('quizFeedback').textContent = '⏰ 时间到！正确答案是：' + q.options[q.answer] + '。' + q.explanation;
+                updateBadge();
+                document.getElementById('quizNextBtn').style.display = 'inline-block';
+                document.getElementById('quizNextBtn').textContent = currentIndex < shuffledQuestions.length - 1 ? '下一题 ▶' : '查看结果 🏆';
+            }
+
+            function endQuiz() {
+                clearInterval(timerInterval);
+                const total = shuffledQuestions.length;
+                let badge = score <= 3 ? '🔨 匠心学徒 · 铜制小刨子' : score <= 7 ? '📐 古建达人 · 银制建筑图样' : score <= 9 ? '🏛️ 样式雷传承人 · 金制烫样模型' : '👑 样式雷大师 · 钻石烫样勋章';
+                document.getElementById('quizResultTitle').textContent = '📝 答题挑战结束！';
+                document.getElementById('quizResultBadge').textContent = '🏆 ' + badge;
+                document.getElementById('quizResultSummary').textContent = `正确率：${score}/${total} | 得分：${Math.round((score/total)*100)}分\n\n知识点回顾：样式雷家族八代传承，其烫样与图档是研究清代建筑的重要资料。2007年样式雷图档入选《世界记忆名录》。`;
+                document.getElementById('quizResultModal').classList.add('show');
+            }
+
+            // 重置勋章（清空显示，不改变题目和进度）
+            function resetBadge() {
+                score = 0;
+                updateBadge();
+                // 也可选择清空结果弹窗内容，但这里只重置当前显示的称号
+                document.getElementById('quizBadge').textContent = '🏅 称号：-';
+                // 如果希望结果弹窗也重置（下次答题会覆盖，所以可不处理）
+            }
+
+            // 按钮事件
+            document.getElementById('quizNextBtn').addEventListener('click', () => { currentIndex++; loadQuestion(); });
+            document.getElementById('quizRestartBtn').addEventListener('click', () => {
+                clearInterval(timerInterval);
+                score = 0; currentIndex = 0;
+                shuffleQuestions();
+                updateBadge();
+                document.getElementById('quizProgress').textContent = '0/' + shuffledQuestions.length;
+                loadQuestion();
+            });
+            document.getElementById('quizResultClose').addEventListener('click', () => document.getElementById('quizResultModal').classList.remove('show'));
+
+            // 重置勋章按钮
+            document.getElementById('resetBadgeBtn').addEventListener('click', () => {
+                document.getElementById('confirmResetModal').classList.add('show');
+            });
+            document.getElementById('confirmResetYes').addEventListener('click', () => {
+                resetBadge();
+                document.getElementById('confirmResetModal').classList.remove('show');
+            });
+            document.getElementById('confirmResetNo').addEventListener('click', () => {
+                document.getElementById('confirmResetModal').classList.remove('show');
+            });
+
+            // 标签跳转
+            document.querySelectorAll('.game-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const pages = { puzzle: 'game2.html', craft: 'game3.html', quiz: 'game4.html', wall: 'game5.html' };
+                    window.location.href = pages[tab.dataset.game];
+                });
+            });
+
+            // 初始化
+            shuffleQuestions();
+            updateBadge();
+            loadQuestion();
+        })();
+    </script>
+</body>
+</html>

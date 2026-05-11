@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>样式雷 · 匠心工坊</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Georgia', 'Times New Roman', '宋体', 'KaiTi', 'STKaiti', serif;
+            background-color: #0a0806;
+        }
+
+        /* ========= 背景图 ========= */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ========= 内容层（无深色蒙版） ========= */
+        .content {
+            position: relative;
+            z-index: 20;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: transparent; /* 无蒙版，背景图完全可见 */
+        }
+
+        /* ========= 导航栏 ========= */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            padding: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(210, 180, 140, 0.55);
+            backdrop-filter: blur(2px);
+        }
+
+        .nav-left {
+            display: flex;
+            flex: 8;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .logo-search-group {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .logo-item {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo-img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin-top: 0;
+            transition: all 0.3s ease;
+        }
+
+        .logo-item:hover .logo-img {
+            filter: brightness(1.2) drop-shadow(0 0 5px rgba(210, 180, 140, 0.5));
+            transform: scale(1.02);
+        }
+
+        .search-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgb(144 101 45 / 55%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 38px;
+            margin-left: -40px;
+        }
+
+        .search-btn:hover {
+            background: rgba(210, 180, 140, 0.25);
+            border-color: rgba(210, 180, 140, 1);
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(210, 180, 140, 0.5);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(210,180,140,0.85)' stroke-width='1.8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-4.35-4.35M19 11a8 8 0 11-16 0 8 8 0 0116 0z' /%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 22px;
+            padding-bottom: 22px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(210, 180, 140, 0.15);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+
+        .nav-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-img {
+            filter: brightness(1.25) drop-shadow(0 0 4px rgba(210, 180, 140, 0.6));
+            transform: scale(1.05);
+        }
+
+        .nav-item:hover::before {
+            background-color: rgba(210, 180, 140, 0.9);
+            height: 35px;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 70%;
+            transform: translateY(-50%);
+            height: 28px;
+            width: 1px;
+            background-color: rgba(210, 180, 140, 0.55);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:first-of-type::before {
+            display: none;
+        }
+
+        .nav-item.active {
+            background: rgba(210, 180, 140, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-item.active .nav-img {
+            filter: brightness(1.3) drop-shadow(0 0 6px rgba(210, 180, 140, 0.7));
+            transform: scale(1.02);
+        }
+
+        .logo-item.active .logo-img {
+            filter: brightness(1.2) drop-shadow(0 0 5px rgba(210, 180, 140, 0.5));
+        }
+
+        /* ========= 主内容容器 ========= */
+        .main-wrapper {
+            flex: 1;
+            padding: 120px 30px 60px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            max-width: 1300px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ========= 通用模块卡片样式（浅色半透明） ========= */
+        .module-card {
+            background: rgba(245, 235, 215, 0.8);
+            border: 1px solid rgba(210, 180, 140, 0.45);
+            border-radius: 14px;
+            padding: 28px 24px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .module-card:hover {
+            border-color: rgba(210, 180, 140, 0.75);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35);
+            background: rgba(245, 235, 215, 0.22);
+        }
+
+        .module-title {
+            font-size: 26px;
+            font-family: 'Georgia', '楷体', 'STKaiti', serif;
+            letter-spacing: 4px;
+            color: #3a2a1a;  /* 深褐色，提高对比度 */
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 14px;
+            text-shadow: 0 1px 2px rgba(255, 245, 225, 0.5);
+        }
+
+        .module-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 1px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(160, 120, 70, 0.7) 20%,
+                    rgba(200, 160, 110, 0.9) 50%,
+                    rgba(160, 120, 70, 0.7) 80%,
+                    transparent);
+        }
+
+        /* ========= 建筑拼图区域（浅色半透明） ========= */
+        .puzzle-section {
+            background: rgba(245, 235, 215, 0.8);
+            border: 1px solid rgba(210, 180, 140, 0.45);
+            border-radius: 14px;
+            padding: 28px 20px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .puzzle-section:hover {
+            border-color: rgba(210, 180, 140, 0.75);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35);
+            background: rgba(245, 235, 215, 0.22);
+        }
+
+        .puzzle-title {
+            font-size: 28px;
+            font-family: 'Georgia', '楷体', 'STKaiti', serif;
+            letter-spacing: 5px;
+            color: #3a2a1a;
+            text-align: center;
+            margin-bottom: 22px;
+            position: relative;
+            padding-bottom: 14px;
+            text-shadow: 0 1px 2px rgba(255, 245, 225, 0.5);
+        }
+
+        .puzzle-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 1px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(160, 120, 70, 0.7) 20%,
+                    rgba(200, 160, 110, 0.9) 50%,
+                    rgba(160, 120, 70, 0.7) 80%,
+                    transparent);
+        }
+
+        .puzzle-container {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .puzzle-item {
+            width: 170px;
+            height: auto;
+            border: 2px solid rgba(210, 180, 140, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(30, 22, 14, 0.5);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .puzzle-item:hover {
+            border-color: rgba(210, 180, 140, 0.9);
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(210, 180, 140, 0.3);
+        }
+
+        .puzzle-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            transition: all 0.35s ease;
+        }
+
+        .puzzle-item:hover img {
+            filter: brightness(1.1) saturate(1.15);
+        }
+
+        .puzzle-label {
+            background: rgba(30, 22, 14, 0.85);
+            color: #f0e0c0;
+            text-align: center;
+            padding: 10px 8px;
+            font-size: 15px;
+            letter-spacing: 2px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid rgba(210, 180, 140, 0.4);
+            font-family: 'Georgia', '楷体', 'STKaiti', serif;
+            transition: all 0.35s ease;
+        }
+
+        .puzzle-item:hover .puzzle-label {
+            color: #fff0d0;
+            background: rgba(40, 28, 16, 0.9);
+        }
+
+        /* ========= 下方三栏布局 ========= */
+        .bottom-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 28px;
+        }
+
+        .bottom-container .module-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========= 探寻烫样工艺 - 选项列表 ========= */
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .option-item {
+            border: 1px solid rgba(210, 180, 140, 0.65);
+            border-radius: 8px;
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 22px;
+            letter-spacing: 3px;
+            color: #2a1e10;
+            background: rgba(250, 240, 220, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', '楷体', 'STKaiti', serif;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+            backdrop-filter: blur(4px);
+        }
+
+        .option-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                    transparent 0%,
+                    rgba(210, 180, 140, 0.1) 40%,
+                    rgba(210, 180, 140, 0.2) 60%,
+                    transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .option-item:hover {
+            border-color: rgba(210, 180, 140, 0.9);
+            color: #1f1408;
+            background: rgba(250, 240, 220, 0.35);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25), 0 0 15px rgba(210, 180, 140, 0.2);
+        }
+
+        .option-item:hover::before {
+            opacity: 1;
+        }
+
+        .option-item:active {
+            transform: scale(0.97);
+            transition: transform 0.1s ease;
+        }
+
+        /* ========= 古建知识挑战赛 ========= */
+        .challenge-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .roof-icon {
+            width: 260px;
+            height: 70px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 80'%3E%3Cpath d='M10 70 L 140 10 L 270 70' stroke='%23c9a03d' fill='none' stroke-width='2' opacity='0.8'/%3E%3Cpath d='M20 70 L 140 20 L 260 70' stroke='%23c9a03d' fill='none' stroke-width='2' opacity='0.65'/%3E%3Cpath d='M30 70 L 140 30 L 250 70' stroke='%23c9a03d' fill='none' stroke-width='2' opacity='0.5'/%3E%3Cpath d='M40 70 L 140 40 L 240 70' stroke='%23c9a03d' fill='none' stroke-width='2' opacity='0.35'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+            transition: all 0.3s ease;
+        }
+
+        .card-stack {
+            width: 220px;
+            height: 140px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .card-stack:hover {
+            transform: translateY(-4px);
+        }
+
+        .card {
+            position: absolute;
+            width: 200px;
+            height: 120px;
+            background-color: rgba(250, 240, 220, 0.25);
+            border: 1px solid rgba(210, 180, 140, 0.6);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .card-1 {
+            top: 10px;
+            left: 10px;
+            background-color: rgba(250, 240, 220, 0.18);
+            border-color: rgba(210, 180, 140, 0.45);
+        }
+
+        .card-stack:hover .card-1 {
+            top: 6px;
+            left: 6px;
+            border-color: rgba(210, 180, 140, 0.7);
+        }
+
+        .card-2 {
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 15px;
+            background-color: rgba(250, 240, 220, 0.3);
+            border-color: rgba(210, 180, 140, 0.7);
+        }
+
+        .card-bar {
+            height: 18px;
+            background: rgba(210, 180, 140, 0.6);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .card-bar-light {
+            height: 18px;
+            background: rgba(200, 160, 110, 0.5);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .card-stack:hover .card-bar {
+            background: rgba(210, 180, 140, 0.8);
+        }
+
+        .card-stack:hover .card-bar-light {
+            background: rgba(200, 160, 110, 0.7);
+        }
+
+        .challenge-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: #c67c4a;
+            color: #2a1e10;
+            width: 58px;
+            height: 58px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            letter-spacing: 1px;
+            font-weight: bold;
+            border: 1px solid rgba(210, 180, 140, 0.7);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            font-family: 'Georgia', '楷体', serif;
+        }
+
+        .card-stack:hover .challenge-badge {
+            background: #d89460;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.4), 0 0 12px rgba(200, 140, 80, 0.4);
+            transform: scale(1.04);
+        }
+
+        /* ========= 留言墙 ========= */
+        .message-input {
+            width: 100%;
+            height: 65px;
+            border: 1px solid rgba(210, 180, 140, 0.6);
+            border-radius: 8px;
+            background: rgba(250, 240, 220, 0.2);
+            color: #2a1e10;
+            font-family: 'Georgia', '楷体', 'STKaiti', serif;
+            font-size: 15px;
+            padding: 12px 16px;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            flex: 1;
+            min-height: 55px;
+        }
+
+        .message-input::placeholder {
+            color: rgba(60, 40, 20, 0.6);
+            letter-spacing: 2px;
+        }
+
+        .message-input:focus {
+            border-color: rgba(210, 180, 140, 0.9);
+            background: rgba(250, 240, 220, 0.35);
+            box-shadow: 0 0 20px rgba(210, 180, 140, 0.2);
+            color: #1f1408;
+        }
+
+        .message-hint {
+            text-align: center;
+            color: rgba(60, 40, 20, 0.7);
+            font-size: 13px;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            font-family: 'Georgia', '楷体', serif;
+            cursor: pointer;
+        }
+
+        /* ========= 响应式 ========= */
+        @media (max-width: 1100px) {
+            .bottom-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 22px;
+            }
+            .puzzle-item {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .bottom-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .puzzle-item {
+                width: 140px;
+            }
+            .puzzle-item img {
+                height: 160px;
+            }
+            .main-wrapper {
+                padding: 110px 16px 40px 16px;
+                gap: 24px;
+            }
+            .module-title {
+                font-size: 22px;
+                letter-spacing: 3px;
+            }
+            .puzzle-title {
+                font-size: 24px;
+                letter-spacing: 4px;
+            }
+            .option-item {
+                font-size: 18px;
+                padding: 13px 16px;
+            }
+            .nav-img {
+                height: 24px;
+            }
+            .logo-img {
+                height: 60px;
+            }
+            .search-btn {
+                width: 30px;
+                height: 30px;
+                margin-top: 28px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .puzzle-container {
+                gap: 10px;
+            }
+            .puzzle-item {
+                width: 120px;
+            }
+            .puzzle-item img {
+                height: 135px;
+            }
+            .puzzle-label {
+                font-size: 12px;
+                padding: 7px 5px;
+                letter-spacing: 1px;
+            }
+            .main-wrapper {
+                padding: 100px 10px 30px 10px;
+                gap: 18px;
+            }
+            .module-card {
+                padding: 18px 14px;
+            }
+            .puzzle-section {
+                padding: 18px 12px;
+            }
+            .module-title {
+                font-size: 19px;
+            }
+            .puzzle-title {
+                font-size: 20px;
+            }
+            .nav-img {
+                height: 18px;
+            }
+            .logo-img {
+                height: 45px;
+            }
+            .search-btn {
+                width: 26px;
+                height: 26px;
+                margin-top: 22px;
+            }
+            .card-stack {
+                width: 180px;
+                height: 115px;
+            }
+            .card {
+                width: 160px;
+                height: 95px;
+            }
+            .challenge-badge {
+                width: 46px;
+                height: 46px;
+                font-size: 11px;
+                bottom: 5px;
+                right: 5px;
+            }
+            .roof-icon {
+                width: 200px;
+                height: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景图片 -->
+    <img class="bg-image" src="./images/bg-image.jpg" alt="背景图片">
+
+    <div class="content">
+        <!-- ========= 导航栏 ========= -->
+        <div class="nav-bar">
+            <div class="nav-left">
+                <div class="logo-search-group">
+                    <a href="index.html" class="logo-item" id="logoLink">
+                        <img src="./images/logo-icon.png" alt="建筑Logo" class="logo-img">
+                    </a>
+                    <div class="search-btn" id="searchBtn" role="button">
+                        <span class="search-icon"></span>
+                    </div>
+                </div>
+                <a href="index.html" class="nav-item" data-page="index.html">
+                    <img src="./images/首页.png" alt="首页" class="nav-img">
+                </a>
+                <a href="about.html" class="nav-item" data-page="about.html">
+                    <img src="./images/家族溯源.png" alt="家族溯源" class="nav-img">
+                </a>
+                <a href="achievement.html" class="nav-item" data-page="achievement.html">
+                    <img src="./images/建筑成就.png" alt="建筑成就" class="nav-img">
+                </a>
+                <a href="craft.html" class="nav-item" data-page="craft.html">
+                    <img src="./images/烫样技艺.png" alt="烫样技艺" class="nav-img">
+                </a>
+                <a href="digital.html" class="nav-item" data-page="digital.html">
+                    <img src="./images/数字展厅.png" alt="数字展厅" class="nav-img">
+                </a>
+                <a href="literature.html" class="nav-item" data-page="literature.html">
+                    <img src="./images/文献资料.png" alt="文献资料" class="nav-img">
+                </a>
+                <a href="game.html" class="nav-item" data-page="game.html">
+                    <img src="./images/匠心工坊.png" alt="匠心工坊" class="nav-img">
+                </a>
+            </div>
+        </div>
+
+        <!-- ========= 主内容 ========= -->
+        <div class="main-wrapper">
+            <!-- 建筑拼图区域 -->
+            <div class="puzzle-section">
+                <div class="puzzle-title">建筑拼图</div>
+                <div class="puzzle-container">
+                    <div class="puzzle-item" data-building="颐和园佛香阁">
+                        <img src="images/game-颐和园佛香阁.jpg" alt="颐和园佛香阁">
+                        <div class="puzzle-label">颐和园佛香阁</div>
+                    </div>
+                    <div class="puzzle-item" data-building="天坛祈年殿">
+                        <img src="images/game-天坛祈年殿.jpg" alt="天坛祈年殿">
+                        <div class="puzzle-label">天坛祈年殿</div>
+                    </div>
+                    <div class="puzzle-item" data-building="清东陵">
+                        <img src="images/game-清东陵.jpg" alt="清东陵">
+                        <div class="puzzle-label">清东陵</div>
+                    </div>
+                    <div class="puzzle-item" data-building="故宫太和殿">
+                        <img src="images/game-故宫太和殿.jpg" alt="故宫太和殿">
+                        <div class="puzzle-label">故宫太和殿</div>
+                    </div>
+                    <div class="puzzle-item" data-building="承德避暑山庄">
+                        <img src="images/game-承德避暑山庄.jpg" alt="承德避暑山庄">
+                        <div class="puzzle-label">承德避暑山庄</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 下方三栏模块 -->
+            <div class="bottom-container">
+               
+                <div class="module-card">
+                    <div class="module-title">探寻古建筑工艺</div>
+                    <div class="option-list">
+                        <div class="option-item" data-craft-type="palace" title="探索宫殿建筑">🏯 宫殿</div>
+                        <div class="option-item" data-craft-type="garden" title="探索园林建筑">🌿 园林</div>
+                        <div class="option-item" data-craft-type="tomb" title="探索陵寝建筑">🏛 陵寝</div>
+                    </div>
+                </div>
+
+                <!-- 中间：古建知识挑战赛 -->
+                <div class="module-card">
+                    <div class="module-title">古建知识挑战赛</div>
+                    <div class="challenge-box">
+                        <div class="roof-icon"></div>
+                        <div class="card-stack" id="quizCardStack" title="点击开始挑战">
+                            <div class="card card-1"></div>
+                            <div class="card card-2">
+                                <div class="card-bar"></div>
+                                <div class="card-bar-light"></div>
+                                <div class="challenge-badge">
+                                    <span>古建</span>
+                                    <span>挑战</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：留言墙 -->
+                <div class="module-card">
+                    <div class="module-title">留言墙</div>
+                    <textarea
+                    class="message-input"
+                    placeholder="留下您的感悟与祝福…点击进入留言墙"
+                    readonly
+                ></textarea>
+                <div class="message-hint" style="cursor:pointer;" id="messageHint">✍ 共筑古建记忆 · 点击进入</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 导航栏高亮
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const navItems = document.querySelectorAll('.nav-item');
+        const logoLink = document.getElementById('logoLink');
+
+        navItems.forEach(item => item.classList.remove('active'));
+        if (logoLink) logoLink.classList.remove('active');
+
+        if (currentPage === 'index.html') {
+            if (logoLink) logoLink.classList.add('active');
+            navItems.forEach(item => {
+                if (item.getAttribute('href') === 'index.html') {
+                    item.classList.add('active');
+                }
+            });
+        } else {
+            navItems.forEach(item => {
+                if (item.getAttribute('href') === currentPage) {
+                    item.classList.add('active');
+                }
+            });
+        }
+    });
+
+    // 搜索按钮
+    document.getElementById('searchBtn')?.addEventListener('click', () => {
+        alert('🔍 搜索功能开发中');
+    });
+
+    // ============ 建筑名称到 game2.html 中 buildings 索引的映射 ============
+    const buildingNameToIndex = {
+        '颐和园佛香阁': 2,
+        '天坛祈年殿': 1,
+        '清东陵': 4,
+        '故宫太和殿': 0,
+        '承德避暑山庄': 3,
+    };
+
+    // ============ 拼图卡片点击 → 跳转 game2.html（拼图页面） ============
+    document.querySelectorAll('.puzzle-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const buildingName = item.getAttribute('data-building') || '';
+            const buildingIndex = buildingNameToIndex[buildingName];
+            let url = 'game2.html';
+            if (buildingIndex !== undefined) {
+                url += '?building=' + buildingIndex;
+            }
+            window.location.href = url;
+        });
+    });
+
+    // ============ 工匠选项点击 → 跳转 game3.html（烫样拂尘）并携带建筑类型参数 ============
+    document.querySelectorAll('.option-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const craftType = item.getAttribute('data-craft-type') || 'palace';
+            window.location.href = 'game3.html?craftType=' + craftType;
+        });
+    });
+
+    // ============ 挑战赛卡片点击 → 跳转 game4.html（知识答题） ============
+    document.getElementById('quizCardStack')?.addEventListener('click', () => {
+        window.location.href = 'game4.html';
+    });
+
+    // ============ 留言墙：点击输入框或提示文字 → 跳转 game5.html（留言墙） ============
+    const messageInput = document.querySelector('.message-input');
+    const messageHint = document.getElementById('messageHint');
+
+    function goToWall() {
+        window.location.href = 'game5.html';
+    }
+
+    if (messageInput) {
+        messageInput.addEventListener('click', goToWall);
+        messageInput.addEventListener('focus', () => {
+            messageInput.style.borderColor = 'rgba(210,180,140,0.75)';
+        });
+        messageInput.addEventListener('blur', () => {
+            messageInput.style.borderColor = 'rgba(166,124,82,0.5)';
+        });
+    }
+
+    if (messageHint) {
+        messageHint.addEventListener('click', goToWall);
+    }
+</script>
+</body>
+</html>

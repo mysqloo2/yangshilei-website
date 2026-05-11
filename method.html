@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>样式雷 · 营造法式</title>
+    <!-- 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: auto;
+            font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+            background-color: #0a0806;
+        }
+
+        /* 背景容器 */
+        .bg-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 内容区域 */
+        .content {
+            position: relative;
+            z-index: 20;
+            min-height: 100vh;
+            background: transparent;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            padding: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(210, 180, 140, 0.55);
+        }
+
+        .nav-left {
+            display: flex;
+            flex: 8;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .logo-search-group {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .logo-item {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-decoration: none;
+            padding-top: 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo-img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin-top: 0;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgb(144 101 45 / 55%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 38px;
+            margin-left: -40px;
+        }
+
+        .search-btn:hover {
+            background: rgba(210, 180, 140, 0.25);
+            border-color: rgba(210, 180, 140, 1);
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(210, 180, 140, 0.5);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(210,180,140,0.85)' stroke-width='1.8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-4.35-4.35M19 11a8 8 0 11-16 0 8 8 0 0116 0z' /%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            transition: all 0.3s ease;
+        }
+
+       .nav-item {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    text-decoration: none;
+    padding-top: 22px;
+    padding-bottom: 22px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+        .nav-item:hover {
+            background: rgba(210, 180, 140, 0.15);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+
+       .nav-img {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+        .nav-item:hover .nav-img {
+            filter: brightness(1.25) drop-shadow(0 0 4px rgba(210, 180, 140, 0.6));
+            transform: scale(1.05);
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 70%;
+            transform: translateY(-50%);
+            height: 28px;
+            width: 1px;
+            background-color: rgba(210, 180, 140, 0.55);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:first-of-type::before {
+            display: none;
+        }
+
+        .nav-item.active {
+            background: rgba(210, 180, 140, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-item.active .nav-img {
+            filter: brightness(1.3) drop-shadow(0 0 6px rgba(210, 180, 140, 0.7));
+            transform: scale(1.02);
+        }
+
+        /* 主内容容器 */
+        .main-container {
+            padding-top: 100px;
+            padding-bottom: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        /* 三个圆形图标 */
+        .icon-section {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .icon-card {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .icon-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .icon-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 20px;
+            background: rgba(210, 180, 140, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(210, 180, 140, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .icon-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .icon-card:hover .icon-circle {
+            background: rgba(210, 180, 140, 0.4);
+            border-color: rgba(210, 180, 140, 1);
+            box-shadow: 0 0 20px rgba(210, 180, 140, 0.5);
+        }
+
+        .icon-card span {
+            font-size: 18px;
+            color: #4a2c1a;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+
+        /* 当前页面圆形图标高亮 */
+.icon-card.active .icon-circle {
+    background: rgba(139, 90, 43, 0.85);
+    border-color: #e8c97a;
+    box-shadow: 0 0 25px rgba(232, 201, 122, 0.8);
+    transform: scale(1.05);
+}
+
+.icon-card.active span {
+    color: #2a1a08;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+    font-weight: bold;
+}
+
+        /* 大卡片（三列） */
+        .big-card {
+            background: rgba(255, 248, 235, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(210, 180, 140, 0.4);
+            padding: 30px;
+            margin-bottom: 40px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .big-card > div {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        /* 内容一：图片区 */
+        .content-image {
+            text-align: center;
+        }
+
+        .content-image .image-title {
+            font-size: 16px;
+            color: #8b5a2b;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .image-with-caption {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.image-with-caption img {
+    width: 100%;
+    height: auto;
+    max-height: 320px;
+    object-fit: contain;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+}
+       /* 图片下方文字说明 */
+.image-caption {
+    text-align: center;
+    font-size: 14px;
+    color: #8b5a2b;
+    margin-top: 12px;
+    letter-spacing: 2px;
+    font-style: italic;
+}
+
+        /* 内容二：文字介绍 */
+        .content-text p {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #3a2a1a;
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        /* 内容三：图片切换区 */
+        /* 内容三：图片切换区 */
+.content-switch {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.switch-image {
+    flex: 2;
+}
+
+.switch-image img {
+    width: 100%;
+    height:  430px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.vertical-buttons {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.switch-btn {
+    padding: 10px 15px;
+    background: rgba(210, 180, 140, 0.3);
+    border: 1px solid rgba(210, 180, 140, 0.6);
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #8b5a2b;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.switch-btn:hover,
+.switch-btn.active {
+    background: #c9a03d;
+    color: #fff;
+}
+
+
+/* 合并后的大卡片样式 */
+/* 合并后的大卡片样式 */
+.merged-card {
+    background: transparent;
+    border-radius: 24px;
+    border: 1px solid rgba(210, 180, 140, 0.4);
+    padding: 30px;
+    margin-bottom: 40px;
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.merged-item {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+}
+
+.merged-item h4 {
+    font-size: 18px;
+    color: #8b5a2b;
+    margin-bottom: 15px;
+    border-left: 3px solid #c9a03d;
+    padding-left: 12px;
+}
+
+.merged-item p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #3a2a1a;
+    text-align: justify;
+    margin-bottom: 12px;
+}
+
+/* 第一列图片容器 - 让图片填满高度 */
+.merged-item:first-child .content-image {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.merged-item:first-child .image-with-caption {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+}
+
+.merged-item:first-child .image-with-caption img {
+    width: 100%;
+    height: auto;
+    max-height: 350px;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+/* 词典栏样式 */
+.merged-item .dictionary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.merged-item .dict-item {
+    padding: 5px 12px;
+    background: rgba(210, 180, 140, 0.2);
+    border-radius: 20px;
+    font-size: 12px;
+    color: #8b5a2b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.merged-item .dict-item.disabled {
+    background: rgba(210, 180, 140, 0.1);
+    color: #c0a080;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.merged-item .dict-item.active {
+    background: #c9a03d;
+    color: #fff;
+}
+
+.merged-item .diagram-img {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 12px;
+    max-height: 180px;
+    object-fit: cover;
+}
+
+        /* 三个卡片区域 */
+        .three-cards {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .method-card {
+            flex: 1;
+            min-width: 250px;
+            background: transparent;;
+           
+            border-radius: 24px;
+            padding: 25px;
+            border: 1px solid rgba(210, 180, 140, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .method-card:hover {
+            background: rgba(255, 248, 235, 0.95);
+            transform: translateY(-3px);
+        }
+
+        .method-card h4 {
+            font-size: 18px;
+            color: #8b5a2b;
+            margin-bottom: 15px;
+            border-left: 3px solid #c9a03d;
+            padding-left: 12px;
+        }
+
+        .method-card p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #3a2a1a;
+            text-align: justify;
+        }
+
+        /* 词典栏 */
+        .dictionary {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .dict-item {
+            padding: 5px 12px;
+            background: rgba(210, 180, 140, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            color: #8b5a2b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dict-item:hover,
+        .dict-item.active {
+            background: #c9a03d;
+            color: #fff;
+        }
+
+       .diagram-img {
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 12px;
+    max-height: 200px;
+    object-fit: cover;
+}
+   /* 禁用的词典项（更醒目） */
+/* 禁用的词典项（深色卡片背景） */
+.dict-item.disabled {
+    background: rgba(60, 40, 20, 0.75);
+    color: #f0e0c0;
+    cursor: not-allowed;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    font-weight: bold;
+    border: 1px solid rgba(210, 180, 140, 0.5);
+    opacity: 1;
+}
+
+.dict-item.disabled:hover {
+    background: rgba(60, 40, 20, 0.85);
+    color: #fff0d0;
+    transform: none;
+}
+        /* 左右两栏布局 */
+        .charts-wrapper {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .left-charts {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .right-charts {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* 统计卡片 */
+        .stat-card {
+    background:  rgba(255, 248, 235, 0.65);
+    border-radius: 24px;
+    padding: 25px;
+    border: 1px solid rgba(210, 180, 140, 0.4);
+    transition: all 0.3s ease;
+    text-align: left;  /* 改为左对齐 */
+}
+
+        .stat-card:hover {
+            background: rgba(255, 248, 235, 0.85);
+        }
+
+        .stat-card h4 {
+            font-size: 18px;
+            color: #8b5a2b;
+            margin-bottom: 15px;
+        }
+
+      .stat-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #c9a03d;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.stat-value.small {
+    font-size: 16px;
+}
+
+.stat-card p {
+    font-size: 14px;
+    color: #4a2c1a;
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+        /* 数据卡片 */
+        .data-card {
+            background: rgba(255, 248, 235, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 25px;
+            border: 1px solid rgba(210, 180, 140, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .data-card:hover {
+            background: rgba(255, 248, 235, 0.95);
+        }
+
+        .data-card h4 {
+            font-size: 18px;
+            color: #8b5a2b;
+            margin-bottom: 15px;
+            border-left: 3px solid #c9a03d;
+            padding-left: 12px;
+        }
+
+        .data-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .data-card li {
+            padding: 8px 0;
+            color: #3a2a1a;
+            border-bottom: 1px dashed rgba(210, 180, 140, 0.3);
+        }
+
+        /* 数据来源 */
+        .data-source-wrapper {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .data-source {
+            width: 100%;
+            background: rgba(255, 248, 235, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 60px;
+            border: 1px solid rgba(210, 180, 140, 0.4);
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .data-source:hover {
+            background: rgba(255, 248, 235, 0.95);
+        }
+
+        .data-source-content {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: baseline;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .data-source-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #8b5a2b;
+        }
+
+        .data-source-items {
+            font-size: 13px;
+            color: #4a2c1a;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .data-source-content {
+                flex-wrap: wrap;
+                white-space: normal;
+            }
+            .big-card {
+                flex-direction: column;
+            }
+            .vertical-text {
+                position: static;
+                writing-mode: horizontal-tb;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-wrapper">
+    <img class="bg-image" src="./images/bg-image.jpg" alt="背景图片">
+</div>
+
+<div class="content">
+    <!-- 导航栏 -->
+   <div class="nav-bar">
+    <div class="nav-left">
+        <div class="logo-search-group">
+            <a href="index.html" class="logo-item">
+                <img src="./images/logo-icon.png" alt="建筑Logo" class="logo-img">
+            </a>
+            <div class="search-btn" id="searchBtn">
+                <span class="search-icon"></span>
+            </div>
+        </div>
+        <a href="index.html" class="nav-item"><img src="./images/首页.png" alt="首页" class="nav-img"></a>
+        <a href="about.html" class="nav-item"><img src="./images/家族溯源.png" alt="家族溯源" class="nav-img"></a>
+        <a href="achievement.html" class="nav-item"><img src="./images/建筑成就.png" alt="建筑成就" class="nav-img"></a>
+        <a href="craft.html" class="nav-item active"><img src="./images/烫样技艺.png" alt="烫样技艺" class="nav-img"></a>
+        
+
+        <a href="digital.html" class="nav-item"><img src="./images/数字展厅.png" alt="数字展厅" class="nav-img"></a>
+        <a href="literature.html" class="nav-item"><img src="./images/文献资料.png" alt="文献资料" class="nav-img"></a>
+        <a href="game.html" class="nav-item"><img src="./images/匠心工坊.png" alt="匠心工坊" class="nav-img"></a>
+    </div>
+</div>
+    <div class="main-container">
+        <!-- 三个圆形图标 -->
+        <div class="icon-section">
+            <div class="icon-card" onclick="window.location.href='craft.html'">
+                <div class="icon-circle"><img src="./images/craft-icon-1.png" alt="烫样工艺"></div>
+                <span>烫样工艺</span>
+            </div>
+           <div class="icon-card" onclick="window.location.href='drawing.html'">
+                <div class="icon-circle"><img src="./images/icon-drawing.png" alt="工程图样"></div>
+                <span>工程图样</span>
+            </div>
+            <div class="icon-card" onclick="window.location.href='method.html'">
+                <div class="icon-circle"><img src="./images/icon-method.png" alt="营造法式"></div>
+                <span>营造法式</span>
+            </div>
+        </div>
+
+        <!-- 大卡片（三列） -->
+        <div class="big-card">
+            <!-- 内容一：北宋营造法式扫描图 -->
+           <div class="content-image">
+    <div class="image-title">📜 古今传承：《营造法式》与样式雷营造实践</div>
+    <div class="image-with-caption">
+        <img id="songImage" src="./images/song-method.jpg" alt="北宋营造法式扫描图" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 150\'%3E%3Crect width=\'200\' height=\'150\' fill=\'%23f5e6d3\'/%3E%3Ctext x=\'100\' y=\'75\' text-anchor=\'middle\' fill=\'%238b5a2b\'%3E北宋营造法式%3C/text%3E%3C/svg%3E'">
+        <div class="image-caption">北宋营造法式扫描图</div>
+    </div>
+</div>
+
+            <!-- 内容二：文字介绍 -->
+           <div class="content-text">
+    <p><strong>一、《营造法式》与样式雷的传承</strong><br>
+    北宋《营造法式》确立了官式建筑的模数、工艺、工料及施工规范，奠定中国古代建筑的技术基础。清代样式雷家族以此为本，结合皇家需求与施工实际，升级形成清代官式营造体系，实现了技艺的传承与发展。</p>
+    
+    <p><strong>二、样式雷的技艺创新</strong><br>
+    <strong>1. 模数化设计：</strong>以斗口为核心模数，实现构件标准化、规模化生产，提升效率并保证建筑规整协调。<br>
+    <strong>2. 结构优化：</strong>改良斗拱、梁架等核心构件，增强稳定性和承重力，兼顾实用与装饰美感。<br>
+    <strong>3. 系统著述：</strong>编撰《工部工程做法则例》等著作，总结营造规范、技法、工料及验收标准，成为清代官式建筑的实操准则。</p>
+    
+    <p><strong>三、历史影响力</strong><br>
+    样式雷主持设计了故宫、颐和园、天坛、承德避暑山庄等顶级建筑，占中国现存世界文化遗产的五分之一。这些杰作代表了中国古代建筑技艺的巅峰，承载了独特的中式营造智慧与文化底蕴，在世界建筑史上占有重要地位。</p>
+</div>
+
+            <!-- 内容三：样式雷建筑图片切换 -->
+           <!-- 内容三：样式雷建筑图片切换 -->
+<div class="content-switch">
+    <div class="switch-image">
+        <img id="buildingImage" src="./images/太和殿大图.jpg" alt="太和殿" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 150\'%3E%3Crect width=\'200\' height=\'150\' fill=\'%23f5e6d3\'/%3E%3Ctext x=\'100\' y=\'75\' text-anchor=\'middle\' fill=\'%238b5a2b\'%3E太和殿%3C/text%3E%3C/svg%3E'">
+    </div>
+    <div class="vertical-buttons">
+        <button class="switch-btn active" data-building="taihedian">太和殿</button>
+        <button class="switch-btn" data-building="yiheyuan">颐和园</button>
+        <button class="switch-btn" data-building="tiantan">天坛</button>
+    </div>
+</div>
+        </div>
+
+        <!-- 三个卡片区域 -->
+        <!-- 三个卡片区域 -->
+<!-- 大卡片（三列合并版） -->
+<div class="big-card merged-card">
+    <div class="merged-item">
+        <h4>📖 样式雷营造法式解析</h4>
+        <p><strong>（1）立体设计体系：</strong>首创“图样（平、立、剖面图）+ 烫样（按比例制作的纸质可拆模型）”的组合，实现精准可视化施工。</p>
+        <p><strong>（2）模数化标准：</strong>以斗口为基本模数，推行构件标准化；并编纂《工部工程做法则例》，确立清代官式建筑规范。</p>
+        <p><strong>（3）深远影响：</strong>主持故宫、颐和园等六项世界文化遗产设计，留下的2万余件图档入选《世界记忆名录》。</p>
+    </div>
+
+    <!-- 第二列：营造技艺传承 -->
+   <!-- 第二列：平格法介绍 -->
+<div class="merged-item">
+    <h4>📐 平格法 · 样式雷介绍</h4>
+    <p><strong>平格法</strong>是样式雷独创的古代建筑空间规划与测绘设计方法，也是清代皇家建筑规划的核心技法。</p>
+    <p>该方法以规整方格网为基础，将场地、建筑群、山水格局统一纳入网格坐标系中进行测算布局。通过划定均等方格，精准控制建筑开间、轴线距离、院落尺度与山水地势关系，实现整体规划的对称均衡与尺度统一。</p>
+    <p>区别于传统营造法式的构件模数，平格法侧重宏观场地规划，兼顾实用功能与风水礼制。样式雷家族依靠平格法绘制地盘图、山形地势图，统筹宫殿、陵寝、园林的整体排布，保证建筑群布局严谨、秩序规整。</p>
+    <p>同时，平格法兼具测绘、设计、选址多重作用，操作简易、尺度可控，是中国古代少见的标准化空间规划体系，也成为样式雷建筑图纸与烫样设计的重要技术支撑。</p>
+</div>
+
+    <!-- 第三列：营造术语 · 关键词典 -->
+    <div class="merged-item">
+        <h4>🏛️ 营造术语 · 关键词典</h4>
+        <div class="dictionary" id="dictionary">
+            <span class="dict-item active" data-term="pingge">平格法</span>
+            <span class="dict-item disabled" data-term="dougong">斗拱</span>
+            <span class="dict-item disabled" data-term="kaijian">开间</span>
+            <span class="dict-item disabled" data-term="jinshen">进深</span>
+            <span class="dict-item disabled" data-term="doukou">斗口</span>
+            <span class="dict-item disabled" data-term="liangjia">梁架</span>
+        </div>
+        <video id="diagramVideo" class="diagram-img" controls autoplay muted loop>
+            <source src="./video/pingge.mp4" type="video/mp4">
+            您的浏览器不支持视频播放
+        </video>
+    </div>
+</div>
+
+        <!-- 左右两栏布局 -->
+        <div class="charts-wrapper">
+            <!-- 左侧两个卡片 -->
+           <!-- 左侧卡片（竖排） -->
+<div class="left-charts">
+    <!-- 营造尺度卡片 -->
+    <div class="stat-card">
+        <h4>📏 营造尺度</h4>
+        <div class="stat-value">基本模数</div>
+        <p>1尺 = 32cm &nbsp;|&nbsp; 1寸 = 3.2cm &nbsp;|&nbsp; 1分 = 0.32cm</p>
+        
+        <div class="stat-value">开间基准</div>
+        <p><strong>宫殿：</strong>明间1丈(3.2m)，次间9尺(2.88m)<br>
+        <strong>陵寝：</strong>隆恩殿明间1丈2尺(3.84m)<br>
+        <strong>园林：</strong>8尺~1丈(2.56~3.2m)</p>
+        
+        <div class="stat-value">进深基准</div>
+        <p><strong>宫殿：</strong>1丈4尺(4.48m)<br>
+        <strong>园林：</strong>1丈2尺(3.84m)</p>
+        
+        <div class="stat-value">台基高度</div>
+        <p><strong>宫殿：</strong>2尺~3尺(0.64~0.96m)<br>
+        <strong>陵寝：</strong>4尺(1.28m)</p>
+    </div>
+    
+    <!-- 总结板块 -->
+    <!-- 总结板块 -->
+<div class="data-card">
+    <h4>📝 总结板块</h4>
+    <p>“样式雷”作为清代执掌皇家建筑设计的雷氏世家，是《营造法式》千年营造传统的集大成者，更是宋式模数体系与清代官式建筑实践的关键传承者。其家族八代人以《营造法式》为根本准则，结合《工部工程做法则例》，构建了一套严谨、可复制的营造体系，让“材份制”的模数思想在清代建筑中延续与革新。</p>
+    
+    <p>在营造尺度上，样式雷继承了宋式以材为模数的核心逻辑，又发展出清代官式建筑的“斗口制”，以斗拱的斗口宽度为基本模数，将建筑构件尺寸、开间、进深、屋顶举架全部纳入标准化体系，实现了从设计到施工的精准把控。家族世代留存的图纸与烫样，完整呈现了这一体系的应用过程：从平面布局到立面设计，从梁架结构到瓦作彩画，每一处细节都严格遵循营造规范。</p>
+    
+    <p>在斗拱体系、大木梁架、瓦作砖饰等环节，样式雷既保留了《营造法式》中的核心技艺，如斗拱的“朵”式排布、梁栿的层级构造，又结合清代皇家建筑的需求进行创新，形成了更具装饰性与等级性的官式做法。烫样作为其标志性设计工具，更是将营造法式的模数思想可视化，可拆解的立体模型直观展现了建筑的结构逻辑，成为古代建筑设计与施工衔接的桥梁。</p>
+    
+    <p>样式雷的营造实践，让《营造法式》的理论规范转化为可落地的工程语言，也为后世留存了一套完整的中国古代建筑营造档案，是传统营造技艺传承中不可或缺的关键一环。</p>
+</div>
+</div>
+            <!-- 右侧三个卡片 -->
+            <div class="right-charts">
+               <!-- 斗拱体系卡片 -->
+<div class="data-card">
+    <h4>🏯 斗拱体系（清式斗口制）</h4>
+    <p style="font-size:14px; color:#4a2c1a; margin-bottom:10px;">
+        <strong style="color:#c9a03d;">1斗口 = 6寸 (19.2cm)</strong>，分11等
+    </p>
+    <ul>
+        <li><strong>宫殿（一等~三等）：</strong>斗口6~4.5寸，出挑3~4跳</li>
+        <li><strong>陵寝（四等~六等）：</strong>斗口4~3寸，出挑2~3跳</li>
+        <li><strong>园林（七等~九等）：</strong>斗口2.5~2寸，出挑1~2跳</li>
+        <li><strong style="color:#c9a03d;">斗拱间距：11斗口 = 2.112m</strong>（清式定制）</li>
+    </ul>
+</div>
+                <!-- 木作核心数据卡片 -->
+<div class="data-card">
+    <h4>📐 木作核心数据</h4>
+    <ul>
+        <li><strong>柱径/柱高比：</strong>宫殿1/10~1/12；园林1/8~1/9</li>
+        <li><strong>举架（屋顶坡度）：</strong></li>
+        <li style="list-style:none; margin-left:15px;">宫殿：五举~六举（坡度26.6°~30.96°）</li>
+        <li style="list-style:none; margin-left:15px;">陵寝：六举~七举（30.96°~35°）</li>
+        <li style="list-style:none; margin-left:15px;">园林：四举~五举（21.8°~26.6°）</li>
+        <li><strong>梁枋断面：</strong>高宽比3:2（如1丈2尺×8尺）</li>
+    </ul>
+</div>
+                <!-- 瓦作与砖瓦卡片 -->
+<div class="data-card">
+    <h4>🧱 瓦作与砖瓦</h4>
+    <p><strong>瓦件规格（琉璃瓦）：</strong></p>
+    <ul>
+        <li><strong>一号（宫殿）：</strong>长1.2尺(38.4cm)，宽0.8尺(25.6cm)</li>
+        <li><strong>二号（陵寝）：</strong>长1尺(32cm)，宽0.7尺(22.4cm)</li>
+        <li><strong>三号（园林）：</strong>长0.8尺(25.6cm)，宽0.6尺(19.2cm)</li>
+    </ul>
+    <p style="margin-top:10px;"><strong>砖料（金砖/城砖）：</strong></p>
+    <ul>
+        <li><strong>金砖：</strong>2尺×1尺×0.4尺（64×32×12.8cm）</li>
+        <li><strong>城砖：</strong>1.5尺×0.75尺×0.3尺（48×24×9.6cm）</li>
+    </ul>
+</div>
+            </div>
+        </div>
+
+        <!-- 数据来源 -->
+        <div class="data-source-wrapper">
+            <div class="data-source">
+                <div class="data-source-content">
+                    <span class="data-source-label">📚 数据来源：</span>
+                    <span class="data-source-items">
+                        [1]（清）允祥等. 工部工程做法则例[Z]. 雍正十二年（1734）内府刻本，故宫博物院、国家图书馆藏.<br>
+                        [2]国家图书馆. 样式雷图档总目[M]. 北京：国家图书馆出版社，2005.<br>
+                        [3]单士元. 宫廷建筑巧匠——样式雷[J]. 文物，1963(10).
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 搜索按钮
+    document.getElementById('searchBtn')?.addEventListener('click', () => alert('🔍 搜索功能开发中'));
+
+    // ========= 建筑图片切换 =========
+    const buildingImages = {
+        'taihedian': './images/太和殿大图.jpg',
+        'yiheyuan': './images/game-烫样-颐和园佛香阁.jpg',
+        'tiantan': './images/天坛大图.jpg'
+    };
+    const buildingImageEl = document.getElementById('buildingImage');
+    const buildingBtns = document.querySelectorAll('.switch-btn');
+
+    buildingBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const building = btn.dataset.building;
+            if (buildingImages[building]) {
+                buildingImageEl.src = buildingImages[building];
+                buildingBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+        });
+    });
+
+    
+   // ========= 关键词典切换示意图（只有平格法可点击） =========
+// ========= 平格法视频播放 =========
+const diagramVideo = document.getElementById('diagramVideo');
+const dictItems = document.querySelectorAll('.dict-item');
+
+dictItems.forEach(item => {
+    item.addEventListener('click', () => {
+        if (item.classList.contains('disabled')) {
+            return;
+        }
+        const term = item.dataset.term;
+        if (term === 'pingge') {
+            // 重新加载并播放视频
+            diagramVideo.load();
+            diagramVideo.play();
+            dictItems.forEach(d => d.classList.remove('active'));
+            item.classList.add('active');
+        }
+    });
+});
+
+// 高亮当前页面对应的圆形图标
+const currentPage = window.location.pathname.split('/').pop() || '';
+const iconCards = document.querySelectorAll('.icon-card');
+
+// 根据当前页面文件名确定应该高亮哪个图标
+let targetPage = '';
+if (currentPage.includes('craft') || currentPage === '' || currentPage === 'index.html') {
+    targetPage = 'craft.html';
+} else if (currentPage.includes('drawing')) {
+    targetPage = 'drawing.html';
+} else if (currentPage.includes('method')) {
+    targetPage = 'method.html';
+}
+
+iconCards.forEach(card => {
+    const onclickAttr = card.getAttribute('onclick');
+    if (onclickAttr && onclickAttr.includes(targetPage.replace('.html', ''))) {
+        card.classList.add('active');
+    }
+});
+
+
+</script>
+</body>
+</html>

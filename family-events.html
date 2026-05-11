@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>样式雷 · 家族大事记</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+            background-color: #0a0806;
+            position: relative;
+        }
+
+        .door-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 300;
+            display: flex;
+            cursor: pointer;
+        }
+
+        .door-left {
+            width: 50%;
+            height: 100%;
+            background: url('./images/door-left.png') left/cover no-repeat;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(0);
+        }
+
+        .door-right {
+            width: 50%;
+            height: 100%;
+            background: url('./images/door-right.png') right/cover no-repeat;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(0);
+        }
+
+        /* 返回按钮 - 右上角 */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 350;
+            background: linear-gradient(135deg, rgba(201, 160, 61, 0.85), rgba(150, 110, 50, 0.9));
+            border: 2px solid rgba(201, 160, 61, 1);
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-family: 'Georgia', '楷体', serif;
+            font-weight: bold;
+            color: #fff5e0;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 0 15px rgba(201, 160, 61, 0.4);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .back-btn:hover {
+            background: linear-gradient(135deg, rgba(201, 160, 61, 1), rgba(180, 130, 70, 1));
+            color: #ffffff;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(201, 160, 61, 0.6);
+        }
+        .back-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 开门按钮 - 屏幕正中央 */
+        .open-door-btn {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 350;
+            background: linear-gradient(135deg, rgba(201, 160, 61, 0.85), rgba(150, 110, 50, 0.9));
+            border: 2px solid rgba(201, 160, 61, 1);
+            border-radius: 60px;
+            padding: 18px 56px;
+            font-size: 28px;
+            font-family: 'Georgia', '楷体', serif;
+            font-weight: bold;
+            color: #fff5e0;
+            letter-spacing: 10px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 0 25px rgba(201, 160, 61, 0.5);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .open-door-btn:hover {
+            background: linear-gradient(135deg, rgba(201, 160, 61, 1), rgba(180, 130, 70, 1));
+            color: #ffffff;
+            transform: translate(-50%, -50%) scale(1.05);
+            letter-spacing: 12px;
+            box-shadow: 0 0 35px rgba(201, 160, 61, 0.8);
+            border-color: rgba(255, 215, 140, 1);
+        }
+        .open-door-btn:active {
+            transform: translate(-50%, -50%) scale(0.98);
+        }
+
+        .door-container.open .door-left { transform: translateX(-100%); }
+        .door-container.open .door-right { transform: translateX(100%); }
+
+        .main-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .parallax-base {
+            position: absolute;
+            top: -10%;
+            left: -80%;
+            width: 260%;
+            height: 120%;
+            object-fit: cover;
+            z-index: 0;
+            will-change: transform;
+        }
+
+        .timeline-curve {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 130%;
+            height: 100px;
+            z-index: 20;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .curve-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .curve-svg path {
+            opacity: 0.6;
+            stroke: #a67c52;
+            stroke-width: 2;
+            stroke-dasharray: 6,4;
+        }
+
+        .nodes-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            z-index: 21;
+            pointer-events: none;
+        }
+        .timeline-node {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #4caf50;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+            cursor: pointer;
+            transition: all 0.2s;
+            pointer-events: auto;
+            z-index: 22;
+        }
+        .timeline-node:hover { transform: scale(1.3); background: #66bb6a; }
+        .timeline-node.active {
+            background: #ffc107;
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.9);
+            transform: scale(1.2);
+        }
+
+        .sword-icon {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: url('./images/sword-icon.png') center/contain no-repeat;
+            z-index: 25;
+            pointer-events: none;
+            transition: left 0.5s ease, top 0.5s ease;
+        }
+
+        .scroll-progress-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 30;
+        }
+        .scroll-progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #c9a03d;
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+
+        .period-card {
+            position: absolute;
+            background: transparent;
+            backdrop-filter: none;
+            border-radius: 0;
+            padding: 4px 0;
+            color: #f0e6d3;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 6px;
+            white-space: nowrap;
+            z-index: 23;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.4s ease;
+            border: none;
+            box-shadow: none;
+            font-family: 'Georgia', '楷体', '华文楷书', 'STKaiti', serif;
+            text-shadow: 
+                -1px -1px 0 #2a241c,
+                1px -1px 0 #2a241c,
+                -1px 1px 0 #2a241c,
+                1px 1px 0 #2a241c,
+                0 0 8px rgba(0,0,0,0.6);
+        }
+        .period-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .illustration-popup {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 15;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        .illustration-popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .illustration-popup .illustration-wrapper {
+            transform: translateY(100%);
+            will-change: transform;
+            transition: transform 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .illustration-popup.show .illustration-wrapper {
+            transform: translateY(0);
+        }
+        .illustration-popup img {
+            width: 90%;
+            height: auto;
+            max-height: 60vh;
+            object-fit: contain;
+            display: block;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            filter: drop-shadow(0 10px 25px rgba(0,0,0,0.3));
+        }
+
+        .info-popup {
+            position: fixed;
+            bottom: 28%;
+            right: 3%;
+            left: auto;
+            top: auto;
+            width: 400px;
+            max-width: 70vw;
+            background: rgb(156 129 102 / 95%);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 18px 22px;
+            z-index: 201;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.9s ease;
+            border: 1px solid rgba(201, 160, 61, 0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: left;
+            pointer-events: auto;
+        }
+        .info-popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .info-popup .title {
+            font-size: 30px;
+            font-family: 'Georgia', '楷体', serif;
+            color: #e8c97a;
+            letter-spacing: 4px;
+            margin-bottom: 12px;
+        }
+        .info-popup .content {
+            font-size: 20px;
+            line-height: 1.7;
+            color: #f0e6d3;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+        .info-popup .close-btn {
+            background: rgba(201, 160, 61, 0.2);
+            border: 1px solid rgba(201, 160, 61, 0.5);
+            padding: 6px 20px;
+            border-radius: 30px;
+            color: #e8c97a;
+            font-size: 13px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+        .info-popup .close-btn:hover {
+            background: rgba(201, 160, 61, 0.4);
+            transform: scale(1.02);
+        }
+
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            border: 1px solid #c9a03d;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c9a03d;
+            font-size: 20px;
+        }
+
+        /* 自定义 Tooltip 样式 */
+.btn-tooltip {
+    position: relative;
+}
+/* 强制确保开门按钮位置正确 */
+.open-door-btn {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 9999 !important;
+}
+
+.btn-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 18, 16, 0.92);
+    backdrop-filter: blur(12px);
+    color: #e8c97a;
+    font-size: 13px;
+    font-family: 'Georgia', serif;
+    letter-spacing: 2px;
+    padding: 6px 16px;
+    border-radius: 30px;
+    white-space: nowrap;
+    border: 1px solid rgba(201, 160, 61, 0.5);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 400;
+}
+
+.btn-tooltip:hover::after {
+    opacity: 1;
+}
+    </style>
+</head>
+<body>
+
+    <div class="door-container" id="doorContainer">
+        <div class="door-left"></div>
+        <div class="door-right"></div>
+    </div>
+
+    <div class="main-content">
+        <img class="parallax-base" id="parallaxBase" src="./images/timeline-base.png" alt="底图">
+
+        <div class="timeline-curve" id="timelineCurve">
+            <svg class="curve-svg" viewBox="0 0 1200 100" preserveAspectRatio="none">
+                <path id="curvePath" d="M0,50 C200,20 400,80 600,50 C800,20 1000,80 1200,50" fill="none" stroke="#a67c52" stroke-width="2.5" stroke-dasharray="6,4"/>
+            </svg>
+        </div>
+
+        <div class="nodes-container" id="nodesContainer"></div>
+        <div class="sword-icon" id="swordIcon"></div>
+
+        <div class="scroll-progress-bar" id="progressBar">
+            <div class="scroll-progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="audio-control" id="audioControl">🔊</div>
+    </div>
+
+    <div id="illustrationPopup" class="illustration-popup">
+        <div class="illustration-wrapper">
+            <img id="illustrationImg" src="" alt="时期插画">
+        </div>
+    </div>
+
+    <div id="infoPopup" class="info-popup">
+        <div class="title" id="popupTitle">康熙年间</div>
+        <div class="content" id="popupContent">介绍文字</div>
+        <div class="close-btn" id="closePopupBtn">收 起</div>
+    </div>
+
+    <!-- 按钮 -->
+    <button class="open-door-btn btn-tooltip" id="openDoorBtn" data-tooltip="鼠标点击即可开启">开 门</button>
+    <button class="back-btn" id="backBtn">返 回 </button>
+
+    <script>
+        const periods = [
+            { name: "节点1", nodeX: 0.05, showCard: false, cardText: "" },
+            { name: "康熙年间", nodeX: 0.22, showCard: true, cardText: "康熙年间" },
+            { name: "雍正年间", nodeX: 0.39, showCard: true, cardText: "雍正年间" },
+            { name: "乾隆年间", nodeX: 0.56, showCard: true, cardText: "乾隆年间" },
+            { name: "晚清时期", nodeX: 0.73, showCard: true, cardText: "晚清（道光—光绪）" },
+            { name: "清末民初", nodeX: 0.90, showCard: true, cardText: "清末民初" }
+        ];
+
+        let currentProgress = 0.05;
+        let isAnimating = false;
+        let currentAnimationId = null;
+        let bgMusic = null;
+        let isMusicPlaying = false;
+        let pathLength = 0;
+        let currentCard = null;
+
+        const curvePath = document.getElementById('curvePath');
+        const timelineCurve = document.getElementById('timelineCurve');
+        const swordIcon = document.getElementById('swordIcon');
+        const parallaxBase = document.getElementById('parallaxBase');
+        const progressFill = document.getElementById('progressFill');
+        const progressBar = document.getElementById('progressBar');
+        const doorContainer = document.getElementById('doorContainer');
+        const illustrationPopup = document.getElementById('illustrationPopup');
+        const infoPopup = document.getElementById('infoPopup');
+        const illustrationImg = document.getElementById('illustrationImg');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupContent = document.getElementById('popupContent');
+
+        function getPointAtProgress(p) {
+            return curvePath.getPointAtLength(p * pathLength);
+        }
+
+        function updateAllNodePositions() {
+            const rect = timelineCurve.getBoundingClientRect();
+            if (rect.width === 0) return;
+            periods.forEach((period, i) => {
+                const point = getPointAtProgress(period.nodeX);
+                const node = document.getElementById(`node-${i}`);
+                if (node) {
+                    node.style.left = (rect.left + point.x - 8) + 'px';
+                    node.style.top = (rect.top + point.y - 8) + 'px';
+                }
+            });
+        }
+
+        function updateCardForNode(index) {
+            const period = periods[index];
+            if (!period) return;
+
+            if (currentCard) {
+                currentCard.remove();
+                currentCard = null;
+            }
+
+            if (period.showCard && period.cardText) {
+                const activeNode = document.getElementById(`node-${index}`);
+                if (activeNode) {
+                    const nodeRect = activeNode.getBoundingClientRect();
+                    const card = document.createElement('div');
+                    card.className = 'period-card show';
+                    card.textContent = period.cardText;
+                    card.style.left = (nodeRect.left + nodeRect.width / 2 - 70) + 'px';
+                    card.style.top = (nodeRect.bottom + 12) + 'px';
+                    document.body.appendChild(card);
+                    currentCard = card;
+                }
+            }
+        }
+
+        const illustrationMap = {
+            1: "./images/kangxi-ill.png",
+            2: "./images/yongzheng-ill.png",
+            3: "./images/qianlong-ill.png",
+            4: "./images/wanqing-ill.png",
+            5: "./images/late-qing-ill.png"
+        };
+
+        const contentMap = {
+            1: "康熙帝雄才大略，平定三藩，收复台湾，三征噶尔丹。雷发达入京，开启雷氏家族宫廷营造之路；雷金玉崭露头角，家族初获清廷认可。",
+            2: "雍正帝励精图治，锐意改革，设立军机处。雷金玉正式担任样式房掌案，雷氏家族确立御用建筑世家地位，圆明园工程启动。",
+            3: "乾隆盛世，文治武功达到顶峰。雷家玺等匠人主持大量皇家园林、陵寝工程，样式雷技艺进入鼎盛期。",
+            4: "道光至光绪年间，国势衰微。雷景修保存家族史料；雷思起、雷廷昌主持晚清皇家核心工程，家族迎来最后辉煌。",
+            5: "清王朝覆灭，样式房解散，雷献彩结束家族八代御用营造历史，技艺转向民间留存与传承。"
+        };
+
+        function showIllustrationAndPopup(index) {
+            console.log('showIllustrationAndPopup 被调用, index=', index);
+
+            if (index === 0 || !periods[index] || periods[index].showCard !== true) {
+                console.log('拦截: index=' + index);
+                return;
+            }
+
+            console.log('准备显示插画, index=' + index);
+
+            const wrapper = document.querySelector('.illustration-wrapper');
+
+            illustrationPopup.classList.remove('show');
+            infoPopup.classList.remove('show');
+
+            if (wrapper) {
+                wrapper.style.transition = 'none';
+                wrapper.style.transform = 'translateY(100%)';
+                void wrapper.offsetHeight;
+            }
+
+            illustrationImg.src = illustrationMap[index] || "";
+            popupTitle.textContent = periods[index].cardText;
+            popupContent.textContent = contentMap[index] || "";
+
+            illustrationPopup.classList.add('show');
+
+            if (wrapper) {
+                wrapper.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1)';
+                wrapper.style.transform = 'translateY(0)';
+            }
+
+            setTimeout(() => {
+                infoPopup.classList.add('show');
+            }, 350);
+        }
+
+        function closePopup() {
+            illustrationPopup.classList.remove('show');
+            infoPopup.classList.remove('show');
+
+            const wrapper = document.querySelector('.illustration-wrapper');
+            if (wrapper) {
+                wrapper.style.transform = 'translateY(100%)';
+            }
+        }
+
+        function moveSwordToProgress(progress) {
+            let activeIndex = 0;
+            let minDist = Infinity;
+            periods.forEach((period, i) => {
+                const dist = Math.abs(progress - period.nodeX);
+                if (dist < minDist) {
+                    minDist = dist;
+                    activeIndex = i;
+                }
+            });
+
+            const activeNode = document.getElementById(`node-${activeIndex}`);
+            if (activeNode && swordIcon) {
+                const nodeRect = activeNode.getBoundingClientRect();
+                const swordRect = swordIcon.getBoundingClientRect();
+                swordIcon.style.left = (nodeRect.left + nodeRect.width / 2 - swordRect.width / 2) + 'px';
+                swordIcon.style.top = (nodeRect.top + nodeRect.height / 2 - swordRect.height / 2) + 'px';
+            }
+        }
+
+        function updateNodesActive(progress) {
+            let activeIndex = 0;
+            let minDist = Infinity;
+            periods.forEach((period, i) => {
+                const dist = Math.abs(progress - period.nodeX);
+                if (dist < minDist) {
+                    minDist = dist;
+                    activeIndex = i;
+                }
+            });
+            for (let i = 0; i < periods.length; i++) {
+                const node = document.getElementById(`node-${i}`);
+                if (node) {
+                    if (i === activeIndex) node.classList.add('active');
+                    else node.classList.remove('active');
+                }
+            }
+        }
+
+        function updateParallax(progress) {
+            const moveX = 0 + (progress * -30);
+            const moveY = 0 + (progress * -6);
+            parallaxBase.style.transform = `translate(${moveX}%, ${moveY}%)`;
+            timelineCurve.style.transform = `translateX(${progress * -150}px)`;
+            progressFill.style.width = (progress * 100) + '%';
+        }
+
+        function animateToProgress(targetProgress) {
+            if (isAnimating) {
+                cancelAnimationFrame(currentAnimationId);
+            }
+
+            const startProgress = currentProgress;
+            const startTime = performance.now();
+            const duration = 500;
+            isAnimating = true;
+
+            function animate(now) {
+                const elapsed = now - startTime;
+                const t = Math.min(1, elapsed / duration);
+                const ease = 1 - Math.pow(1 - t, 3);
+
+                const newProgress = startProgress + (targetProgress - startProgress) * ease;
+                currentProgress = newProgress;
+
+                updateParallax(currentProgress);
+                updateNodesActive(currentProgress);
+                moveSwordToProgress(currentProgress);
+
+                if (t < 1) {
+                    currentAnimationId = requestAnimationFrame(animate);
+                } else {
+                    currentProgress = targetProgress;
+                    updateParallax(currentProgress);
+                    updateNodesActive(currentProgress);
+                    moveSwordToProgress(currentProgress);
+                    isAnimating = false;
+                    currentAnimationId = null;
+                }
+            }
+
+            currentAnimationId = requestAnimationFrame(animate);
+        }
+
+        function scrollToNode(nodeX) {
+            animateToProgress(nodeX);
+        }
+
+        function createNodes() {
+            const container = document.getElementById('nodesContainer');
+            container.innerHTML = '';
+            periods.forEach((period, i) => {
+                const node = document.createElement('div');
+                node.id = `node-${i}`;
+                node.className = 'timeline-node';
+                node.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    console.log('点击节点, 索引:', i, '名称:', period.name);
+
+                    closePopup();
+                    scrollToNode(period.nodeX);
+
+                    if (period.showCard === true) {
+                        updateCardForNode(i);
+                        showIllustrationAndPopup(i);
+                    } else {
+                        if (currentCard) {
+                            currentCard.remove();
+                            currentCard = null;
+                        }
+                    }
+                });
+                container.appendChild(node);
+            });
+            updateAllNodePositions();
+        }
+
+        function initProgressBar() {
+            let isDragging = false;
+
+            progressBar.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                const rect = progressBar.getBoundingClientRect();
+                let x = (e.clientX - rect.left) / rect.width;
+                x = Math.max(0, Math.min(1, x));
+                animateToProgress(x);
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const rect = progressBar.getBoundingClientRect();
+                let x = (e.clientX - rect.left) / rect.width;
+                x = Math.max(0, Math.min(1, x));
+                animateToProgress(x);
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        }
+
+        function playMusic() {
+            if (bgMusic) {
+                bgMusic.play().catch(() => {});
+                isMusicPlaying = true;
+                document.getElementById('audioControl').innerHTML = '🔊';
+            }
+        }
+
+        function stopMusic() {
+            if (bgMusic) {
+                bgMusic.pause();
+                isMusicPlaying = false;
+                document.getElementById('audioControl').innerHTML = '🔇';
+            }
+        }
+
+        function toggleMusic() {
+            isMusicPlaying ? stopMusic() : playMusic();
+        }
+
+        // 开门按钮
+        const openDoorBtn = document.getElementById('openDoorBtn');
+        if (openDoorBtn) {
+            openDoorBtn.addEventListener('click', () => {
+                const audio = new Audio('./audio/door-open.mp3');
+                audio.volume = 0.5;
+                audio.play().catch(() => {});
+
+                openDoorBtn.style.display = 'none';
+
+                doorContainer.classList.add('open');
+
+                setTimeout(() => {
+                    doorContainer.style.display = 'none';
+
+                    bgMusic = new Audio('./audio/background-music.mp3');
+                    bgMusic.loop = true;
+                    bgMusic.volume = 0.3;
+                    playMusic();
+                }, 800);
+            });
+        }
+
+        // 返回按钮
+       // 返回按钮
+// 返回按钮
+const backBtn = document.getElementById('backBtn');
+if (backBtn) {
+    backBtn.addEventListener('click', () => {
+        window.location.href = 'about.html?skip=true';
+    });
+}
+
+        window.addEventListener('load', () => {
+            pathLength = curvePath.getTotalLength();
+            createNodes();
+            initProgressBar();
+            updateParallax(0.05);
+            updateNodesActive(0.05);
+            moveSwordToProgress(0.05);
+        });
+
+        window.addEventListener('resize', () => {
+            pathLength = curvePath.getTotalLength();
+            updateAllNodePositions();
+            moveSwordToProgress(currentProgress);
+            updateParallax(currentProgress);
+        });
+
+        document.getElementById('audioControl').addEventListener('click', toggleMusic);
+        document.getElementById('closePopupBtn').addEventListener('click', closePopup);
+    </script>
+</body>
+</html>

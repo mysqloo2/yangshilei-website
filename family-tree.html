@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>样式雷 · 八代谱系</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+            background-color: #0a0806;
+        }
+
+        /* 视频/图片区域 - 全屏首屏 */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .media-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+
+        #familyVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        #familyImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            background-color: #0a0806;
+        }
+
+        .hotspots-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 30;
+            display: none;
+        }
+
+        .hotspot {
+            position: absolute;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            transition: none;
+        }
+
+        .hotspot:hover {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 50;
+            background: rgba(0,0,0,0.5);
+            padding: 12px 24px;
+            border-radius: 50px;
+            width: fit-content;
+            margin: 0 auto;
+            backdrop-filter: blur(8px);
+        }
+
+        .control-btn {
+            background: rgba(210, 180, 140, 0.85);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: #2a2418;
+            font-size: 16px;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .control-btn:hover {
+            background: #c9a03d;
+            transform: scale(1.02);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(210,180,140,0.6);
+            border-radius: 40px;
+            padding: 10px 20px;
+            color: #e8c97a;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Georgia', serif;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: rgba(210,180,140,0.3);
+            color: #fff;
+        }
+
+       /* ========= 结语板块（使用图片背景） ========= */
+.conclusion-section {
+    width: 100%;
+    position: relative;
+    background-image: url('./images/族谱板块结语.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 80px 20px 100px;
+    z-index: 20;
+}
+
+/* 白色渐变蒙版 */
+.conclusion-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 250, 240, 0.85) 0%, rgba(245, 235, 220, 0.9) 100%);
+    z-index: 1;
+}
+
+.conclusion-card {
+    position: relative;
+    z-index: 2;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 32px;
+    padding: 48px 56px;
+    border: 1px solid rgba(180, 140, 100, 0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s ease;
+}
+
+.conclusion-card:hover {
+    border-color: rgba(180, 140, 100, 0.6);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-3px);
+}
+
+.conclusion-title {
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+}
+
+.conclusion-title h3 {
+    font-size: 28px;
+    letter-spacing: 8px;
+    color: #8b5a2b;
+    font-family: 'Georgia', '楷体', serif;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.conclusion-title .deco-line {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #c9a03d, transparent);
+    margin: 20px auto 0;
+}
+
+.conclusion-title .deco-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.conclusion-text {
+    text-align: justify;
+    line-height: 2;
+    font-size: 16px;
+    color: #3a2a1a;
+    letter-spacing: 1px;
+    font-family: 'Georgia', '宋体', serif;
+}
+
+.conclusion-text .highlight {
+    color: #b8622a;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.conclusion-text .quote-mark {
+    font-size: 32px;
+    color: #c9a03d;
+    opacity: 0.6;
+    font-family: serif;
+    vertical-align: middle;
+    margin: 0 6px;
+}
+
+.conclusion-divider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 24px;
+}
+
+.conclusion-divider .dot {
+    width: 6px;
+    height: 6px;
+    background: #c9a03d;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+.conclusion-divider .line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #c9a03d, transparent);
+}
+
+.conclusion-footer {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px dashed rgba(139, 90, 43, 0.25);
+}
+
+.conclusion-footer p {
+    font-size: 14px;
+    color: #8b5a2b;
+    letter-spacing: 4px;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.conclusion-footer .seal {
+    display: inline-block;
+    margin-top: 16px;
+    width: 60px;
+    height: 60px;
+    border: 1px solid rgba(139, 90, 43, 0.4);
+    border-radius: 50%;
+    line-height: 58px;
+    text-align: center;
+    font-size: 12px;
+    color: #8b5a2b;
+    font-family: '楷体', serif;
+    opacity: 0.7;
+    transition: all 0.3s;
+}
+
+.conclusion-footer .seal:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .conclusion-section { padding: 50px 16px 70px; }
+    .conclusion-card { padding: 30px 24px; margin: 0 16px; }
+    .conclusion-title h3 { font-size: 20px; letter-spacing: 4px; }
+    .conclusion-text { font-size: 14px; line-height: 1.8; }
+    .conclusion-footer p { font-size: 12px; letter-spacing: 2px; }
+}
+
+@media (max-width: 480px) {
+    .conclusion-section { padding: 40px 12px 60px; }
+    .conclusion-card { padding: 24px 18px; }
+    .conclusion-title h3 { font-size: 16px; letter-spacing: 3px; }
+    .conclusion-text { font-size: 13px; line-height: 1.7; }
+    .conclusion-text .highlight { font-size: 14px; }
+}
+        /* 光标抖动提示 */
+        @keyframes cursorBounce {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+        }
+        @keyframes pulseRing {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+        .cursor-hint {
+            position: absolute;
+            z-index: 200;
+            pointer-events: none;
+            display: none;
+        }
+        .cursor-hint.show { display: block; }
+        .cursor-icon { position: relative; width: 70px; height: 70px; }
+        .cursor-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80px;
+            height: 80px;
+            background: rgba(210, 180, 140, 0.3);
+            border-radius: 50%;
+            animation: pulseRing 1.5s ease-out infinite;
+        }
+        .cursor-hand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 45px;
+            height: 45px;
+            animation: cursorBounce 0.8s ease-in-out infinite;
+        }
+        .cursor-hand svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 5px rgba(210,180,140,0.8));
+        }
+        .hint-text {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            background: rgba(0,0,0,0.75);
+            color: #e8c97a;
+            padding: 5px 14px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-family: 'Georgia', serif;
+            letter-spacing: 2px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(210,180,140,0.6);
+        }
+
+        /* 弹窗样式 */
+        .custom-modal {
+            position: fixed;
+            z-index: 300;
+            background: #fef7e8;
+            border-radius: 20px;
+            border: 2px solid #c9a03d;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            width: 380px;
+            max-width: 85vw;
+            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            animation: modalFadeIn 0.25s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .custom-modal .modal-header {
+            background: linear-gradient(135deg, #a67c52, #8b5a2b);
+            padding: 14px 18px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            border-radius: 18px 18px 0 0;
+        }
+        .custom-modal .modal-header h3 {
+            font-size: 20px;
+            letter-spacing: 2px;
+            font-family: 'Georgia', '楷体', serif;
+        }
+        .custom-modal .modal-header .gen-badge {
+            background: rgba(255,255,255,0.25);
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-size: 12px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        .custom-modal .modal-close {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .custom-modal .modal-close:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.05);
+        }
+        .custom-modal .modal-body {
+            padding: 18px 20px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+        }
+        .custom-modal .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-modal .modal-body::-webkit-scrollbar-track {
+            background: rgba(166,124,82,0.15);
+            border-radius: 3px;
+        }
+        .custom-modal .modal-body::-webkit-scrollbar-thumb {
+            background: #a67c52;
+            border-radius: 3px;
+        }
+        .custom-modal .life-years {
+            font-size: 14px;
+            color: #a67c52;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed rgba(166,124,82,0.3);
+            font-weight: bold;
+        }
+        .custom-modal .section {
+            margin-bottom: 16px;
+        }
+        .custom-modal .section-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #6b4c2c;
+            margin-bottom: 8px;
+            border-left: 3px solid #c9a03d;
+            padding-left: 10px;
+        }
+        .custom-modal .section-content {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #3a3228;
+            text-align: justify;
+            word-break: break-word;
+        }
+        .custom-modal .modal-footer {
+            padding: 12px 18px;
+            border-top: 1px solid rgba(166,124,82,0.2);
+            display: flex;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+        .custom-modal .modal-footer button {
+            background: #a67c52;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .custom-modal .modal-footer button:hover {
+            background: #c9a03d;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 视频/图片首屏区域 -->
+<div class="hero-section">
+    <a href="about.html?skip=true" class="back-btn">← 返回</a>
+
+    <div class="media-container">
+        <video id="familyVideo" src="video/family-tree.mp4"></video>
+        <img id="familyImage" src="./images/family-tree.jpg" alt="八代谱系图">
+    </div>
+
+    <div class="cursor-hint" id="cursorHint">
+        <div class="cursor-icon">
+            <div class="cursor-ring"></div>
+            <div class="cursor-hand">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 3.5V12L3.5 10.5L2 12.5L7 17.5L12 12.5L10.5 11L8.5 12.5V4.5L6.5 3.5H5.5Z" fill="#c9a03d" stroke="#e8c97a" stroke-width="0.5"/>
+                    <path d="M12 12.5L15 9.5L14 8L12.5 9.5V6L11 5V12.5H12Z" fill="#c9a03d" stroke="#e8c97a" stroke-width="0.5"/>
+                    <path d="M15 9.5L17.5 12L19 10.5L17 8.5L18.5 7L17 5.5L15 9.5Z" fill="#c9a03d" stroke="#e8c97a" stroke-width="0.5"/>
+                </svg>
+            </div>
+            <div class="hint-text">✨ 点击查看人物资料 ✨</div>
+        </div>
+    </div>
+
+    <div class="hotspots-container" id="hotspotsContainer">
+        <div class="hotspot" data-gen="1" data-name="雷发达" data-years="1619-1694"
+             data-achievement='明末清初从江西迁居北京，以精湛的木工技艺进入清廷营造体系，在康熙年间参与紫禁城太和殿等工程，因上梁献艺崭露头角，开启了雷氏家族执掌皇家营造的序幕。'
+             data-status='奠定了雷氏家族在清代宫廷营造业的基础，被后世尊为样式雷始祖。'
+             style="left: 10%; top: 24%; width: 8%; height: 12%;">
+        </div>
+        
+        <div class="hotspot" data-gen="2" data-name="雷金玉" data-years="1659-1729"
+             data-achievement='继承父业，主持康熙年间畅春园、雍正年间圆明园等核心工程，是样式雷家族正式担任样式房掌案的第一人，也是家族地位稳固的关键人物。'
+             data-status='雍正帝曾赐赠雷金玉楠木匾额，雷氏家族自此正式成为清廷御用建筑世家，样式雷的名号也由此打响。'
+             style="left: 23%; top: 9%; width: 8%; height: 12%;">
+        </div>
+        
+        <div class="hotspot" data-gen="3" data-name="雷声澄" data-years="1729-1792"
+             data-achievement='在雍正、乾隆年间主持多项皇家建筑修缮与新建工程，延续了家族的掌案地位，完善了雷氏家族的营造技艺体系。'
+             data-status='承接了第二代的辉煌，为后续家族在乾隆朝的鼎盛发展打下了基础。'
+             style="left: 37%; top: 9%; width: 8%; height: 12%;">
+        </div>
+        
+        <div class="hotspot" data-gen="4" data-name="雷家玺" data-years="1764-1825"
+             data-achievement='乾隆至道光年间的掌案，主持了颐和园、承德避暑山庄、清东陵等大型皇家园林与陵寝工程，尤其擅长园林造景与陵寝风水布局，烫样技艺在此时期达到巅峰。'
+             data-status='带领样式雷家族进入鼎盛期，雷氏营造技艺在园林、陵寝等领域的应用达到了新高度。'
+             style="left: 49%; top: 10%; width: 8%; height: 12%;">
+        </div>
+        
+        <div class="hotspot" data-gen="5" data-name="雷景修" data-years="1803-1866"
+             data-achievement='道光至同治年间，恰逢鸦片战争、英法联军侵华，圆明园被毁，雷景修在乱世中坚守，整理、保存了家族数万张图纸与烫样，避免了核心技艺资料的流失。'
+             data-status='不仅延续了家族掌案职责，更成为样式雷技艺与史料的守护者，为后世留下了珍贵的建筑档案。'
+             style="left: 76%; top: 14%; width: 8%; height: 12%;">
+        </div>
+        
+        <div class="hotspot" data-gen="6" data-name="雷思起" data-years="1826-1876"
+             data-achievement='咸丰至光绪年间，主持了清东陵定陵、圆明园重建（未完工）、颐和园部分工程等，尤其擅长陵寝建筑的规制与营造，多次因工程质量获清廷嘉奖。'
+             data-status='在晚清动荡中，依旧支撑着样式雷家族的皇家营造职责，是家族在清末的重要传承人。'
+             style="left: 64%; top: 49%; width: 8%; height: 12%;">
+        </div>
+        
+        <div class="hotspot" data-gen="7" data-name="雷廷昌" data-years="1845-1907"
+             data-achievement='同治至光绪年间的掌案，主持了清东陵惠陵、清西陵崇陵、颐和园重建、天坛祈年殿修缮等晚清最重要的皇家工程，是样式雷家族技艺的集大成者。'
+             data-status='带领样式雷家族迎来了最后一段辉煌，也是雷氏家族中唯一获清廷赏戴二品顶戴的匠人，达到了家族身份地位的顶峰。'
+             style="left: 55%; top: 43%; width: 8%; height: 12%;">
+        </div>
+        
+        <div class="hotspot" data-gen="8" data-name="雷献彩" data-years="1877-不详"
+             data-achievement='生于同治年间，光绪至民国初年主持了部分皇家建筑修缮工程，随着清王朝覆灭，清廷样式房解散，雷氏家族的御用营造职责也随之终结。'
+             data-status='作为样式雷第八代传人，见证了封建王朝的终结与传统营造体系的落幕，也开启了雷氏技艺从皇家御用向民间传承的转型。'
+             style="left: 20%; top: 66%; width: 8%; height: 12%;">
+        </div>
+    </div>
+
+    <div class="video-controls">
+        <button class="control-btn" id="pauseToImageBtn">⏸ 结束播放</button>
+        <button class="control-btn" id="restartVideoBtn">▶ 重新播放视频</button>
+    </div>
+</div>
+
+<!-- 结语板块（使用图片背景） -->
+<div class="conclusion-section">
+    <div class="conclusion-card">
+        <div class="conclusion-title">
+            <div class="deco-icon">🏛️</div>
+            <h3>匠心不灭 · 薪火相传</h3>
+            <div class="deco-line"></div>
+        </div>
+        
+        <div class="conclusion-text">
+            <span class="quote-mark">「</span>
+            样式雷家族是清代独掌皇家建筑营造大权的<span class="highlight">“八代匠人世家”</span>，
+            自康熙年间起，连续八代担任清廷样式房掌案，主持了<span class="highlight">故宫、圆明园、颐和园、清东陵/西陵</span>等几乎所有皇家重大工程，
+            是中国古代建筑史上的传奇。
+            <span class="quote-mark">」</span>
+        </div>
+        
+        <div class="conclusion-divider">
+            <div class="line"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="line"></div>
+        </div>
+        
+        <div class="conclusion-text">
+            <span class="quote-mark">「</span>
+            两百年八代匠心，一座家族传承史，半部清代皇家建筑史。
+            样式雷用坚守与技艺，镌刻中国古代建筑史上的不朽传奇。
+            <span class="quote-mark">」</span>
+        </div>
+        
+        <div class="conclusion-footer">
+            <p>—— 样式雷 · 八代匠人世家 ——</p>
+            <div class="seal">雷</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const video = document.getElementById('familyVideo');
+    const image = document.getElementById('familyImage');
+    const hotspotsContainer = document.getElementById('hotspotsContainer');
+    const pauseBtn = document.getElementById('pauseToImageBtn');
+    const restartBtn = document.getElementById('restartVideoBtn');
+    const cursorHint = document.getElementById('cursorHint');
+    const seventhHotspot = document.querySelector('.hotspot[data-gen="7"]');
+
+    function positionCursorHint() {
+        if (seventhHotspot && cursorHint) {
+            const rect = seventhHotspot.getBoundingClientRect();
+            cursorHint.style.left = (rect.left + rect.width / 2) + 'px';
+            cursorHint.style.top = (rect.top + rect.height / 2) + 'px';
+            cursorHint.style.transform = 'translate(-50%, -50%)';
+        }
+    }
+
+    function switchToImageMode() {
+        video.style.display = 'none';
+        image.style.display = 'block';
+        hotspotsContainer.style.display = 'block';
+        video.pause();
+        positionCursorHint();
+        cursorHint.classList.add('show');
+        setTimeout(() => {
+            cursorHint.classList.remove('show');
+        }, 8000);
+    }
+
+    function switchToVideoMode() {
+        video.style.display = 'block';
+        image.style.display = 'none';
+        hotspotsContainer.style.display = 'none';
+        video.currentTime = 0;
+        video.play().catch(console.log);
+        cursorHint.classList.remove('show');
+    }
+
+    function hideHintOnFirstClick() {
+        cursorHint.classList.remove('show');
+        document.querySelectorAll('.hotspot').forEach(hotspot => {
+            hotspot.removeEventListener('click', hideHintOnFirstClick);
+        });
+    }
+
+    pauseBtn.addEventListener('click', switchToImageMode);
+    restartBtn.addEventListener('click', switchToVideoMode);
+    video.addEventListener('ended', switchToImageMode);
+
+    // 视频播放
+    const playVideo = () => {
+        video.play().catch(e => {
+            const tip = document.createElement('div');
+            tip.textContent = '🔊 点击页面任意位置启用声音';
+            tip.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);color:#e8c97a;padding:8px 20px;border-radius:30px;z-index:500;font-size:14px;backdrop-filter:blur(4px);';
+            document.body.appendChild(tip);
+            const enableAudio = () => {
+                video.play().catch(console.log);
+                tip.remove();
+                document.body.removeEventListener('click', enableAudio);
+                document.body.removeEventListener('touchstart', enableAudio);
+            };
+            document.body.addEventListener('click', enableAudio);
+            document.body.addEventListener('touchstart', enableAudio);
+        });
+    };
+    playVideo();
+
+    window.addEventListener('resize', () => {
+        if (cursorHint.classList.contains('show')) positionCursorHint();
+    });
+
+    // 弹窗
+    let currentModal = null;
+
+    function showModalNearHotspot(hotspotElement, gen, name, years, achievement, status) {
+        if (currentModal) currentModal.remove();
+        
+        const rect = hotspotElement.getBoundingClientRect();
+        const modal = document.createElement('div');
+        modal.className = 'custom-modal';
+        modal.innerHTML = `
+            <div class="modal-header">
+                <div><h3>${name}</h3><div class="gen-badge">第${gen}代</div></div>
+                <div class="modal-close">✕</div>
+            </div>
+            <div class="modal-body">
+                <div class="life-years">📅 ${years}</div>
+                <div class="section"><div class="section-title">📜 核心事迹</div><div class="section-content">${achievement}</div></div>
+                <div class="section"><div class="section-title">🏛️ 历史地位</div><div class="section-content">${status}</div></div>
+            </div>
+            <div class="modal-footer"><button class="close-btn">关 闭</button></div>
+        `;
+        document.body.appendChild(modal);
+        
+        const modalW = modal.offsetWidth;
+        const modalH = modal.offsetHeight;
+        let left = rect.right + 10;
+        let top = rect.top + (rect.height / 2) - (modalH / 2);
+        if (left + modalW > window.innerWidth) left = rect.left - modalW - 10;
+        if (top < 10) top = 10;
+        if (top + modalH > window.innerHeight - 10) top = window.innerHeight - modalH - 10;
+        modal.style.left = left + 'px';
+        modal.style.top = top + 'px';
+        currentModal = modal;
+        
+        const close = () => { modal.remove(); currentModal = null; };
+        modal.querySelector('.modal-close').onclick = close;
+        modal.querySelector('.close-btn').onclick = close;
+        
+        setTimeout(() => {
+            const outside = (e) => {
+                if (!modal.contains(e.target) && !hotspotElement.contains(e.target)) {
+                    modal.remove();
+                    currentModal = null;
+                    document.removeEventListener('click', outside);
+                }
+            };
+            document.addEventListener('click', outside);
+        }, 100);
+    }
+
+    document.querySelectorAll('.hotspot').forEach(hotspot => {
+        hotspot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showModalNearHotspot(
+                hotspot, 
+                hotspot.dataset.gen, 
+                hotspot.dataset.name, 
+                hotspot.dataset.years, 
+                hotspot.dataset.achievement, 
+                hotspot.dataset.status
+            );
+        });
+        hotspot.addEventListener('click', hideHintOnFirstClick);
+    });
+</script>
+</body>
+</html>
