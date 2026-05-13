@@ -361,6 +361,17 @@
     background: rgba(210, 180, 140, 0.1);
 }
 
+.drawing-caption {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #4a2c1a;
+    background: rgba(255, 248, 235, 0.95);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(210, 180, 140, 0.35);
+}
+
 /* 角落按钮容器 */
 .corner-buttons {
     position: absolute;
@@ -919,6 +930,7 @@
     <div class="drawing-card">
         <h3>📜 样式雷高清古图样赏析</h3>
         <img id="drawingImage" class="drawing-image" src="./images/dayang.jpg" alt="古图样" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f5e6d3\'/%3E%3Ctext x=\'200\' y=\'150\' text-anchor=\'middle\' fill=\'%238b5a2b\'%3E图样示例%3C/text%3E%3C/svg%3E'">
+        <div id="drawingCaption" class="drawing-caption">大木样（剖面图/梁架图）：厘清梁、柱、檩、枋、斗拱等木作结构关系，详细标注构件尺寸与卯口构造。</div>
         
         <!-- 角落按钮 -->
         <div class="corner-buttons">
@@ -1112,8 +1124,23 @@ const imageMap = {
     'zongyang': 'zongyang'
 };
 
+const captionMap = {
+    'dayang': '大木样（剖面图/梁架图）：厘清梁、柱、檩、枋、斗拱等木作结构关系，详细标注构件尺寸与卯口构造。',
+    'liyang': '立样：相当于现在的建筑立面、剖面图。用于精细描绘建筑物的外观造型、立面构图（如色彩、纹饰）以及内部梁架结构（即“大木”做法）。',
+    'dipan': '地盘样：相当于现在的建筑平面图，主要表达建筑的平面布局（台基、柱网、房间分隔等），是“俯视”视角的基础图纸。',
+    'zongyang': '总样：相对于建筑的局部图，它是指一个建筑群甚至整个建筑项目的 “总体规划图”。',
+    'dashi': '地势全图：古建筑的“风水地势勘察图”或“环境规划图”。不仅包含建筑布局，更侧重于描绘周边的山水形势和地理脉络。'
+};
+
 const drawingImage = document.getElementById('drawingImage');
+const drawingCaption = document.getElementById('drawingCaption');
 const btns = document.querySelectorAll('.corner-btn');
+
+function updateDrawingCaption(key) {
+    if (drawingCaption && captionMap[key]) {
+        drawingCaption.textContent = captionMap[key];
+    }
+}
 
 btns.forEach(btn => {
     const imgValue = btn.getAttribute('data-img');
@@ -1124,6 +1151,7 @@ btns.forEach(btn => {
 
 if (drawingImage) {
     loadDrawingImage('dayang', drawingImage);
+    updateDrawingCaption('dayang');
 }
 
 btns.forEach(btn => {
@@ -1132,6 +1160,7 @@ btns.forEach(btn => {
         const imgKey = btn.getAttribute('data-img');
         if (imageMap[imgKey]) {
             loadDrawingImage(imageMap[imgKey], drawingImage);
+            updateDrawingCaption(imgKey);
             btns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }

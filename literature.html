@@ -208,41 +208,41 @@
         }
 
         .intro-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 248, 235, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 34px 42px;
-}
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 248, 235, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 34px 42px;
+        }
 
-       .intro-text {
-    max-width: 960px;
-    color: #3a2a1a;
-    text-shadow: none;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    padding: 0;
-    margin: 0 auto;
-    text-align: center;
-}
+        .intro-text {
+            max-width: 960px;
+            color: #3a2a1a;
+            text-shadow: none;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            margin: 0 auto;
+            text-align: center;
+        }
 
-       .intro-text h2 {
-    font-size: 34px;
-    letter-spacing: 2px;
-    margin-bottom: 14px;
-    text-align: center;
-    color: #8b5a2b;
-}
+        .intro-text h2 {
+            font-size: 34px;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            text-align: center;
+            color: #8b5a2b;
+        }
 
-.intro-text p {
-    font-size: 16px;
-    line-height: 1.9;
-    color: #3a2a1a;
-    text-align: center;
-}
+        .intro-text p {
+            font-size: 16px;
+            line-height: 1.9;
+            color: #3a2a1a;
+            text-align: center;
+        }
 
         .theme-layout {
             display: grid;
@@ -259,6 +259,7 @@
             min-height: 430px;
             background: rgba(255, 248, 235, 0.85);
             transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            cursor: pointer;
         }
 
         .theme-card:hover {
@@ -285,6 +286,12 @@
             flex-direction: column;
             color: #3a2a1a;
             background: rgba(255, 248, 235, 0.65);
+            pointer-events: none;  /* 让内部文字不干扰点击，卡片整体可点击 */
+        }
+
+        .theme-overlay h3,
+        .theme-overlay p {
+            pointer-events: none;
         }
 
         .theme-overlay h3 {
@@ -300,15 +307,15 @@
             padding-bottom: 8px;
         }
 
-       .theme-overlay p {
-    font-size: 14px;
-    line-height: 1.72;
-    text-align: justify;
-    margin: 0 0 12px 0;  /* 段落之间加间距 */
-    color: #3a2a1a;
-    text-shadow: none;
-    text-indent: 2em;  /* 首行缩进2字符 */
-}
+        .theme-overlay p {
+            font-size: 14px;
+            line-height: 1.72;
+            text-align: justify;
+            margin: 0 0 12px 0;
+            color: #3a2a1a;
+            text-shadow: none;
+            text-indent: 2em;
+        }
 
         .heritage-row {
             margin-bottom: 34px;
@@ -316,6 +323,7 @@
 
         .heritage-card {
             min-height: 320px;
+            cursor: pointer;
         }
 
         .heritage-card .theme-overlay h3 {
@@ -326,11 +334,11 @@
             line-height: 1.7;
         }
 
-      .heritage-card img {
-    object-fit: cover;
-    transform: scale(1);
-    background: transparent;
-}
+        .heritage-card img {
+            object-fit: cover;
+            transform: scale(1);
+            background: transparent;
+        }
 
         .heritage-link {
             text-decoration: none;
@@ -395,28 +403,28 @@
             background: rgba(255, 248, 235, 0.82);
         }
 
-       .book-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    padding: 14px;
-    background: rgba(62, 40, 24, 0.52);
-}
+        .book-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: flex-end;
+            padding: 14px;
+            background: rgba(62, 40, 24, 0.52);
+        }
 
         .book-overlay span {
-    color: rgba(255, 255, 255, 0.95);
-    font-size: 17px;
-    line-height: 1.5;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.85), 0 0 2px rgba(255, 255, 255, 0.95);
-    text-align: center;
-    width: 100%;
-    display: block;
-    font-weight: 900;
-    letter-spacing: 1px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.55);
-    padding-bottom: 8px;
-}
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 17px;
+            line-height: 1.5;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.85), 0 0 2px rgba(255, 255, 255, 0.95);
+            text-align: center;
+            width: 100%;
+            display: block;
+            font-weight: 900;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+            padding-bottom: 8px;
+        }
 
         .books-nav {
             position: absolute;
@@ -490,25 +498,111 @@
         }
 
         .bottom-overlay p {
-    font-size: 14px;
-    line-height: 1.72;
-    white-space: normal;
-    text-align: justify;
-    overflow-y: auto;
-    padding-right: 4px;
-    color: #3a2a1a;
-    text-shadow: none;
-    text-indent: 2em;  /* 添加首行缩进 */
-    margin-bottom: 12px;
-}
+            font-size: 14px;
+            line-height: 1.72;
+            white-space: normal;
+            text-align: justify;
+            overflow-y: auto;
+            padding-right: 4px;
+            color: #3a2a1a;
+            text-shadow: none;
+            text-indent: 2em;
+            margin-bottom: 12px;
+        }
 
-.bottom-overlay .ref-list {
-    text-indent: 0;
-    text-align: left;
-    font-size: 13px;
-    line-height: 1.8;
-}
+        .bottom-overlay .ref-list {
+            text-indent: 0;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.8;
+        }
 
+        /* ========= 自定义tooltip (小弹窗提示) ========= */
+        .game-hover-tip {
+            position: fixed;
+            background: #2c2418e6;
+            backdrop-filter: blur(12px);
+            color: #ffefcf;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Georgia', 'Times New Roman', '宋体', serif;
+            padding: 8px 18px;
+            border-radius: 40px;
+            border: 1px solid rgba(210, 180, 140, 0.7);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            letter-spacing: 1px;
+            white-space: nowrap;
+            z-index: 10000;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+            opacity: 0;
+        }
+
+        .game-hover-tip.show {
+            opacity: 1;
+        }
+
+        /* ========= 模态框样式 (几乎全屏大box, 左上角返回键) ========= */
+        .game-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(8px);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .game-empty-box {
+            position: relative;
+            width: 98vw;
+            height: 96vh;
+            background: #fef7e8;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(210, 180, 140, 0.7);
+            cursor: default;
+            /* 内部完全空白，仅包含返回按钮 */
+        }
+
+        /* 左上角返回 / 关闭按钮 */
+        .modal-back-btn {
+            position: absolute;
+            top: 20px;
+            left: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 40px;
+            background: rgba(139, 90, 43, 0.85);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 223, 170, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #ffefcf;
+            font-size: 28px;
+            font-weight: 300;
+            line-height: 1;
+            font-family: system-ui, 'Segoe UI', monospace;
+            z-index: 20;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-back-btn:hover {
+            background: rgba(110, 68, 31, 0.95);
+            transform: scale(1.05);
+            border-color: #ffdfaa;
+            color: #fff;
+        }
+
+        /* 大盒子内部除了返回按钮外无任何内容 */
         @media (max-width: 1280px) {
             .theme-layout {
                 grid-template-columns: 1fr;
@@ -551,6 +645,19 @@
             .bottom-pair {
                 grid-template-columns: 1fr;
             }
+
+            .game-empty-box {
+                width: 94vw;
+                height: 86vh;
+            }
+
+            .modal-back-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 26px;
+                top: 16px;
+                left: 18px;
+            }
         }
 
         @media (max-width: 640px) {
@@ -575,6 +682,20 @@
             .theme-overlay h3,
             .bottom-overlay h3 {
                 font-size: 22px;
+            }
+
+            .game-empty-box {
+                width: 96vw;
+                height: 84vh;
+                border-radius: 24px;
+            }
+
+            .modal-back-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 24px;
+                top: 12px;
+                left: 14px;
             }
         }
     </style>
@@ -617,65 +738,71 @@
             </section>
 
             <section class="theme-layout">
-                <article class="theme-card">
-    <img src="./images/literature-theme-common.jpg" alt="匠心铸魂背景图">
-    <div class="theme-overlay">
-        <h3>匠心铸魂</h3>
-        <p>择一事，终一生，八代雷氏匠人，以匠心守初心，以毫厘定乾坤，用坚守与专注，铸就了中国古代建筑史上的传奇，也书写了流传千古的工匠精神。</p>
-        <p>在等级森严的清代宫廷，样式雷家族以匠人身份，扛起皇家建筑营造重任。他们恪守精益求精、严谨务实、恪尽职守、薪火相传的匠人信念，从烫样制作的一草一纸，到建筑施工的一砖一瓦，无不精雕细琢、分毫必较；从园林布局的整体规划，到陵寝地宫的细微构造，无不思虑周全、匠心独运。</p>
-        <p>没有惊天动地的壮举，却在日复一日的设计、制图、营造中，将对技艺的敬畏、对作品的负责刻入血脉。雷景修耗尽半生整理家族图档，雷思起、雷廷昌为皇家工程呕心沥血，一代代雷氏匠人不求功名，只愿打造传世建筑，用坚守诠释匠人匠心，用传承延续技艺根脉，这份工匠精神，穿越百年时光，依旧熠熠生辉，成为中华传统技艺精神的典范。</p>
-    </div>
-</article>
-                <article class="theme-card">
-    <img src="./images/literature-theme-common.jpg" alt="典籍留痕背景图">
-    <div class="theme-overlay">
-        <h3>典籍留痕</h3>
-        <p>纸载千秋，图绘万象，样式雷留存的海量文献图档，是见证百年营造历史的珍贵信物，是解锁清代皇家建筑密码的核心密钥，为后世研究、传承、弘扬提供了坚实依据。</p>
-        <p>样式雷家族历经数代积累、整理，留下了海量珍贵资料文献，是中国现存最完整、最系统的古代建筑档案，也是世界建筑史上极为罕见的实物文献资料。</p>
-        <p>核心资料包含样式雷建筑烫样、手绘工程图纸、营造做法册、工程奏折、勘估文档等，涵盖圆明园、颐和园、紫禁城、天坛、清东陵、清西陵等诸多皇家建筑的设计图纸、施工方案、尺寸标注、用料明细、工期规划，内容详尽、绘制精准。</p>
-        <p>这些文献大多珍藏于国家图书馆、故宫博物院等权威机构，系统记录了清代皇家建筑营造的全流程，兼具历史价值、学术价值与技艺价值。本板块整理收录权威文献目录、核心文档摘要、珍贵图档赏析，为文化爱好者、学术研究者、建筑从业者提供专业、详实的资料参考，让百年营造典籍得以完整呈现、永续留存。</p>
-    </div>
-</article>
-               <article class="theme-card">
-    <img src="./images/literature-theme-common.jpg" alt="文脉永续背景图">
-    <div class="theme-overlay">
-        <h3>文脉永续</h3>
-        <p>样式雷，不止是建筑技艺，更是承载清代历史、古建文化、非遗智慧的文化瑰宝，是中华优秀传统文化不可或缺的组成部分，历经百年，依旧文脉绵长、薪火不绝。</p>
-        <p>作为世界记忆遗产，样式雷留存的烫样、建筑图档、做法册，是中国古代独一无二的「建筑三维档案」，完整记录了清代皇家建筑的营造理念、技艺流程、文化内涵，是研究中国古代建筑史、清代宫廷史、园林艺术、丧葬规制的珍贵史料，填补了中国古代建筑设计实物档案的空白。</p>
-        <p>其蕴含的营造技艺，融合了中国传统风水文化、美学理念、工程智慧，是东方古建技艺的集大成者；家族传承的坚守之道、敬业之魂，更是中华传统美德的生动体现。从文物修复、技艺研究，到非遗传播、教育普及，社会各界聚力守护，让样式雷文化走出档案馆、走出博物馆，融入现代生活，让这份珍贵的历史文脉、非遗文化，代代相传、历久弥新，彰显中华古建文化的深厚底蕴与强大生命力。</p>
-    </div>
-</article>
-               <article class="theme-card">
-    <img src="./images/literature-theme-common.jpg" alt="传承与创新背景图">
-    <div class="theme-overlay">
-        <h3>传承与创新</h3>
-        <p>让古老技艺活起来，让传统文化潮起来，样式雷文化在当代不断破圈创新，以全新形式融入现代生活，绽放出跨越时代的新生魅力。</p>
-        <p>百年技艺，当代传承。如今，样式雷不再是尘封的历史遗产，而是通过多元化创新，走进大众视野：烫样技艺走进校园课堂，成为非遗研学、手工体验的热门内容；样式雷建筑元素、图档纹样融入文创设计，打造出文具、饰品、摆件、艺术品等多款潮流文创；数字技术赋能古建复原，通过3D建模、VR展示，让百年烫样、古建筑实现数字化重现；文旅融合、主题展览、非遗讲座等活动遍地开花，让更多人近距离感受样式雷的文化魅力。</p>
-        <p>从专业研究到大众科普，从文物保护到文创开发，样式雷文化在传承中创新，在创新中发展，让古老的营造智慧与现代生活相融，让非遗文化真正活在当下、走向未来。</p>
-    </div>
-</article>
+                <!-- 匠心铸魂 -->
+                <article class="theme-card" data-module="1">
+                    <img src="./images/literature-theme-common.jpg" alt="匠心铸魂背景图">
+                    <div class="theme-overlay">
+                        <h3>匠心铸魂</h3>
+                        <p>择一事，终一生，八代雷氏匠人，以匠心守初心，以毫厘定乾坤，用坚守与专注，铸就了中国古代建筑史上的传奇，也书写了流传千古的工匠精神。</p>
+                        <p>在等级森严的清代宫廷，样式雷家族以匠人身份，扛起皇家建筑营造重任。他们恪守精益求精、严谨务实、恪尽职守、薪火相传的匠人信念，从烫样制作的一草一纸，到建筑施工的一砖一瓦，无不精雕细琢、分毫必较；从园林布局的整体规划，到陵寝地宫的细微构造，无不思虑周全、匠心独运。</p>
+                        <p>没有惊天动地的壮举，却在日复一日的设计、制图、营造中，将对技艺的敬畏、对作品的负责刻入血脉。雷景修耗尽半生整理家族图档，雷思起、雷廷昌为皇家工程呕心沥血，一代代雷氏匠人不求功名，只愿打造传世建筑，用坚守诠释匠人匠心，用传承延续技艺根脉，这份工匠精神，穿越百年时光，依旧熠熠生辉，成为中华传统技艺精神的典范。</p>
+                    </div>
+                </article>
+                <!-- 典籍留痕 -->
+                <article class="theme-card" data-module="2">
+                    <img src="./images/literature-theme-common.jpg" alt="典籍留痕背景图">
+                    <div class="theme-overlay">
+                        <h3>典籍留痕</h3>
+                        <p>纸载千秋，图绘万象，样式雷留存的海量文献图档，是见证百年营造历史的珍贵信物，是解锁清代皇家建筑密码的核心密钥，为后世研究、传承、弘扬提供了坚实依据。</p>
+                        <p>样式雷家族历经数代积累、整理，留下了海量珍贵资料文献，是中国现存最完整、最系统的古代建筑档案，也是世界建筑史上极为罕见的实物文献资料。</p>
+                        <p>核心资料包含样式雷建筑烫样、手绘工程图纸、营造做法册、工程奏折、勘估文档等，涵盖圆明园、颐和园、紫禁城、天坛、清东陵、清西陵等诸多皇家建筑的设计图纸、施工方案、尺寸标注、用料明细、工期规划，内容详尽、绘制精准。</p>
+                        <p>这些文献大多珍藏于国家图书馆、故宫博物院等权威机构，系统记录了清代皇家建筑营造的全流程，兼具历史价值、学术价值与技艺价值。本板块整理收录权威文献目录、核心文档摘要、珍贵图档赏析，为文化爱好者、学术研究者、建筑从业者提供专业、详实的资料参考，让百年营造典籍得以完整呈现、永续留存。</p>
+                    </div>
+                </article>
+                <!-- 文脉永续 -->
+                <article class="theme-card" data-module="3">
+                    <img src="./images/literature-theme-common.jpg" alt="文脉永续背景图">
+                    <div class="theme-overlay">
+                        <h3>文脉永续</h3>
+                        <p>样式雷，不止是建筑技艺，更是承载清代历史、古建文化、非遗智慧的文化瑰宝，是中华优秀传统文化不可或缺的组成部分，历经百年，依旧文脉绵长、薪火不绝。</p>
+                        <p>作为世界记忆遗产，样式雷留存的烫样、建筑图档、做法册，是中国古代独一无二的「建筑三维档案」，完整记录了清代皇家建筑的营造理念、技艺流程、文化内涵，是研究中国古代建筑史、清代宫廷史、园林艺术、丧葬规制的珍贵史料，填补了中国古代建筑设计实物档案的空白。</p>
+                        <p>其蕴含的营造技艺，融合了中国传统风水文化、美学理念、工程智慧，是东方古建技艺的集大成者；家族传承的坚守之道、敬业之魂，更是中华传统美德的生动体现。从文物修复、技艺研究，到非遗传播、教育普及，社会各界聚力守护，让样式雷文化走出档案馆、走出博物馆，融入现代生活，让这份珍贵的历史文脉、非遗文化，代代相传、历久弥新，彰显中华古建文化的深厚底蕴与强大生命力。</p>
+                    </div>
+                </article>
+                <!-- 传承与创新 -->
+                <article class="theme-card" data-module="4">
+                    <img src="./images/literature-theme-common.jpg" alt="传承与创新背景图">
+                    <div class="theme-overlay">
+                        <h3>传承与创新</h3>
+                        <p>让古老技艺活起来，让传统文化潮起来，样式雷文化在当代不断破圈创新，以全新形式融入现代生活，绽放出跨越时代的新生魅力。</p>
+                        <p>百年技艺，当代传承。如今，样式雷不再是尘封的历史遗产，而是通过多元化创新，走进大众视野：烫样技艺走进校园课堂，成为非遗研学、手工体验的热门内容；样式雷建筑元素、图档纹样融入文创设计，打造出文具、饰品、摆件、艺术品等多款潮流文创；数字技术赋能古建复原，通过3D建模、VR展示，让百年烫样、古建筑实现数字化重现；文旅融合、主题展览、非遗讲座等活动遍地开花，让更多人近距离感受样式雷的文化魅力。</p>
+                        <p>从专业研究到大众科普，从文物保护到文创开发，样式雷文化在传承中创新，在创新中发展，让古老的营造智慧与现代生活相融，让非遗文化真正活在当下、走向未来。</p>
+                    </div>
+                </article>
             </section>
 
-           <section class="heritage-row">
-    <a class="heritage-link" href="javascript:void(0)" style="cursor:default; text-decoration:none;" onclick="return false;">
-        <article class="theme-card heritage-card">
-            <img src="./images/literature-theme-heritage.jpg" alt="世遗荣光背景图">
-            <div class="theme-overlay">
-                <h3>世遗荣光</h3>
-                <p>一纸档案载华夏匠心，千年技艺登世界舞台，样式雷建筑图档成功入选世界记忆遗产，是世界对中华古建文化的高度认可，更是中国非遗文化的世界级荣光。</p>
-                <p>在申遗之路上，样式雷文化逐步迈向世界。2003年，样式雷图档成功入选中国档案文献遗产，筑牢了国内非遗保护根基。此后，经过精心筹备与价值梳理，2006年我国正式向联合国教科文组织提交申报材料，2007年，清代样式雷建筑图档凭借极高的文化价值，成功入选《世界记忆名录》，实现了从中国非遗到世界记忆遗产的跨越，让这份中式建筑智慧站上国际舞台。</p>
-                <p>样式雷的世界遗产价值毋庸置疑。雷氏家族八代传承，主持设计了故宫、天坛、颐和园、清东陵等诸多经典皇家建筑，这些作品大多跻身世界文化遗产之列。样式雷图档包含建筑图样、烫样、工程文献，完整留存了古代建筑设计、施工的全流程技艺，是研究中国古代建筑营造体系的珍贵实证，兼具艺术价值、历史价值与学术价值，填补了世界建筑档案领域的空白。</p>
-                <p>这份独特的文化瑰宝，收获了国际社会广泛赞誉。联合国教科文组织及全球建筑学界高度认可其价值，认为样式雷建筑文化是人类建筑史上的不朽财富，展现了中国古代工匠的极致匠心与东方建筑哲学。它不仅是中华优秀传统文化的杰出代表，更成为世界建筑文化中不可或缺的重要组成，彰显了中国传统建筑文化举足轻重的国际地位，让世界见证属于中国、也属于全人类的建筑文明瑰宝。</p>
-            </div>
-        </article>
-    </a>
-</section>
+            <section class="heritage-row">
+                <a class="heritage-link" href="javascript:void(0)" style="cursor:default; text-decoration:none;" onclick="return false;">
+                    <!-- 世遗荣光模块 特殊data-module=5 -->
+                    <article class="theme-card heritage-card" data-module="5">
+                        <img src="./images/literature-theme-heritage.jpg" alt="世遗荣光背景图">
+                        <div class="theme-overlay">
+                            <h3>世遗荣光</h3>
+                            <p>一纸档案载华夏匠心，千年技艺登世界舞台，样式雷建筑图档成功入选世界记忆遗产，是世界对中华古建文化的高度认可，更是中国非遗文化的世界级荣光。</p>
+                            <p>在申遗之路上，样式雷文化逐步迈向世界。2003年，样式雷图档成功入选中国档案文献遗产，筑牢了国内非遗保护根基。此后，经过精心筹备与价值梳理，2006年我国正式向联合国教科文组织提交申报材料，2007年，清代样式雷建筑图档凭借极高的文化价值，成功入选《世界记忆名录》，实现了从中国非遗到世界记忆遗产的跨越，让这份中式建筑智慧站上国际舞台。</p>
+                            <p>样式雷的世界遗产价值毋庸置疑。雷氏家族八代传承，主持设计了故宫、天坛、颐和园、清东陵等诸多经典皇家建筑，这些作品大多跻身世界文化遗产之列。样式雷图档包含建筑图样、烫样、工程文献，完整留存了古代建筑设计、施工的全流程技艺，是研究中国古代建筑营造体系的珍贵实证，兼具艺术价值、历史价值与学术价值，填补了世界建筑档案领域的空白。</p>
+                            <p>这份独特的文化瑰宝，收获了国际社会广泛赞誉。联合国教科文组织及全球建筑学界高度认可其价值，认为样式雷建筑文化是人类建筑史上的不朽财富，展现了中国古代工匠的极致匠心与东方建筑哲学。它不仅是中华优秀传统文化的杰出代表，更成为世界建筑文化中不可或缺的重要组成，彰显了中国传统建筑文化举足轻重的国际地位，让世界见证属于中国、也属于全人类的建筑文明瑰宝。</p>
+                        </div>
+                    </article>
+                </a>
+            </section>
 
             <section class="carousel-section">
                 <h3 class="carousel-title">书籍与影像资料</h3>
                 <div class="books-window">
                     <button class="books-nav prev" id="booksPrevBtn" type="button" aria-label="上一项">‹</button>
                     <div class="books-track" id="booksTrack">
+                        <!-- 书籍卡片内容保持不变 -->
                         <a class="book-card" href="https://www.nlcpress.com/ProductView.aspx?Id=12436" target="_blank" rel="noopener noreferrer">
                             <img src="" data-cover-base="literature-book-1" alt="国家图书馆藏样式雷图档">
                             <div class="book-overlay"><span>《国家图书馆藏样式雷图档》系列（含故宫卷、圆明园卷等）</span></div>
@@ -706,168 +833,278 @@
             </section>
 
             <section class="bottom-pair">
-               <article class="bottom-card">
-    <img src="./images/literature-bottom-common.jpg" alt="守护践行背景图">
-    <div class="bottom-overlay">
-        <h3>守护践行</h3>
-        <p>文化因传承而不朽，遗产因守护而永恒。样式雷非遗文化的传承保护，离不开专业机构的坚守，更离不开每一个人的参与。</p>
-        <p>样式雷烫样、图档等珍贵文物，历经百年岁月，存在老化、破损等问题，文物修复、档案整理、技艺传承工作任重道远。多年来，文博机构、高校团队、非遗传承人携手发力，开展文物修复、图档整理、技艺挖掘、学术研究等工作，全力守护这份珍贵遗产。</p>
-        <p>而传承非遗文化，不止是专业人士的使命，更是我们每个人的责任。本板块科普样式雷文物保护知识、非遗传承意义，发布文化守护倡议，分享公众参与渠道——无论是走进博物馆参观展览、学习非遗知识，还是参与研学体验、传播文化内容，都是对样式雷文化的守护与传承。</p>
-        <p>以微光聚星河，让我们共同行动，守护样式雷千年文脉，传承中华古建非遗瑰宝，让这份百年匠心与文化瑰宝，永续流传、光耀后世。</p>
-    </div>
-</article>
-
-               <article class="bottom-card">
-    <img src="./images/literature-bottom-common.jpg" alt="参考文献背景图">
-    <div class="bottom-overlay">
-        <h3>参考文献</h3>
-        <p class="ref-list">
-[1] 朱启钤. 样式雷考[J]. 中国营造学社汇刊,1933,4(1):86-89.<br>
-[2] 王其亨,何蓓洁. 样式雷考校注[M]. 天津:天津大学出版社,2018.<br>
-[3] 王方捷,王其亨. “样式雷”定陵地宫建筑烫样设计图研究[J]. 文物,2020(04):73-91.<br>
-[4] 国家图书馆,国家古籍保护中心. 样式雷图档集成[M]. 北京:国家图书馆出版社,2020.<br>
-[5] 何蓓洁,王其亨. 华夏意匠的世界记忆——传世清代样式雷建筑图档源流纪略[J]. 建筑师,2015(03):51-65.<br>
-[6] 刘彤彤,何蓓洁. 样式雷与清代皇家园林[J]. 中国园林,2008(06):17-22.<br>
-[7] 王其亨,张凤梧. 康熙《皇城宫殿衙署图》解读补遗[J]. 建筑史学刊,2024,5(3):101-112.<br>
-[8] 张应韬,单琳琳. 清代样式雷家族教育研究及工匠精神启示[J]. 西安建筑科技大学学报(社会科学版),2023,42(5):37-46.<br>
-[9] 张宝章. 建筑世家样式雷[M]. 北京:北京出版社,2003.<br>
-[10] 中国联合国教科文组织全国委员会. 世界记忆遗产——清代样式雷建筑图档申报材料[Z]. 2007.
-        </p>
-    </div>
-</article>
+                <article class="bottom-card">
+                    <img src="./images/literature-bottom-common.jpg" alt="守护践行背景图">
+                    <div class="bottom-overlay">
+                        <h3>守护践行</h3>
+                        <p>文化因传承而不朽，遗产因守护而永恒。样式雷非遗文化的传承保护，离不开专业机构的坚守，更离不开每一个人的参与。</p>
+                        <p>样式雷烫样、图档等珍贵文物，历经百年岁月，存在老化、破损等问题，文物修复、档案整理、技艺传承工作任重道远。多年来，文博机构、高校团队、非遗传承人携手发力，开展文物修复、图档整理、技艺挖掘、学术研究等工作，全力守护这份珍贵遗产。</p>
+                        <p>而传承非遗文化，不止是专业人士的使命，更是我们每个人的责任。本板块科普样式雷文物保护知识、非遗传承意义，发布文化守护倡议，分享公众参与渠道——无论是走进博物馆参观展览、学习非遗知识，还是参与研学体验、传播文化内容，都是对样式雷文化的守护与传承。</p>
+                        <p>以微光聚星河，让我们共同行动，守护样式雷千年文脉，传承中华古建非遗瑰宝，让这份百年匠心与文化瑰宝，永续流传、光耀后世。</p>
+                    </div>
+                </article>
+                <article class="bottom-card">
+                    <img src="./images/literature-bottom-common.jpg" alt="参考文献背景图">
+                    <div class="bottom-overlay">
+                        <h3>参考文献</h3>
+                        <p class="ref-list">
+                            [1] 朱启钤. 样式雷考[J]. 中国营造学社汇刊,1933,4(1):86-89.<br>
+                            [2] 王其亨,何蓓洁. 样式雷考校注[M]. 天津:天津大学出版社,2018.<br>
+                            [3] 王方捷,王其亨. “样式雷”定陵地宫建筑烫样设计图研究[J]. 文物,2020(04):73-91.<br>
+                            [4] 国家图书馆,国家古籍保护中心. 样式雷图档集成[M]. 北京:国家图书馆出版社,2020.<br>
+                            [5] 何蓓洁,王其亨. 华夏意匠的世界记忆——传世清代样式雷建筑图档源流纪略[J]. 建筑师,2015(03):51-65.<br>
+                            [6] 刘彤彤,何蓓洁. 样式雷与清代皇家园林[J]. 中国园林,2008(06):17-22.<br>
+                            [7] 王其亨,张凤梧. 康熙《皇城宫殿衙署图》解读补遗[J]. 建筑史学刊,2024,5(3):101-112.<br>
+                            [8] 张应韬,单琳琳. 清代样式雷家族教育研究及工匠精神启示[J]. 西安建筑科技大学学报(社会科学版),2023,42(5):37-46.<br>
+                            [9] 张宝章. 建筑世家样式雷[M]. 北京:北京出版社,2003.<br>
+                            [10] 中国联合国教科文组织全国委员会. 世界记忆遗产——清代样式雷建筑图档申报材料[Z]. 2007.
+                        </p>
+                    </div>
+                </article>
             </section>
         </main>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        (function() {
+            // 导航高亮
             const currentPage = window.location.pathname.split('/').pop() || 'literature.html';
             const navItems = document.querySelectorAll('.nav-item');
-            const logoLink = document.getElementById('logoLink');
-
-            navItems.forEach(function(item) { item.classList.remove('active'); });
-            if (logoLink) logoLink.classList.remove('active');
-
-            navItems.forEach(function(item) {
+            navItems.forEach(item => item.classList.remove('active'));
+            navItems.forEach(item => {
                 const href = item.getAttribute('href');
-                if (href === currentPage) {
-                    item.classList.add('active');
-                }
+                if (href === currentPage) item.classList.add('active');
             });
-        });
 
-        document.getElementById('searchBtn')?.addEventListener('click', function() {
-            alert('搜索功能开发中');
-        });
+            // 搜索提示
+            document.getElementById('searchBtn')?.addEventListener('click', () => alert('搜索功能开发中'));
 
-        document.addEventListener('DOMContentLoaded', function() {
+            // 获取五个游戏模块: 匠心铸魂(1) 典籍留痕(2) 文脉永续(3) 传承与创新(4) 世遗荣光(5)
+            const themeCards = Array.from(document.querySelectorAll('.theme-layout .theme-card'));
+            const heritageCard = document.querySelector('.heritage-card');
+            const modules = [...themeCards];
+            if (heritageCard) modules.push(heritageCard);
+
+            // ------ Hover 小弹窗提示 (不依赖按钮，鼠标悬浮显示“点击进入游戏”) ------
+            let currentTip = null;
+            let tipTimeout = null;
+
+         function showTooltip(text, mouseX, mouseY) {
+    if (tipTimeout) clearTimeout(tipTimeout);
+    if (currentTip) {
+        currentTip.remove();
+        currentTip = null;
+    }
+    const tip = document.createElement('div');
+    tip.className = 'game-hover-tip';
+    tip.textContent = text || '🎮 点击进入游戏';
+    document.body.appendChild(tip);
+    // 根据鼠标坐标定位（偏移 15px 避免遮挡）
+    tip.style.left = `${mouseX + 15}px`;
+    tip.style.top = `${mouseY - 35}px`;
+    requestAnimationFrame(() => tip.classList.add('show'));
+    currentTip = tip;
+}
+
+          function hideTooltip() {
+    if (tipTimeout) clearTimeout(tipTimeout);
+    tipTimeout = setTimeout(() => {
+        if (currentTip) {
+            currentTip.remove();
+            currentTip = null;
+        }
+    }, 100);
+}
+
+            // 为每个模块绑定鼠标悬浮显示小弹窗
+        // 为每个模块绑定鼠标悬浮显示小弹窗（跟随鼠标）
+modules.forEach(module => {
+    let mouseMoveHandler = null;
+
+    module.addEventListener('mouseenter', (e) => {
+        // 先显示 tip 在鼠标初始位置
+        showTooltip('🎮 点击进入游戏', e.clientX, e.clientY);
+        // 绑定 mousemove 更新位置
+        mouseMoveHandler = (moveEvent) => {
+            if (currentTip) {
+                currentTip.style.left = `${moveEvent.clientX + 15}px`;
+                currentTip.style.top = `${moveEvent.clientY - 35}px`;
+            }
+        };
+        module.addEventListener('mousemove', mouseMoveHandler);
+    });
+
+    module.addEventListener('mouseleave', () => {
+        if (mouseMoveHandler) {
+            module.removeEventListener('mousemove', mouseMoveHandler);
+            mouseMoveHandler = null;
+        }
+        hideTooltip();
+    });
+});
+
+            // ------ 点击模块弹出几乎全屏的大box (左上角带返回键) ------
+            let activeModal = null;
+            let escHandler = null;
+
+            function closeGameModal() {
+                if (activeModal) {
+                    document.body.style.overflow = '';
+                    if (escHandler) document.removeEventListener('keydown', escHandler);
+                    escHandler = null;
+                    activeModal.remove();
+                    activeModal = null;
+                }
+            }
+
+           // 找到原来的 showGameBox 函数，替换为下面的版本
+        function showGameBox(boxNumber) {
+            if (activeModal) closeGameModal();
+
+            // 遮罩层
+            const overlayDiv = document.createElement('div');
+            overlayDiv.className = 'game-modal-overlay';
+            
+            // 空白大盒子（相对定位，用于承载 iframe 和返回按钮）
+            const emptyBox = document.createElement('div');
+            emptyBox.className = 'game-empty-box';
+            emptyBox.style.position = 'relative';
+            emptyBox.style.overflow = 'hidden';
+
+            // 左上角返回按钮
+            const backBtn = document.createElement('div');
+            backBtn.className = 'modal-back-btn';
+            backBtn.innerHTML = '←';
+            backBtn.setAttribute('aria-label', '返回关闭');
+            backBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeGameModal();
+            });
+            emptyBox.appendChild(backBtn);
+
+            // 根据 boxNumber 嵌入对应的游戏 iframe
+            let gameSrc = null;
+            switch (boxNumber) {
+                case 1: gameSrc = './l-game1.html'; break;  // 匠心铸魂
+                case 2: gameSrc = './l-game2.html'; break;  // 典籍留痕
+                case 3: gameSrc = './l-game3.html'; break;  // 文脉永续
+                case 4: gameSrc = './l-game4.html'; break;  // 传承与创新
+                case 5: gameSrc = './l-game5.html'; break;  // 世遗荣光
+                default: gameSrc = null;
+            }
+
+            if (gameSrc) {
+                const iframe = document.createElement('iframe');
+                iframe.src = gameSrc;
+                iframe.style.position = 'absolute';
+                iframe.style.top = '0';
+                iframe.style.left = '0';
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                iframe.style.borderRadius = '32px';
+                iframe.style.backgroundColor = '#fff9ef';
+                emptyBox.appendChild(iframe);
+                backBtn.style.zIndex = '30';
+            }
+            // 如果不需要嵌入游戏（比如未定义），则盒子保持空白（仅返回按钮）
+
+            overlayDiv.appendChild(emptyBox);
+
+            // 点击遮罩空白区域关闭
+            overlayDiv.addEventListener('click', (e) => {
+                if (e.target === overlayDiv) closeGameModal();
+            });
+
+            // ESC 关闭
+            function onEsc(e) {
+                if (e.key === 'Escape') closeGameModal();
+            }
+            document.addEventListener('keydown', onEsc);
+            escHandler = onEsc;
+
+            document.body.style.overflow = 'hidden';
+            document.body.appendChild(overlayDiv);
+            activeModal = overlayDiv;
+
+            console.log(`[样式雷] 打开游戏 — Box${boxNumber} (${gameSrc || '空白'})`);
+            iframe.onload = function() {
+    try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        iframeDoc.documentElement.style.height = '100%';
+        iframeDoc.body.style.height = '100%';
+        iframeDoc.body.style.overflow = 'hidden';
+        const container = iframeDoc.querySelector('.game-container');
+        if (container) container.style.overflowY = 'auto';
+    } catch(e) {}
+};
+        }
+
+            // 为每个模块绑定点击事件 (传递对应的 box序号)
+            modules.forEach((mod, idx) => {
+                const moduleId = parseInt(mod.getAttribute('data-module'), 10);
+                const boxNumber = (moduleId >= 1 && moduleId <= 5) ? moduleId : (idx + 1);
+                mod.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showGameBox(boxNumber);
+                });
+            });
+
+            // ----- 书籍轮播逻辑（保留原有功能，不影响新交互）-----
             const track = document.getElementById('booksTrack');
             const prevBtn = document.getElementById('booksPrevBtn');
             const nextBtn = document.getElementById('booksNextBtn');
-            if (!track) return;
-
-            const cards = Array.from(track.querySelectorAll('.book-card'));
-            if (!cards.length) return;
-
-            const coverImages = track.querySelectorAll('img[data-cover-base]');
-            const formats = ['.jpg', '.png', '.jpeg', '.webp', '.JPG', '.PNG', '.JPEG', '.WEBP'];
-            const dirs = ['./images/', './'];
-
-            coverImages.forEach(function(img) {
-                const base = img.getAttribute('data-cover-base') || '';
-                const candidates = [];
-                dirs.forEach(function(dir) {
-                    formats.forEach(function(ext) {
-                        candidates.push(dir + base + ext);
+            if (track) {
+                const cards = Array.from(track.querySelectorAll('.book-card'));
+                if (cards.length) {
+                    const coverImages = track.querySelectorAll('img[data-cover-base]');
+                    const formats = ['.jpg', '.png', '.jpeg', '.webp', '.JPG', '.PNG', '.JPEG', '.WEBP'];
+                    const dirs = ['./images/', './'];
+                    coverImages.forEach(img => {
+                        const base = img.getAttribute('data-cover-base') || '';
+                        const candidates = [];
+                        dirs.forEach(dir => {
+                            formats.forEach(ext => candidates.push(dir + base + ext));
+                        });
+                        let idx = 0;
+                        function tryNext() {
+                            if (idx >= candidates.length) {
+                                img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Crect width='400' height='260' fill='%23d8c0a0'/%3E%3Ctext x='200' y='132' text-anchor='middle' font-size='20' fill='%238b5a2b'%3E%E5%B0%81%E9%9D%A2%E5%9B%BE%E6%9A%82%E7%BC%BA%3C/text%3E%3C/svg%3E";
+                                return;
+                            }
+                            img.src = candidates[idx++];
+                            img.onerror = tryNext;
+                        }
+                        tryNext();
                     });
-                });
 
-                let idx = 0;
-                function tryNext() {
-                    if (idx >= candidates.length) {
-                        img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Crect width='400' height='260' fill='%23d8c0a0'/%3E%3Ctext x='200' y='132' text-anchor='middle' font-size='20' fill='%238b5a2b'%3E%E5%B0%81%E9%9D%A2%E5%9B%BE%E6%9A%82%E7%BC%BA%3C/text%3E%3C/svg%3E";
-                        return;
+                    let currentIndex = 0;
+                    let timer = null;
+                    function getPerView() {
+                        if (window.innerWidth <= 900) return 1;
+                        if (window.innerWidth <= 1280) return 2;
+                        return 3;
                     }
-                    img.src = candidates[idx++];
-                    img.onerror = tryNext;
-                }
-                tryNext();
-            });
-
-            let currentIndex = 0;
-            let timer = null;
-
-            function getPerView() {
-                if (window.innerWidth <= 900) return 1;
-                if (window.innerWidth <= 1280) return 2;
-                return 3;
-            }
-
-            function maxIndex() {
-                return Math.max(0, cards.length - getPerView());
-            }
-
-            function cardStep() {
-                if (cards.length < 2) return cards[0].offsetWidth;
-                return cards[1].offsetLeft - cards[0].offsetLeft;
-            }
-
-            function render() {
-                const step = cardStep();
-                track.style.transform = 'translateX(' + (-currentIndex * step) + 'px)';
-            }
-
-            function moveNext() {
-                if (currentIndex >= maxIndex()) {
-                    currentIndex = 0;
-                } else {
-                    currentIndex += 1;
-                }
-                render();
-            }
-
-            function movePrev() {
-                if (currentIndex <= 0) {
-                    currentIndex = maxIndex();
-                } else {
-                    currentIndex -= 1;
-                }
-                render();
-            }
-
-            function startAuto() {
-                stopAuto();
-                timer = setInterval(function() {
-                    moveNext();
-                }, 3200);
-            }
-
-            function stopAuto() {
-                if (timer) {
-                    clearInterval(timer);
-                    timer = null;
+                    function maxIndex() { return Math.max(0, cards.length - getPerView()); }
+                    function cardStep() {
+                        if (cards.length < 2) return cards[0]?.offsetWidth || 0;
+                        return cards[1].offsetLeft - cards[0].offsetLeft;
+                    }
+                    function render() { track.style.transform = `translateX(${-currentIndex * cardStep()}px)`; }
+                    function moveNext() { currentIndex = currentIndex >= maxIndex() ? 0 : currentIndex + 1; render(); }
+                    function movePrev() { currentIndex = currentIndex <= 0 ? maxIndex() : currentIndex - 1; render(); }
+                    function startAuto() { if (timer) clearInterval(timer); timer = setInterval(moveNext, 3200); }
+                    function stopAuto() { if (timer) clearInterval(timer); timer = null; }
+                    track.addEventListener('mouseenter', stopAuto);
+                    track.addEventListener('mouseleave', startAuto);
+                    prevBtn?.addEventListener('click', () => { movePrev(); startAuto(); });
+                    nextBtn?.addEventListener('click', () => { moveNext(); startAuto(); });
+                    window.addEventListener('resize', () => { currentIndex = Math.min(currentIndex, maxIndex()); render(); });
+                    render();
+                    startAuto();
                 }
             }
-
-            track.addEventListener('mouseenter', stopAuto);
-            track.addEventListener('mouseleave', startAuto);
-            prevBtn?.addEventListener('click', function() {
-                movePrev();
-                startAuto();
-            });
-            nextBtn?.addEventListener('click', function() {
-                moveNext();
-                startAuto();
-            });
-
-            window.addEventListener('resize', function() {
-                currentIndex = Math.min(currentIndex, maxIndex());
-                render();
-            });
-
-            render();
-            startAuto();
-        });
+        })();
     </script>
 </body>
 </html>

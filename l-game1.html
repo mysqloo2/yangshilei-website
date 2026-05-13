@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>匠心铸魂 · 古建构件知识配对</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e8dbbd 0%, #c7ad7a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', '华文楷书', 'Microsoft YaHei', '宋体', 'KaiTi', 'Georgia', serif;
+            padding: 16px;
+        }
+
+        .game-container {
+            max-width: 1040px;   /* 原1300px，缩小约20% */
+            width: 100%;
+            background: #fff9ef;
+            border-radius: 3rem 2rem 3rem 2rem;
+            box-shadow: 0 20px 36px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 200, 0.8);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #3e2a21;
+            padding: 1rem 1.2rem;
+            text-align: center;
+            border-bottom: 5px solid #e3b87c;
+        }
+        .header h1 {
+            font-size: 1.6rem;   /* 原2rem */
+            letter-spacing: 4px;
+            color: #fbe9c3;
+            text-shadow: 2px 2px 0 #5a3a2a;
+            font-weight: 500;
+        }
+        .header p {
+            color: #ffdfa5;
+            font-size: 0.8rem;
+            margin-top: 6px;
+        }
+
+        .game-main {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 1.2rem 1.2rem 1rem;
+            gap: 1.2rem;   /* 原2rem */
+            justify-content: center;
+        }
+
+        .names-panel {
+            flex: 1.2;
+            min-width: 200px;
+            background: #fef3e2;
+            border-radius: 2rem;
+            padding: 1.2rem 0.8rem;
+            box-shadow: inset 0 0 0 2px #fff8e7, 0 8px 16px rgba(0,0,0,0.1);
+            border: 1px solid #e3c394;
+        }
+        .panel-title {
+            font-size: 1.3rem;   /* 原1.6rem */
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 2px dashed #c5a259;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            color: #5c3716;
+        }
+        .name-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;   /* 原1rem */
+        }
+        .name-card {
+            background: #fff6ea;
+            border-radius: 48px;
+            padding: 0.7rem 0.8rem;   /* 原0.9rem 1rem */
+            text-align: center;
+            font-size: 1.2rem;   /* 原1.4rem */
+            font-weight: 600;
+            color: #693f1d;
+            cursor: pointer;
+            transition: 0.15s linear;
+            border: 2px solid #e2c19b;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
+            letter-spacing: 1px;
+        }
+        .name-card:hover {
+            background: #ffedd5;
+            transform: translateY(-2px);
+            border-color: #b97f48;
+        }
+        .name-card.selected {
+            background: #d9c191;
+            border-color: #a55117;
+            color: white;
+            box-shadow: 0 0 0 2px #f3d48f;
+        }
+        .name-card.matched {
+            background: #79a56d;
+            border-color: #3f6b2f;
+            color: white;
+            cursor: default;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .name-card.matched::after {
+            content: " ✓";
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .icons-panel {
+            flex: 1.8;
+            min-width: 260px;
+            background: #fef3e2;
+            border-radius: 2rem;
+            padding: 1.2rem 0.8rem;
+            box-shadow: inset 0 0 0 2px #fff8e7, 0 8px 16px rgba(0,0,0,0.1);
+            border: 1px solid #e3c394;
+        }
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 0.9rem;   /* 原1.2rem */
+            justify-items: center;
+            align-items: center;
+        }
+        .icon-card {
+            width: 100%;
+            max-width: 130px;   /* 原160px */
+            aspect-ratio: 1 / 1;
+            background: #faf0df;
+            border-radius: 1.2rem;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 2px solid #e2bc84;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;   /* 原16px */
+        }
+        .icon-card:hover {
+            background: #ffe6c7;
+            transform: scale(0.97);
+            border-color: #b97f48;
+        }
+        .icon-card.selected {
+            background: #d9c191;
+            border-color: #a55117;
+        }
+        .icon-card.matched {
+            background: #79a56d;
+            border-color: #3f6b2f;
+            cursor: default;
+            pointer-events: none;
+            opacity: 0.85;
+        }
+        .icon-svg {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-svg svg {
+            width: 80%;
+            height: 80%;
+            max-width: 70px;
+            max-height: 70px;
+        }
+
+        .error-flash {
+            animation: shakeFlash 0.3s ease-in-out;
+            background-color: #cc6b4c !important;
+            border-color: #a1310c !important;
+        }
+        @keyframes shakeFlash {
+            0% { transform: translateX(0px); background-color: #e09d7c; }
+            25% { transform: translateX(-3px);}
+            75% { transform: translateX(3px);}
+            100% { transform: translateX(0); background-color: #cc6b4c; }
+        }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0.8rem 1rem 1.2rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            font-family: inherit;
+            font-size: 1rem;    /* 原1.2rem */
+            font-weight: bold;
+            padding: 0.5rem 1.5rem;  /* 原0.8rem 2rem */
+            border: none;
+            border-radius: 48px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #e6cf9e;
+            color: #4a2a12;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+            border-bottom: 2px solid #9b6a3c;
+        }
+        .btn:active {
+            transform: translateY(1px);
+        }
+        .btn-primary {
+            background: #a5713c;
+            color: #fff3e0;
+            border-bottom-color: #59381c;
+        }
+        .btn-primary:hover {
+            background: #bd8852;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content {
+            background: #fcf5e6;
+            border-radius: 2.5rem 1.8rem 2.5rem 1.8rem;
+            max-width: 380px;
+            width: 80%;
+            text-align: center;
+            padding: 1.5rem;
+            border: 6px double #b87c48;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.3);
+            transform: scale(0.9);
+            transition: transform 0.2s;
+        }
+        .active .modal-content {
+            transform: scale(1);
+        }
+        .modal-content p {
+            font-size: 1.3rem;   /* 原1.5rem */
+            color: #5c3a1e;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+        .modal-sub {
+            font-size: 0.85rem;
+            color: #8b6944;
+            margin: 12px 0;
+        }
+        .modal-close {
+            background: #b97f48;
+            border: none;
+            padding: 6px 18px;
+            font-size: 0.9rem;
+            border-radius: 32px;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .tips-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d2218e6;
+            backdrop-filter: blur(12px);
+            color: #ffefcf;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            z-index: 99;
+            font-weight: 500;
+            letter-spacing: 1px;
+            pointer-events: none;
+            transition: 0.2s;
+            opacity: 0;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 700px) {
+            .game-main { padding: 0.8rem; gap: 0.8rem; }
+            .name-card { font-size: 1rem; padding: 0.5rem 0.6rem; }
+            .icons-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.6rem; }
+            .icon-card { padding: 8px; max-width: 100px; }
+            .btn { padding: 0.4rem 1rem; font-size: 0.85rem; }
+            .modal-content p { font-size: 1.1rem; }
+            .header h1 { font-size: 1.3rem; }
+        }
+        footer {
+            text-align: center;
+            font-size: 0.65rem;
+            color: #bc9a64;
+            padding: 8px;
+            border-top: 1px solid #ecdbaa;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="header">
+        <h1>匠心配对 · 熟记古建营造构件</h1>
+        <p>⚒️ 斗拱雕梁 · 一榫一卯皆传承 ⚒️</p>
+    </div>
+
+    <div class="game-main">
+        <div class="names-panel">
+            <div class="panel-title">📜 构件名录</div>
+            <div class="name-list" id="nameListContainer"></div>
+        </div>
+
+        <div class="icons-panel">
+            <div class="panel-title">🏮 构件图样 · 巧手配对</div>
+            <div class="icons-grid" id="iconsGridContainer"></div>
+        </div>
+    </div>
+
+    <div class="footer-buttons">
+        <button class="btn" id="resetBtn">🔄 重新匹配</button>
+        <button class="btn btn-primary" id="glossaryBtn">📖 查看构件释义</button>
+    </div>
+    <footer>匠心铸魂 · 一砖一瓦见真章</footer>
+</div>
+
+<div id="completionModal" class="modal-overlay">
+    <div class="modal-content">
+        <p>✨ 匹配完成！ ✨</p>
+        <p style="font-size:1rem;">雷氏匠人精益求精，以毫厘定乾坤</p>
+        <div class="modal-sub">匠心铸就古建，分毫皆是传承</div>
+        <button class="modal-close" id="closeModalBtn">承 匠 心</button>
+    </div>
+</div>
+
+<div id="toastMsg" class="tips-toast"></div>
+
+<script>
+    // 构件数据保持不变
+    const components = [
+        { 
+            name: "斗拱", 
+            iconSvg: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="18" y="28" width="44" height="10" fill="#B87C4A" stroke="#5C3419" stroke-width="1.5"/><rect x="24" y="38" width="32" height="10" fill="#C68E54" stroke="#5C3419" stroke-width="1.5"/><rect x="30" y="48" width="20" height="10" fill="#D49E62" stroke="#5C3419" stroke-width="1.5"/><path d="M34 58 L46 58 L40 68 Z" fill="#8B5A2E" stroke="#4F2B12" stroke-width="1.2"/><ellipse cx="40" cy="24" rx="6" ry="4" fill="#D4A373" stroke="#8B5A2E" stroke-width="1"/></svg>`,
+            desc: "斗拱：中国古建筑特有构件，承上启下，层层出挑，既承重又装饰。" 
+        },
+        { 
+            name: "开间", 
+            iconSvg: `<svg viewBox="0 0 80 80" fill="none"><rect x="8" y="28" width="64" height="32" stroke="#7A4C28" stroke-width="2.5" fill="#EDD6B0" rx="2"/><line x1="28" y1="28" x2="28" y2="60" stroke="#8B5A2E" stroke-width="2"/><line x1="52" y1="28" x2="52" y2="60" stroke="#8B5A2E" stroke-width="2"/><rect x="18" y="42" width="12" height="10" fill="#C27E4A" rx="2"/><rect x="50" y="42" width="12" height="10" fill="#C27E4A" rx="2"/><path d="M38 48 L42 48 L40 44 Z" fill="#9B623C"/></svg>`,
+            desc: "开间：木构建筑正面两檐柱间宽度，四根柱子围合一间，体现建筑平面尺度。" 
+        },
+        { 
+            name: "进深", 
+            iconSvg: `<svg viewBox="0 0 80 80" fill="none"><rect x="12" y="18" width="56" height="44" stroke="#6F411E" stroke-width="2.5" fill="#F7E7CF" rx="3"/><path d="M12 30 L68 30 M12 42 L68 42 M12 54 L68 54" stroke="#BB8550" stroke-width="1.5"/><path d="M40 18 L40 62" stroke="#8B5A2E" stroke-width="2" stroke-dasharray="4 3"/><polygon points="34,62 46,62 40,70" fill="#A56B3A"/><rect x="36" y="22" width="8" height="6" fill="#D9A066" rx="1"/></svg>`,
+            desc: "进深：指建筑物纵深各间的长度，与开间共同决定屋宇规模。" 
+        },
+        { 
+            name: "斗口", 
+            iconSvg: `<svg viewBox="0 0 80 80"><rect x="24" y="28" width="32" height="22" stroke="#6E3C1A" stroke-width="2.5" fill="#EFCFA5" rx="3"/><circle cx="40" cy="39" r="8" fill="#BB7545" stroke="#5C3419" stroke-width="1.5"/><rect x="18" y="20" width="44" height="8" fill="#BC8353" stroke="#5C3419" stroke-width="1.5" rx="2"/><path d="M36 52 L44 52 L40 60 Z" fill="#7A4C28"/></svg>`,
+            desc: "斗口：斗拱的度量基准，清代模数单位，体现构件标准化与精密把控。" 
+        },
+        { 
+            name: "梁架", 
+            iconSvg: `<svg viewBox="0 0 80 80"><polygon points="12,50 40,14 68,50" fill="#CB9A6B" stroke="#7F4F24" stroke-width="2"/><line x1="26" y1="36" x2="54" y2="36" stroke="#5C3419" stroke-width="2.5"/><line x1="34" y1="24" x2="46" y2="44" stroke="#714D27" stroke-width="2"/><rect x="28" y="50" width="24" height="14" fill="#B17238" stroke="#5C3419" stroke-width="1.5" rx="2"/><circle cx="40" cy="32" r="3" fill="#F5D6A8"/></svg>`,
+            desc: "梁架：古建屋架骨干，由梁、柱、枋组合承托屋面，刚柔并济。" 
+        },
+        { 
+            name: "榫卯", 
+            iconSvg: `<svg viewBox="0 0 80 80"><path d="M20 36 L60 36 L60 46 L20 46 Z" fill="#DAA872" stroke="#8B5A2B" stroke-width="2"/><path d="M26 28 L54 28 L60 36 L20 36 Z" fill="#C28A53" stroke="#7A4C28" stroke-width="1.8"/><path d="M26 46 L54 46 L60 54 L20 54 Z" fill="#B0753D" stroke="#7A4C28" stroke-width="1.8"/><circle cx="40" cy="41" r="5" fill="#513A1E"/><rect x="36" y="18" width="8" height="10" fill="#C28A53" stroke="#8B5A2B" stroke-width="1.2" rx="1"/></svg>`,
+            desc: "榫卯：凹凸结合的木构智慧，无需铁钉，浑然天成，刚柔相济。" 
+        }
+    ];
+
+    let nameItems = [];        
+    let iconItems = [];       
+    let selectedName = null;   
+    let selectedIcon = null;   
+    let processing = false;
+
+    const nameContainer = document.getElementById('nameListContainer');
+    const iconsContainer = document.getElementById('iconsGridContainer');
+    const resetBtn = document.getElementById('resetBtn');
+    const glossaryBtn = document.getElementById('glossaryBtn');
+    const modal = document.getElementById('completionModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const toast = document.getElementById('toastMsg');
+
+    function showToast(message, duration = 1800) {
+        toast.textContent = message;
+        toast.style.opacity = '1';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+        }, duration);
+    }
+
+    function showGlossary() {
+        let glossaryText = "🏮 构件释义 · 匠心传承 🏮\n\n";
+        components.forEach(c => {
+            glossaryText += `【${c.name}】\n${c.desc}\n\n`;
+        });
+        alert(glossaryText);
+    }
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function resetGame() {
+        if (selectedName) {
+            selectedName.element.classList.remove('selected');
+            selectedName = null;
+        }
+        if (selectedIcon) {
+            selectedIcon.element.classList.remove('selected');
+            selectedIcon = null;
+        }
+        processing = false;
+        nameItems.forEach(item => { item.matched = false; });
+        const rawIcons = components.map((comp, idx) => ({
+            id: idx,
+            componentName: comp.name,
+            matched: false,
+            svgHtml: comp.iconSvg,
+            desc: comp.desc
+        }));
+        const shuffledIcons = shuffleArray([...rawIcons]);
+        iconItems = shuffledIcons.map((ic, idx) => ({
+            ...ic,
+            orderId: idx,
+            element: null,
+        }));
+        renderIconGrid();
+        renderNameList();
+        if (modal.classList.contains('active')) modal.classList.remove('active');
+    }
+
+    function renderNameList() {
+        nameContainer.innerHTML = '';
+        nameItems.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'name-card';
+            if (item.matched) div.classList.add('matched');
+            div.textContent = item.name;
+            div.dataset.name = item.name;
+            div.dataset.id = item.id;
+            div.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (processing) return;
+                if (item.matched) {
+                    showToast("此构件已完成配对，匠心已铸！", 800);
+                    return;
+                }
+                if (selectedIcon && !selectedName) {
+                    attemptPair(item, selectedIcon.dataIcon);
+                } 
+                else if (selectedName && selectedName.id === item.id) {
+                    clearNameSelected();
+                }
+                else {
+                    clearNameSelected();
+                    clearIconSelected();
+                    setSelectedName(item, div);
+                }
+            });
+            nameContainer.appendChild(div);
+            item.element = div;
+        });
+    }
+
+    function renderIconGrid() {
+        iconsContainer.innerHTML = '';
+        iconItems.forEach(icon => {
+            const card = document.createElement('div');
+            card.className = 'icon-card';
+            if (icon.matched) card.classList.add('matched');
+            const svgWrapper = document.createElement('div');
+            svgWrapper.className = 'icon-svg';
+            svgWrapper.innerHTML = icon.svgHtml;
+            card.appendChild(svgWrapper);
+            card.dataset.compName = icon.componentName;
+            card.dataset.id = icon.orderId;
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (processing) return;
+                if (icon.matched) {
+                    showToast(`“${icon.componentName}”已匠心配伍`, 800);
+                    return;
+                }
+                if (selectedName && !selectedIcon) {
+                    attemptPair(selectedName.dataItem, icon);
+                } 
+                else if (selectedIcon && selectedIcon.orderId === icon.orderId) {
+                    clearIconSelected();
+                }
+                else {
+                    clearNameSelected();
+                    clearIconSelected();
+                    setSelectedIcon(icon, card);
+                }
+            });
+            iconsContainer.appendChild(card);
+            icon.element = card;
+        });
+    }
+
+    function setSelectedName(item, element) {
+        selectedName = { id: item.id, name: item.name, element: element, dataItem: item };
+        element.classList.add('selected');
+    }
+    function setSelectedIcon(icon, element) {
+        selectedIcon = { orderId: icon.orderId, compName: icon.componentName, element: element, dataIcon: icon };
+        element.classList.add('selected');
+    }
+    function clearNameSelected() {
+        if (selectedName) {
+            selectedName.element.classList.remove('selected');
+            selectedName = null;
+        }
+    }
+    function clearIconSelected() {
+        if (selectedIcon) {
+            selectedIcon.element.classList.remove('selected');
+            selectedIcon = null;
+        }
+    }
+
+    function attemptPair(nameData, iconData) {
+        if (nameData.matched || iconData.matched) {
+            clearNameSelected(); clearIconSelected();
+            showToast("构件已完成配对，不可重复！", 800);
+            return;
+        }
+        const isMatch = (nameData.name === iconData.componentName);
+        if (isMatch) {
+            nameData.matched = true;
+            iconData.matched = true;
+            nameData.element.classList.add('matched');
+            iconData.element.classList.add('matched');
+            clearNameSelected();
+            clearIconSelected();
+            checkAllMatched();
+        } else {
+            processing = true;
+            const nameEl = nameData.element;
+            const iconEl = iconData.element;
+            nameEl.classList.add('error-flash');
+            iconEl.classList.add('error-flash');
+            showToast(`“${nameData.name}” 与 图样不匹配，再试匠心功夫`, 1000);
+            setTimeout(() => {
+                nameEl.classList.remove('error-flash');
+                iconEl.classList.remove('error-flash');
+                processing = false;
+            }, 300);
+            clearNameSelected();
+            clearIconSelected();
+        }
+    }
+
+    function checkAllMatched() {
+        const allNamesMatched = nameItems.every(item => item.matched === true);
+        const allIconsMatched = iconItems.every(icon => icon.matched === true);
+        if (allNamesMatched && allIconsMatched) {
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 120);
+        }
+    }
+
+    function initGame() {
+        nameItems = components.map((comp, idx) => ({
+            id: idx,
+            name: comp.name,
+            matched: false,
+            element: null,
+        }));
+        const rawIcons = components.map((comp, idx) => ({
+            id: idx,
+            componentName: comp.name,
+            matched: false,
+            svgHtml: comp.iconSvg,
+            desc: comp.desc
+        }));
+        const shuffled = shuffleArray([...rawIcons]);
+        iconItems = shuffled.map((ic, idx) => ({
+            ...ic,
+            orderId: idx,
+            element: null,
+        }));
+        renderNameList();
+        renderIconGrid();
+        selectedName = null;
+        selectedIcon = null;
+        processing = false;
+        if (modal.classList.contains('active')) modal.classList.remove('active');
+    }
+
+    resetBtn.addEventListener('click', () => {
+        resetGame();
+    });
+    glossaryBtn.addEventListener('click', () => {
+        showGlossary();
+    });
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
+
+    initGame();
+</script>
+</body>
+</html>

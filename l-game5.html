@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>世遗翻牌 · 探寻皇家建筑荣光</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+    }
+
+    body {
+        background: linear-gradient(145deg, #dacaa4 0%, #b39262 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Segoe UI', '华文楷书', 'Microsoft YaHei', '宋体', 'KaiTi', 'Georgia', serif;
+        padding: 16px;
+    }
+
+    .game-container {
+        max-width: 880px;
+        width: 100%;
+        background: #fef7e8;
+        border-radius: 2.5rem 1.8rem 2.5rem 1.8rem;
+        box-shadow: 0 20px 32px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 250, 210, 0.8);
+        overflow: hidden;
+    }
+
+    .header {
+        background: #2b4638;
+        padding: 0.9rem 1.2rem;
+        text-align: center;
+        border-bottom: 5px solid #e9bc77;
+    }
+    .header h1 {
+        font-size: 1.6rem;
+        letter-spacing: 3px;
+        color: #fef0cf;
+        text-shadow: 2px 2px 0 #1f3527;
+        font-weight: 500;
+    }
+    .header p {
+        color: #e6dbb5;
+        font-size: 0.8rem;
+        margin-top: 5px;
+    }
+
+    .game-board {
+        padding: 1.2rem 1rem;
+    }
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+        gap: 0.8rem;
+        justify-items: center;
+        align-items: center;
+        margin-bottom: 1.2rem;
+    }
+    .card {
+        width: 100%;
+        background: transparent;
+        perspective: 800px;
+        cursor: pointer;
+        aspect-ratio: 3 / 4;
+        max-width: 150px;
+    }
+    .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.5s ease;
+        transform-style: preserve-3d;
+        border-radius: 1rem;
+        box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
+    }
+    .card.flipped .card-inner {
+        transform: rotateY(180deg);
+    }
+    .card.matched .card-inner {
+        transform: rotateY(180deg);
+    }
+    .card.matched {
+        cursor: default;
+        filter: drop-shadow(0 0 5px #6f9e4f);
+    }
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+    .card-back {
+        background: #e7dbbd;
+        background-image: radial-gradient(circle at 20% 35%, rgba(170, 120, 60, 0.15) 2%, transparent 2.5%),
+                          radial-gradient(circle at 80% 70%, rgba(130, 85, 40, 0.12) 1.8%, transparent 2%);
+        background-size: 24px 24px, 28px 28px;
+        border: 2px solid #c4a064;
+        transform: rotateY(0deg);
+        color: #6b4c2a;
+    }
+    .card-back::before {
+        content: "🏯";
+        font-size: 2.4rem;
+        opacity: 0.7;
+        margin-bottom: 6px;
+    }
+    .card-back::after {
+        content: "样式雷·世遗";
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        font-weight: bold;
+    }
+    .card-front {
+        background: linear-gradient(135deg, #fff2df, #ffe6c9);
+        border: 2px solid #ccaa73;
+        transform: rotateY(180deg);
+        font-weight: bold;
+        color: #4a2c16;
+        text-align: center;
+        word-break: break-word;
+        box-shadow: inset 0 0 0 2px #fff9ef, 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .main-text {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    .sub-text {
+        font-size: 0.7rem;
+        color: #8a623f;
+        border-top: 1px dashed #cfb27c;
+        padding-top: 6px;
+    }
+    .card.matched .card-front {
+        background: linear-gradient(135deg, #bddb9f, #9cc07a);
+        border-color: #56802e;
+        color: #1e3a1a;
+    }
+    .card.matched .card-front .main-text {
+        color: #1e4a1a;
+    }
+
+    .footer-action {
+        display: flex;
+        justify-content: center;
+        padding: 0.3rem 1rem 1.2rem;
+    }
+    .btn-reset {
+        background: #b8874a;
+        border: none;
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: bold;
+        padding: 0.5rem 1.5rem;
+        border-radius: 48px;
+        color: #fff3e0;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-bottom: 2px solid #6f431f;
+    }
+    .btn-reset:active {
+        transform: translateY(1px);
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(28, 24, 16, 0.85);
+        backdrop-filter: blur(4px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        visibility: hidden;
+        opacity: 0;
+        transition: 0.2s;
+    }
+    .modal-overlay.active {
+        visibility: visible;
+        opacity: 1;
+    }
+    .modal-content {
+        background: #fff8ec;
+        border-radius: 2.5rem 1.8rem 2.5rem 1.8rem;
+        max-width: 400px;
+        width: 80%;
+        text-align: center;
+        padding: 1.5rem;
+        border: 6px double #cc8b46;
+        box-shadow: 0 20px 30px rgba(0,0,0,0.4);
+    }
+    .modal-content h2 {
+        font-size: 1.6rem;
+        color: #5f3c1e;
+        margin-bottom: 8px;
+    }
+    .modal-content p {
+        font-size: 1rem;
+        color: #456b3a;
+        margin: 10px 0;
+    }
+    .modal-close {
+        background: #b5773a;
+        border: none;
+        padding: 6px 24px;
+        font-size: 0.9rem;
+        border-radius: 36px;
+        color: white;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .toast-tip {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2f2a1ce6;
+        backdrop-filter: blur(12px);
+        color: #fff3cf;
+        padding: 6px 16px;
+        border-radius: 32px;
+        font-size: 0.8rem;
+        z-index: 99;
+        pointer-events: none;
+        transition: 0.2s;
+        opacity: 0;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 700px) {
+        .cards-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.7rem;
+        }
+        .main-text { font-size: 0.95rem; }
+        .sub-text { font-size: 0.6rem; }
+        .card-back::before { font-size: 1.8rem; }
+        .game-container {
+            max-width: 100%;
+            margin: 0 8px;
+        }
+        .header h1 { font-size: 1.3rem; }
+    }
+    footer {
+        text-align: center;
+        font-size: 0.6rem;
+        color: #b48d54;
+        padding: 6px 0 12px;
+        border-top: 1px solid #e6d3ae;
+    }
+</style>
+</head>
+<body>
+<div class="game-container">
+    <div class="header">
+        <h1>世遗翻牌 · 探寻皇家建筑荣光</h1>
+        <p>🏛️ 世界文化遗产 | 样式雷记忆遗产 | 皇家建筑经典 🏛️</p>
+    </div>
+    <div class="game-board">
+        <div class="cards-grid" id="cardsGrid"></div>
+    </div>
+    <div class="footer-action">
+        <button class="btn-reset" id="resetGameBtn">🀆 一键重置开局 🀆</button>
+    </div>
+    <footer>两两配对：建筑名称 ↔ 世界遗产身份 · 见证样式雷世界级文化荣光</footer>
+</div>
+
+<div id="completionModal" class="modal-overlay">
+    <div class="modal-content">
+        <h2>🏆 匹配成功 🏆</h2>
+        <p>见证样式雷世界级文化荣光</p>
+        <p>皇家建筑，世遗瑰宝，文脉永续</p>
+        <button class="modal-close" id="closeModalBtn">再 启 荣 光</button>
+    </div>
+</div>
+<div id="toastMsg" class="toast-tip"></div>
+
+<script>
+    (function(){
+        // ---------- 卡牌数据：6对 (建筑名称 ↔ 世界遗产身份) ----------
+        const pairsData = [
+            { name: "故宫", identity: "明清皇宫·世界文化遗产", nameDesc: "紫禁城，明清两代皇家宫殿", idDesc: "1987年列入世界遗产" },
+            { name: "颐和园", identity: "皇家园林·世界文化遗产", nameDesc: "乾隆清漪园，光绪重建", idDesc: "1998年列入世界遗产" },
+            { name: "承德避暑山庄", identity: "皇家古典园林·世界文化遗产", nameDesc: "清代规模最大、格局最宏大的皇家御苑", idDesc: "1994年列入世界文化遗产" },
+            { name: "天坛", identity: "祭天建筑·世界文化遗产", nameDesc: "祈年殿，明清祭天之所", idDesc: "1998年列入世界遗产" },
+            { name: "清东陵", identity: "清代陵寝·世界文化遗产", nameDesc: "顺治、康熙等帝王陵", idDesc: "2000年列入世界遗产" },
+            { name: "清西陵", identity: "清代陵寝·世界文化遗产", nameDesc: "雍正、嘉庆等陵寝", idDesc: "2000年列入世界遗产" }
+        ];
+
+        // 构建卡牌数组 (每对两张: 一张为名称卡, 一张为身份卡)
+        let cards = [];
+        function buildCardArray() {
+            let newCards = [];
+            pairsData.forEach((item, idx) => {
+                // 名称卡
+                newCards.push({
+                    id: `name-${idx}`,
+                    pairId: idx,
+                    type: 'name',
+                    title: item.name,
+                    sub: item.nameDesc,
+                    matched: false,
+                    flipped: false,
+                });
+                // 身份卡
+                newCards.push({
+                    id: `id-${idx}`,
+                    pairId: idx,
+                    type: 'identity',
+                    title: item.identity,
+                    sub: item.idDesc,
+                    matched: false,
+                    flipped: false,
+                });
+            });
+            // 洗牌 Fisher-Yates
+            for (let i = newCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newCards[i], newCards[j]] = [newCards[j], newCards[i]];
+            }
+            return newCards;
+        }
+
+        let gameCards = [];       // 当前卡牌对象数组
+        let lockBoard = false;    // 等待动画或判断时锁定
+        let firstCard = null;     // 存储第一次点击的卡牌DOM及数据
+        let secondCard = null;
+        let timeoutId = null;
+        const gridContainer = document.getElementById('cardsGrid');
+        const resetBtn = document.getElementById('resetGameBtn');
+        const modal = document.getElementById('completionModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const toastDiv = document.getElementById('toastMsg');
+
+        function showToast(msg, duration=1600) {
+            toastDiv.textContent = msg;
+            toastDiv.style.opacity = '1';
+            setTimeout(() => {
+                toastDiv.style.opacity = '0';
+            }, duration);
+        }
+
+        // 渲染卡牌UI
+        function renderBoard() {
+            gridContainer.innerHTML = '';
+            gameCards.forEach((card, idx) => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card';
+                if(card.matched) {
+                    cardDiv.classList.add('matched');
+                    cardDiv.classList.add('flipped'); // 匹配时保持正面
+                } else if(card.flipped) {
+                    cardDiv.classList.add('flipped');
+                }
+                cardDiv.setAttribute('data-index', idx);
+                
+                const inner = document.createElement('div');
+                inner.className = 'card-inner';
+                
+                // 正面（显示内容）
+                const front = document.createElement('div');
+                front.className = 'card-front';
+                const mainSpan = document.createElement('div');
+                mainSpan.className = 'main-text';
+                mainSpan.innerText = card.title;
+                const subSpan = document.createElement('div');
+                subSpan.className = 'sub-text';
+                subSpan.innerText = card.sub;
+                front.appendChild(mainSpan);
+                front.appendChild(subSpan);
+                
+                // 背面
+                const back = document.createElement('div');
+                back.className = 'card-back';
+                
+                inner.appendChild(front);
+                inner.appendChild(back);
+                cardDiv.appendChild(inner);
+                
+                cardDiv.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = parseInt(cardDiv.getAttribute('data-index'));
+                    onCardClick(index);
+                });
+                gridContainer.appendChild(cardDiv);
+            });
+        }
+
+        // 更新单张卡牌翻转样式(基于数据)
+        function updateCardVisual(index) {
+            const cardDiv = gridContainer.querySelector(`.card[data-index='${index}']`);
+            if(!cardDiv) return;
+            const cardData = gameCards[index];
+            if(cardData.matched) {
+                cardDiv.classList.add('matched');
+                cardDiv.classList.add('flipped');
+            } else if(cardData.flipped) {
+                cardDiv.classList.add('flipped');
+                cardDiv.classList.remove('matched');
+            } else {
+                cardDiv.classList.remove('flipped');
+                cardDiv.classList.remove('matched');
+            }
+        }
+
+        // 检查是否全部配对
+        function checkAllMatched() {
+            const allMatched = gameCards.every(card => card.matched === true);
+            if(allMatched) {
+                // 通关弹窗
+                modal.classList.add('active');
+            }
+            return allMatched;
+        }
+
+        // 处理两张卡匹配逻辑
+        function checkMatch(cardA, cardB, idxA, idxB) {
+            const isMatch = (cardA.pairId === cardB.pairId);
+            if(isMatch) {
+                // 匹配成功，标记为已配对不可翻转
+                gameCards[idxA].matched = true;
+                gameCards[idxB].matched = true;
+                // 将其保持正面且绿色
+                updateCardVisual(idxA);
+                updateCardVisual(idxB);
+                // 清除暂存翻转状态
+                gameCards[idxA].flipped = true;
+                gameCards[idxB].flipped = true;
+                showToast(`✓ 匹配成功：${cardA.title} ↔ ${cardB.title}`, 1000);
+                // 解锁并清空暂存
+                firstCard = null;
+                secondCard = null;
+                lockBoard = false;
+                // 检测全部完成
+                checkAllMatched();
+            } else {
+                // 匹配失败：短暂显示后翻回背面
+                showToast(`❌ 配对失败，再试慧眼`, 900);
+                setTimeout(() => {
+                    // 将两张卡翻回背面（如果没有被锁定匹配）
+                    if(gameCards[idxA] && !gameCards[idxA].matched) {
+                        gameCards[idxA].flipped = false;
+                        updateCardVisual(idxA);
+                    }
+                    if(gameCards[idxB] && !gameCards[idxB].matched) {
+                        gameCards[idxB].flipped = false;
+                        updateCardVisual(idxB);
+                    }
+                    // 清空暂存状态及解锁
+                    firstCard = null;
+                    secondCard = null;
+                    lockBoard = false;
+                }, 800);
+            }
+        }
+
+        // 卡片点击核心逻辑
+        function onCardClick(clickedIdx) {
+            if(lockBoard) return;
+            const clickedCard = gameCards[clickedIdx];
+            // 已配对 或 已经翻开朝上且未配对时不可重复点击同一张
+            if(clickedCard.matched) {
+                showToast("此卡已配对成功，世遗荣光铭记", 800);
+                return;
+            }
+            if(clickedCard.flipped) {
+                // 如果当前卡片已经翻开，不能重复点同一个
+                return;
+            }
+            
+            // 情况1：没有第一张卡
+            if(firstCard === null) {
+                // 翻开当前卡片
+                clickedCard.flipped = true;
+                updateCardVisual(clickedIdx);
+                firstCard = { index: clickedIdx, data: clickedCard };
+                return;
+            }
+            
+            // 情况2：有第一张，没有第二张，且当前点击不是第一张卡
+            if(firstCard !== null && secondCard === null) {
+                // 避免点击同一张卡
+                if(firstCard.index === clickedIdx) return;
+                // 翻开当前卡片
+                clickedCard.flipped = true;
+                updateCardVisual(clickedIdx);
+                secondCard = { index: clickedIdx, data: clickedCard };
+                // 锁定面板，准备匹配
+                lockBoard = true;
+                // 进行匹配
+                checkMatch(firstCard.data, secondCard.data, firstCard.index, secondCard.index);
+                // 注意: 在匹配成功或失败的处理中会重置firstCard, secondCard并解锁（失败时有setTimeout延迟解锁）
+                if (firstCard && secondCard && firstCard.data.pairId === secondCard.data.pairId) {
+                    // 配对成功时已经在checkMatch内部置null，无需额外解锁
+                } else {
+                    // 失败时，会在setTimeout内重置，但lockBoard已经在调用前设为true, 等待异步清理
+                    // 为了避免额外清空干扰，暂不手动置null
+                }
+                // 配对失败时， firstCard,secondCard在延迟回调里置空； 配对成功时直接置空+解锁
+                if (firstCard && secondCard && firstCard.data.pairId === secondCard.data.pairId) {
+                    // 成功时已经置空,确保lockBoard在成功后被释放
+                    lockBoard = false;
+                    firstCard = null;
+                    secondCard = null;
+                }
+                return;
+            }
+            // 其他情况忽略
+        }
+
+        // 重置整个游戏
+        function resetGame() {
+            // 清除任何待执行的timeout避免冲突
+            if(timeoutId) clearTimeout(timeoutId);
+            lockBoard = false;
+            firstCard = null;
+            secondCard = null;
+            // 全新洗牌并重置数据
+            const newCards = buildCardArray();
+            gameCards = newCards;
+            // 重新渲染
+            renderBoard();
+            if(modal.classList.contains('active')) modal.classList.remove('active');
+            showToast("崭新开局，续写世遗荣光", 1200);
+        }
+
+        // 绑定重置按钮
+        resetBtn.addEventListener('click', () => {
+            resetGame();
+        });
+        
+        // 关闭弹窗并重置
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            resetGame();
+        });
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) {
+                modal.classList.remove('active');
+                resetGame();
+            }
+        });
+        
+        // 初始化游戏
+        function init() {
+            const initialCards = buildCardArray();
+            gameCards = initialCards;
+            renderBoard();
+        }
+        init();
+    })();
+</script>
+</body>
+</html>

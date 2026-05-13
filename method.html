@@ -466,12 +466,25 @@
     color: #fff;
 }
 
+.merged-item .diagram-media {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 320px;
+    min-height: 320px;
+    max-height: 320px;
+    overflow: hidden;
+}
+
 .merged-item .diagram-img {
     width: 100%;
     margin-top: 10px;
     border-radius: 12px;
-    max-height: 180px;
     object-fit: cover;
+    background: #000;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
 }
 
         /* 三个卡片区域 */
@@ -541,8 +554,10 @@
     width: 100%;
     margin-top: 15px;
     border-radius: 12px;
-    max-height: 200px;
     object-fit: cover;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
 }
    /* 禁用的词典项（更醒目） */
 /* 禁用的词典项（深色卡片背景） */
@@ -710,6 +725,11 @@
                 writing-mode: horizontal-tb;
                 margin-top: 10px;
             }
+            .merged-item .diagram-img {
+                max-height: 280px;
+                min-height: 280px;
+                height: 280px;
+            }
         }
     </style>
 </head>
@@ -824,16 +844,19 @@
         <h4>🏛️ 营造术语 · 关键词典</h4>
         <div class="dictionary" id="dictionary">
             <span class="dict-item active" data-term="pingge">平格法</span>
-            <span class="dict-item disabled" data-term="dougong">斗拱</span>
-            <span class="dict-item disabled" data-term="kaijian">开间</span>
-            <span class="dict-item disabled" data-term="jinshen">进深</span>
-            <span class="dict-item disabled" data-term="doukou">斗口</span>
-            <span class="dict-item disabled" data-term="liangjia">梁架</span>
+            <span class="dict-item" data-term="dougong">斗拱</span>
+            <span class="dict-item" data-term="kaijian">开间</span>
+            <span class="dict-item" data-term="jinshen">进深</span>
+            <span class="dict-item" data-term="doukou">斗口</span>
+            <span class="dict-item" data-term="liangjia">梁架</span>
         </div>
-        <video id="diagramVideo" class="diagram-img" controls autoplay muted loop>
-            <source src="./video/pingge.mp4" type="video/mp4">
-            您的浏览器不支持视频播放
-        </video>
+        <div class="diagram-media">
+            <video id="diagramVideo" class="diagram-img" controls autoplay muted loop>
+                <source src="./video/pingge.mp4" type="video/mp4">
+                您的浏览器不支持视频播放
+            </video>
+            <img id="diagramImage" class="diagram-img" src="./images/斗拱.jpeg" alt="斗拱示意图" style="display:none;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f5e6d3\'/%3E%3Ctext x=\'200\' y=\'150\' text-anchor=\'middle\' fill=\'%238b5a2b\'%3E图片加载失败%3C/text%3E%3C/svg%3E'">
+        </div>
     </div>
 </div>
 
@@ -961,24 +984,50 @@
     });
 
     
-   // ========= 关键词典切换示意图（只有平格法可点击） =========
-// ========= 平格法视频播放 =========
+   // ========= 关键词典切换示意图 =========
 const diagramVideo = document.getElementById('diagramVideo');
+const diagramImage = document.getElementById('diagramImage');
 const dictItems = document.querySelectorAll('.dict-item');
+
+const diagramMap = {
+    'pingge': { type: 'video', src: './video/pingge.mp4', alt: '平格法演示视频' },
+    'dougong': { type: 'image', src: './images/斗拱.jpeg', alt: '斗拱示意图' },
+    'kaijian': { type: 'image', src: './images/开间.jpeg', alt: '开间示意图' },
+    'jinshen': { type: 'image', src: './images/进深.jpeg', alt: '进深示意图' },
+    'doukou': { type: 'image', src: './images/斗口.jpeg', alt: '斗口示意图' },
+    'liangjia': { type: 'image', src: './images/梁架.jpeg', alt: '梁架示意图' }
+};
+
+function showDiagram(term) {
+    const item = diagramMap[term];
+    if (!item) return;
+
+    dictItems.forEach(d => d.classList.remove('active'));
+    const activeItem = document.querySelector(`.dict-item[data-term="${term}"]`);
+    if (activeItem) activeItem.classList.add('active');
+
+    if (item.type === 'video') {
+        diagramImage.style.display = 'none';
+        diagramVideo.style.display = 'block';
+        const source = diagramVideo.querySelector('source');
+        if (source) {
+            source.src = item.src;
+            diagramVideo.load();
+            diagramVideo.play().catch(() => {});
+        }
+    } else {
+        diagramVideo.pause();
+        diagramVideo.style.display = 'none';
+        diagramImage.style.display = 'block';
+        diagramImage.src = item.src;
+        diagramImage.alt = item.alt;
+    }
+}
 
 dictItems.forEach(item => {
     item.addEventListener('click', () => {
-        if (item.classList.contains('disabled')) {
-            return;
-        }
         const term = item.dataset.term;
-        if (term === 'pingge') {
-            // 重新加载并播放视频
-            diagramVideo.load();
-            diagramVideo.play();
-            dictItems.forEach(d => d.classList.remove('active'));
-            item.classList.add('active');
-        }
+        showDiagram(term);
     });
 });
 

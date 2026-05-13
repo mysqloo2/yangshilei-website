@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>文脉填韵 · 品读古建文化名句</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(145deg, #dad0b0 0%, #bbaa7f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', '华文楷书', 'Microsoft YaHei', '宋体', 'KaiTi', 'Georgia', serif;
+            padding: 20px;
+        }
+
+        /* 主游戏卡片 */
+        .game-container {
+            max-width: 1000px;
+            width: 100%;
+            background: #fffef5;
+            border-radius: 3rem 2rem 3rem 2rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 245, 200, 0.9);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* 顶部文脉区 */
+        .header {
+            background: #2c4b3a;
+            padding: 1.4rem 1.5rem;
+            text-align: center;
+            border-bottom: 6px solid #e2bc7c;
+        }
+        .header h1 {
+            font-size: 2rem;
+            letter-spacing: 4px;
+            color: #fef0cf;
+            text-shadow: 3px 3px 0 #1f3528;
+            font-weight: 500;
+        }
+        .header p {
+            color: #e6dbb5;
+            font-size: 0.95rem;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* 进度条区域 */
+        .progress-area {
+            padding: 1rem 2rem 0.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #fcf6e8;
+        }
+        .q-counter {
+            font-size: 1rem;
+            color: #6d4c2c;
+            font-weight: bold;
+            background: #e7dbbc;
+            padding: 4px 16px;
+            border-radius: 40px;
+            letter-spacing: 1px;
+        }
+        .score-badge {
+            font-size: 1rem;
+            color: #1f5e3a;
+            background: #e2d5b3;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+        .progress-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #dccfaa;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #a5713c;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* 核心诗词卡片 */
+        .poem-card {
+            margin: 1.8rem 2rem 1rem;
+            background: #fef7e6;
+            border-radius: 2.5rem;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff9e6;
+            border: 1px solid #ecd79e;
+            text-align: center;
+        }
+        .sentence {
+            font-size: 1.7rem;
+            line-height: 1.5;
+            color: #3b2a1c;
+            font-weight: 500;
+            font-family: inherit;
+            word-break: break-word;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: baseline;
+            gap: 4px;
+        }
+        .sentence span {
+            display: inline-block;
+        }
+        .blank {
+            display: inline-block;
+            min-width: 90px;
+            background: #f3ebd2;
+            border-bottom: 4px solid #bc935f;
+            margin: 0 8px;
+            text-align: center;
+            font-size: 1.7rem;
+            font-weight: bold;
+            color: #355c3e;
+            padding: 0 6px;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+        .blank.filled {
+            background: #cbe5cf;
+            border-bottom-color: #558b2f;
+            color: #2c5e2d;
+            box-shadow: 0 0 6px rgba(85, 139, 47, 0.4);
+        }
+
+        .desc-note {
+            margin-top: 18px;
+            font-size: 0.85rem;
+            color: #8f7a58;
+            font-style: italic;
+            border-top: 1px dashed #ebdbbc;
+            padding-top: 14px;
+        }
+
+        /* 选项区域 A B C D */
+        .options-area {
+            padding: 1rem 2rem 1.2rem;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .opt-btn {
+            background: #efead9;
+            border: 2px solid #cfbc8f;
+            border-radius: 60px;
+            padding: 0.8rem 0.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4f3a22;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: monospace;
+            letter-spacing: 2px;
+            text-align: center;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+        }
+        .opt-btn:hover {
+            background: #ffe2b5;
+            transform: translateY(-2px);
+            border-color: #b4823a;
+        }
+        .opt-btn.disabled-opt, .opt-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* 底部提示与按钮 */
+        .footer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 2rem 1.8rem;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .hint-text {
+            font-size: 0.85rem;
+            color: #9e8965;
+            background: #f3efdf;
+            padding: 6px 18px;
+            border-radius: 30px;
+        }
+        .btn-reset {
+            background: #c1a06b;
+            border: none;
+            padding: 8px 28px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn-reset:hover {
+            background: #a77f48;
+        }
+
+        /* 弹窗（评级） */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(25, 20, 12, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content {
+            background: #fff7e8;
+            border-radius: 3rem 2rem 3rem 2rem;
+            max-width: 460px;
+            width: 85%;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            border: 8px double #bb874b;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+        }
+        .modal-content h2 {
+            font-size: 2rem;
+            color: #5a3921;
+            margin-bottom: 1rem;
+        }
+        .modal-content p {
+            font-size: 1.2rem;
+            color: #3e5c3a;
+            margin: 12px 0;
+        }
+        .rank-title {
+            font-size: 1.7rem;
+            font-weight: bold;
+            background: #eedbaa;
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 60px;
+            margin: 12px 0;
+        }
+        .modal-close {
+            background: #b77b36;
+            border: none;
+            padding: 8px 28px;
+            font-size: 1rem;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+        .toast-msg {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2b1ce6;
+            backdrop-filter: blur(12px);
+            color: #fff0cf;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            z-index: 99;
+            pointer-events: none;
+            transition: 0.2s;
+            opacity: 0;
+            white-space: nowrap;
+            font-family: monospace;
+        }
+        @media (max-width: 650px) {
+            .sentence { font-size: 1.2rem; }
+            .blank { font-size: 1.2rem; min-width: 65px; }
+            .opt-btn { font-size: 1rem; padding: 0.6rem; }
+            .poem-card { margin: 1rem; padding: 1.2rem; }
+            .options-area { padding: 0 1rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="header">
+        <h1>文脉填韵 · 品读古建文化名句</h1>
+        <p>🏯 样式雷匠韵 · 皇家园林千秋 🏯</p>
+    </div>
+    <div class="progress-area">
+        <div class="q-counter" id="questionCounter">第1 / 10题</div>
+        <div class="score-badge" id="scoreDisplay">✓ 正确: 0</div>
+        <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div class="poem-card">
+        <div class="sentence" id="sentenceContainer">
+            <!-- 动态句子 + 填空区 -->
+        </div>
+        <div class="desc-note" id="contextHint">📖 品一句古建诗文，续百年文脉</div>
+    </div>
+
+    <div class="options-area">
+        <div class="options-grid" id="optionsContainer">
+            <!-- 动态生成 A B C D 选项按钮 -->
+        </div>
+        <div class="footer-info">
+            <div class="hint-text">✨ 选对自动续题，选错附文脉小解 ✨</div>
+            <button class="btn-reset" id="resetGameBtn">🖌️ 重开文卷</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-msg" id="toastMsg"></div>
+<div id="completionModal" class="modal-overlay">
+    <div class="modal-content">
+        <h2>🏮 闯关完成 🏮</h2>
+        <p>赓续百年文脉，传承中华古建底蕴</p>
+        <div id="rankArea"></div>
+        <button class="modal-close" id="closeModalBtn">敬 匠 心</button>
+    </div>
+</div>
+
+<script>
+    // ---------- 诗词库：10句关于样式雷、皇家园林、古建营造的经典名句（含1-2空）----------
+    const questions = [
+        {
+            text: "样式雷图藏____，烫样精微见匠心。",
+            blankCount: 1,
+            blanks: ["乾坤"],
+            options: ["乾坤", "江山", "寰宇", "九州"],
+            explanation: "样式雷世家珍藏图档包罗万象，“乾坤”彰显其囊括天地营造之宏愿。"
+        },
+        {
+            text: "____凝紫气，万寿山前碧波清。",
+            blankCount: 1,
+            blanks: ["佛香阁"],
+            options: ["佛香阁", "德和园", "长廊景", "石舫舟"],
+            explanation: "佛香阁是颐和园制高点，皇家园林气韵汇聚，凝望紫气东来。"
+        },
+        {
+            text: "雷氏____精算妙，斗拱层叠起高阁。",
+            blankCount: 1,
+            blanks: ["烫样"],
+            options: ["烫样", "图纸", "木经", "则例"],
+            explanation: "“烫样”为样式雷独创立体模型，精准推敲建筑构造，体现匠心营造。"
+        },
+        {
+            text: "____何处寻，三山五园印鸿泥。",
+            blankCount: 1,
+            blanks: ["匠魂"],
+            options: ["匠魂", "帝迹", "宫苑", "仙都"],
+            explanation: "匠魂凝聚于三山五园的每一处亭台楼阁，是古建文脉的魂魄所在。"
+        },
+        {
+            text: "楠木立柱撑____，金砖墁地映丹霞。",
+            blankCount: 1,
+            blanks: ["殿宇"],
+            options: ["殿宇", "宫墙", "华庭", "帝阙"],
+            explanation: "皇家殿宇以楠木为柱，金砖铺地，气象万千，体现古建营造之鼎盛。"
+        },
+        {
+            text: "榫卯____承岁月，样式雷名震京华。",
+            blankCount: 1,
+            blanks: ["环扣"],
+            options: ["环扣", "衔接", "相合", "天衣"],
+            explanation: "榫卯环扣之间，不费一钉而屹立百年，正是样式雷家族绝艺的写照。"
+        },
+        {
+            text: "万园之园____毁，雷氏图档忆华章。",
+            blankCount: 1,
+            blanks: ["圆明园"],
+            options: ["圆明园", "清漪园", "静宜园", "畅春园"],
+            explanation: "圆明园虽遭劫难，样式雷留存烫样图档，成为复原文化记忆的根脉。"
+        },
+        {
+            text: "____如翼展，飞檐举首望星辰。",
+            blankCount: 1,
+            blanks: ["檐角"],
+            options: ["檐角", "戗脊", "瓦当", "鸱吻"],
+            explanation: "古建飞檐檐角上扬如大鹏展翅，体现了传统木构的力学与审美极致。"
+        },
+        {
+            text: "匠心____铸奇观，避暑山庄纳乾坤。",
+            blankCount: 1,
+            blanks: ["摹画"],
+            options: ["摹画", "雕琢", "营造", "写仿"],
+            explanation: "匠心摹画，将自然山水与建筑融合，避暑山庄正是文人意匠与皇家气度合一。"
+        },
+        {
+            text: "____传承七世名，故宫楼阙记功成。",
+            blankCount: 1,
+            blanks: ["样式雷"],
+            options: ["样式雷", "工部匠", "梓人传", "营造司"],
+            explanation: "样式雷家族七世担任皇家建筑师，故宫、颐和园等均留下不朽丰碑。"
+        }
+    ];
+
+    // 当前游戏状态
+    let currentIndex = 0;          // 0-9
+    let correctCount = 0;
+    let answered = false;            // 当前题目是否已经答对（防止重复选择）
+    let currentQuestion = null;
+    let currentFilledBlank = "";     // 当前已经正确填入的空值
+
+    // DOM 元素
+    const sentenceContainer = document.getElementById('sentenceContainer');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const questionCounterSpan = document.getElementById('questionCounter');
+    const scoreDisplaySpan = document.getElementById('scoreDisplay');
+    const progressFillDiv = document.getElementById('progressFill');
+    const contextHintDiv = document.getElementById('contextHint');
+    const toastMsgDiv = document.getElementById('toastMsg');
+    const resetBtn = document.getElementById('resetGameBtn');
+    const modal = document.getElementById('completionModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const rankArea = document.getElementById('rankArea');
+
+    // 辅助函数
+    function showToast(message, duration = 2200) {
+        toastMsgDiv.textContent = message;
+        toastMsgDiv.style.opacity = '1';
+        setTimeout(() => {
+            toastMsgDiv.style.opacity = '0';
+        }, duration);
+    }
+
+    // 更新进度条
+    function updateProgress() {
+        const percent = ((currentIndex) / questions.length) * 100;
+        progressFillDiv.style.width = `${percent}%`;
+        questionCounterSpan.innerText = `第${currentIndex+1} / ${questions.length}题`;
+        scoreDisplaySpan.innerText = `✓ 正确: ${correctCount}`;
+    }
+
+    // 显示当前题目 (渲染句子填空样式)
+    function renderCurrentQuestion() {
+        if (currentIndex >= questions.length) {
+            // 游戏完成，由外部调用评级
+            return;
+        }
+        const q = questions[currentIndex];
+        currentQuestion = q;
+        answered = false;
+        currentFilledBlank = "";
+
+        // 构建句子展示，带填空位
+        let rawText = q.text;
+        // 用特殊标记替换空白占位符 ____ 为动态填空区域 (本库只有一个空)
+        let blankSlotHtml = `<span class="blank" id="dynamicBlank">???</span>`;
+        let displayHtml = rawText.replace(/____/g, blankSlotHtml);
+        sentenceContainer.innerHTML = displayHtml;
+        // 如果已经填过了（恢复时清除样式）, 确保初始未填充
+        const blankSpan = document.getElementById('dynamicBlank');
+        if (blankSpan) {
+            blankSpan.innerText = '???';
+            blankSpan.classList.remove('filled');
+        }
+
+        // 重置选项按钮状态，生成新的四个选项 (打乱顺序)
+        const correctAnswer = q.blanks[0];
+        let opts = [...q.options];
+        // 确保正确选项一定在选项中（已包含）
+        if (!opts.includes(correctAnswer)) opts.push(correctAnswer);
+        // 洗牌打乱顺序
+        for (let i = opts.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [opts[i], opts[j]] = [opts[j], opts[i]];
+        }
+        // 渲染选项按钮
+        optionsContainer.innerHTML = '';
+        const prefix = ['A', 'B', 'C', 'D'];
+        opts.forEach((opt, idx) => {
+            const btn = document.createElement('div');
+            btn.className = 'opt-btn';
+            btn.innerText = `${prefix[idx]}. ${opt}`;
+            btn.dataset.value = opt;
+            btn.addEventListener('click', () => {
+                if (answered) {
+                    showToast("此题已完美填续，进入下一段文脉吧", 1000);
+                    return;
+                }
+                handleAnswer(opt, correctAnswer, q.explanation);
+            });
+            optionsContainer.appendChild(btn);
+        });
+        // 刷新文脉提示区为基础样式
+        contextHintDiv.innerHTML = `📖 ${q.explanation.substring(0, 40)}... 选错可览全解`;
+        updateProgress();
+    }
+
+    // 处理作答
+    function handleAnswer(selected, correct, explanationFull) {
+        if (answered) return;
+        if (selected === correct) {
+            // 答对：填入空白，高亮渐变，进入下一题
+            answered = true;
+            correctCount++;
+            // 更新空白显示
+            const blankSpan = document.getElementById('dynamicBlank');
+            if (blankSpan) {
+                blankSpan.innerText = correct;
+                blankSpan.classList.add('filled');
+            }
+            // 显示正确toast
+            showToast(`✓ 妙哉！ “${correct}” 文脉相承`, 1200);
+            // 更新得分显示
+            scoreDisplaySpan.innerText = `✓ 正确: ${correctCount}`;
+            // 延迟进入下一题
+            setTimeout(() => {
+                // 移动到下一题
+                currentIndex++;
+                if (currentIndex < questions.length) {
+                    renderCurrentQuestion();
+                } else {
+                    // 全部完成，弹窗评级
+                    showCompletionRank();
+                }
+                updateProgress();
+            }, 800);
+        } else {
+            // 答错显示错误提示 + 文脉小解读
+            showToast(`❌ “${selected}” 不妥，再品文脉`, 1600);
+            // 弹出文脉小解读（在下方提示区展示完整解读）
+            contextHintDiv.innerHTML = `📜 文脉小解：${explanationFull}`;
+            // 添加闪烁错误样式动画但不清空
+            const optsBtns = document.querySelectorAll('.opt-btn');
+            optsBtns.forEach(btn => {
+                if (btn.dataset.value === selected) {
+                    btn.style.backgroundColor = "#e6b8a8";
+                    btn.style.borderColor = "#b34e3a";
+                    setTimeout(() => {
+                        btn.style.backgroundColor = "";
+                        btn.style.borderColor = "";
+                    }, 400);
+                }
+            });
+            // 不减分，但不可跳到下一题
+        }
+    }
+
+    // 完成评级并按正确数量判定
+    function showCompletionRank() {
+        let rank = "";
+        if (correctCount <= 3) rank = "📜 文脉初学者";
+        else if (correctCount <= 7) rank = "🏛️ 文脉传承者";
+        else rank = "🏆 古建文韵大师";
+        const rankMessage = `<div class="rank-title">${rank}</div><p>答对 ${correctCount} / ${questions.length} 题</p>`;
+        rankArea.innerHTML = rankMessage;
+        modal.classList.add('active');
+    }
+
+    // 重置全部游戏
+    function resetGame() {
+        currentIndex = 0;
+        correctCount = 0;
+        answered = false;
+        currentFilledBlank = "";
+        renderCurrentQuestion();
+        updateProgress();
+        if (modal.classList.contains('active')) modal.classList.remove('active');
+        contextHintDiv.innerHTML = "📖 品一句古建诗文，续百年文脉";
+        showToast("🖌️ 文卷重开，再续古建诗韵", 1500);
+    }
+
+    // 关闭弹窗并重置
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        resetGame();
+    });
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+            resetGame();
+        }
+    });
+    resetBtn.addEventListener('click', () => {
+        if (modal.classList.contains('active')) modal.classList.remove('active');
+        resetGame();
+    });
+
+    // 初始化
+    function init() {
+        resetGame(); // 加载第0题
+    }
+    init();
+</script>
+</body>
+</html>
